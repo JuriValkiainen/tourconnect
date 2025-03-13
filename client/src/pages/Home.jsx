@@ -1,4 +1,4 @@
-const PageContent = () => {
+const Home = () => {
   return (
     <div className="w3-content" style={{ maxWidth: "1100px" }}>
       {/* <!-- Good offers --> */}
@@ -48,7 +48,7 @@ const PageContent = () => {
               </div>
             </div>
           </div>
-          <div className="w3-row-padding" style={{margin:'0 -16px'}}>
+          <div className="w3-row-padding" style={{ margin: "0 -16px" }}>
             <div className="w3-half w3-margin-bottom">
               <div className="w3-display-container">
                 <img
@@ -128,11 +128,13 @@ const PageContent = () => {
       <div className="w3-container">
         <h2>Contact</h2>
         <p>Let us book your next trip!</p>
-        <i className="fa fa-map-marker" style={{width:'30px'}}></i> Chicago, US
+        <i className="fa fa-map-marker" style={{ width: "30px" }}></i> Chicago,
+        US
         <br />
-        <i className="fa fa-phone" style={{width:'30px'}}></i> Phone: +00 151515
+        <i className="fa fa-phone" style={{ width: "30px" }}></i> Phone: +00
+        151515
         <br />
-        <i className="fa fa-envelope" style={{width:'30px'}}>
+        <i className="fa fa-envelope" style={{ width: "30px" }}>
           {" "}
         </i>{" "}
         Email: mail@mail.com
@@ -180,4 +182,4 @@ const PageContent = () => {
     </div>
   );
 };
-export default PageContent;
+export default Home;
