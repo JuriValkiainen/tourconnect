@@ -12,7 +12,7 @@ function App() {
     <BrowserRouter>
       <div className="w3-light-grey">
         <NavigationBar />
-        <Header />
+        {location.pathname === "/" && <Header />}
         <main>
           <AppRoutes /> {/* Здесь рендерится текущая страница */}
         </main>
