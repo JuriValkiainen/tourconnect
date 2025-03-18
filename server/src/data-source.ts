@@ -10,10 +10,10 @@ import { Tours } from "./entity/Tours"
 export const AppDataSource = new DataSource({
     type: "mssql",
     //TODO: add database connection settings !!!
-    host: "tourconnect.database.windows.net",
-    username: "tourconnect",
-    password: "0Connect!",
-    database: "tourConnectDB",
+    host: "",
+    username: "",
+    password: "",
+    database: "",
     synchronize: true,
     options : {
         trustServerCertificate : true
