@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import axios from "axios";
 import Newsletter from "../components/Newsletter.jsx";
 import Contact from "../components/Contact.jsx";
 
@@ -7,6 +8,7 @@ const ExcursionList = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const city = searchParams.get("city"); // Get the "city" parameter from the URL
+  const date = searchParams.get("date") || new Date().toISOString().split("T")[0]; // Get the "date" parameter from the URL or use the current date
 
   const [excursions, setExcursions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,7 +16,9 @@ const ExcursionList = () => {
 
   useEffect(() => {
     if (city) {
-      fetch(`http://localhost:5000/api/excursions?city=${city}`)
+      axios(`http://localhost:5000/api/excursions`, {
+        params: { city, date }, // Pass the parameters to the API
+      })
         .then((response) => {
           if (!response.ok) {
             throw new Error("Network response was not ok");
@@ -26,14 +30,14 @@ const ExcursionList = () => {
           setLoading(false);
         })
         .catch((error) => {
-          setError(error.message);
+          setError(error.response?.data?.message || "Error loading data");
           setLoading(false);
         });
       }
-       }, [city]);
+       }, [city, date]);
 
     if (loading) {
-        return <p><i class="fa fa-refresh"></i>Loading...</p>;
+        return <p><i className="fa fa-refresh"></i> Loading...</p>;
       }
       if (error) {
         return <p>Error: {error}</p>;
@@ -41,7 +45,7 @@ const ExcursionList = () => {
 
     return (
       <div className="w3-content" style={{ maxWidth: "1100px" }}>
-        {/* <!-- Explore City --> */}
+        {/* <!-- Page Title --> */}
         <div className="w3-container">
         <h3>Places to Visit in {city}</h3>
         <p>Travel with us and see city at its finest.</p>
@@ -63,13 +67,13 @@ const ExcursionList = () => {
               </div>
             ))
           ) : (
-            <p>There are no excursions in this city.</p>
+            <p>No excursions available for {city} on {date}.</p>
           )}
         </div>
+
         <Newsletter />
         <Contact />
       </div>
-
     );
   };
   
