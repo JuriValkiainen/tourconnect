@@ -19,16 +19,10 @@ const ExcursionList = () => {
       axios(`http://localhost:5000/api/excursions`, {
         params: { city, date }, // Pass the parameters to the API
       })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          setExcursions(data);
-          setLoading(false);
-        })
+      .then((response) => {
+        setExcursions(response.data);
+        setLoading(false);
+      })
         .catch((error) => {
           setError(error.response?.data?.message || "Error loading data");
           setLoading(false);
@@ -40,7 +34,7 @@ const ExcursionList = () => {
         return <p><i className="fa fa-refresh"></i> Loading...</p>;
       }
       if (error) {
-        return <p>Error: {error}</p>;
+        return <p>❌ Error: {error}</p>;
       }
 
     return (
