@@ -24,7 +24,7 @@ export default [
     },
     settings: {
       react: {
-        version: 'detect', // Автоматически определяет версию React
+        version: 'detect', // Automatically detects React version
       },
     },
     rules: {
