@@ -13,7 +13,7 @@ export class Tours {
     @Column("nvarchar", {length: 20,})
     city: string
 
-    @Column("nvarchar", {length: 10,})
+    @Column("nvarchar")
     type: string
 
     @Column("int", {nullable: true })
@@ -22,10 +22,10 @@ export class Tours {
     @Column("int", {nullable: true })
     maxPerson: number
 
-    @Column("text")
+    @Column("nvarchar", {length: 4000,})
     description: string
 
-    @Column("text", {nullable: true })
+    @Column("nvarchar", {nullable: true })
     picture: string
 
     @JoinColumn({name : "guideID"})
@@ -33,8 +33,9 @@ export class Tours {
     guide: Guides
 
     @JoinColumn({name : "tourID"})
-    @OneToMany(() => Reservations, (reserv) => reserv.tours)
+    @OneToMany(() => Reservations, (reserv) => reserv.tours, { nullable: false })
     reservations: Reservations[]
+ 
 
 }
 
