@@ -1,3 +1,4 @@
+import { useLocation } from "react-router-dom";
 import NavigationBar from './components/NavigationBar.jsx'
 import Header from './components/Header.jsx'
 import Footer from './components/Footer.jsx'
@@ -6,11 +7,13 @@ import './App.css'
 
 
 function App() {
+  const location = useLocation();
+  const showHeader = location.pathname === "/" || location.pathname.startsWith("/excursions");
 
   return (
       <div className="w3-light-grey">
         <NavigationBar />
-        {location.pathname === "/" && <Header />}
+        {showHeader && <Header />}
         <main>
           <AppRoutes /> {/* Здесь рендерится текущая страница */}
         </main>

@@ -16,7 +16,7 @@ const ExcursionList = () => {
 
   useEffect(() => {
     if (city) {
-      axios(`http://localhost:5000/api/excursions`, {
+      axios(`http://localhost:5001/excursions`, {
         params: { city, date }, // Pass the parameters to the API
       })
       .then((response) => {

@@ -4,7 +4,7 @@ import express, { Express, Request, Response , Application } from 'express';
 import { Tours } from "./entity/Tours";
 import { Guides } from "./entity/Guides";
 
-//import cors from "cors";
+import cors from "cors";
 //import dotenv from "dotenv";
 
 //dotenv.config();
@@ -79,7 +79,7 @@ AppDataSource.initialize().then(() => {
 }).catch((error: any) => console.log(error))
 
 const app = express();
-//app.use(cors());
+app.use(cors());
 app.use(express.json());
 
 const PORT = process.env.PORT || 5001;
