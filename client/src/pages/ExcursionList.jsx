@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 import Newsletter from "../components/Newsletter.jsx";
 import Contact from "../components/Contact.jsx";
+import { Link } from "react-router-dom";
 
 const ExcursionList = () => {
   const location = useLocation();
@@ -52,11 +53,10 @@ const ExcursionList = () => {
                 {tour.picture && <img src={tour.picture} alt={tour.type} style={{ width: "100%" }} />}
                 <div className="w3-container w3-white">
                   <h4>Type of excursion: {tour.type}</h4>
-                  <p>{tour.description}</p>
+                  <p>{tour.description.split(" ").slice(0, 20).join(" ")}...</p>
                   <p>Maximum people: {tour.maxPerson}</p>
-                  <p>Price per person: {tour.prisePerPerson} €</p>
-                  <p><strong>Guide:</strong> {tour.guide ? tour.guide.name : "Unknown"}</p>
-                  <button className="w3-button w3-margin-bottom">Find out more</button>
+                  
+                  <Link to={`/excursions/${tour.tourID}`} className="w3-button w3-margin-bottom">Find out more</Link>
                 </div>
               </div>
             ))
