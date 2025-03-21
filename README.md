@@ -31,9 +31,9 @@ TourConnect is a travel application that connects users with local guides. It al
 
 ## Tech Stack
 
-- **Frontend:** React, Vite, Tailwind CSS
-- **Backend:** Node.js, Express.js
-- **Database:** Azure SQL / MariaDB
+- **Frontend:** React, Vite, W3.CSS
+- **Backend:** Node.js, Express.js, TypeORM
+- **Database:** Azure SQL Server
 - **Authentication:** JWT-based authentication
 
 ## Contribution
