@@ -5,6 +5,7 @@ import ExcursionList from "./pages/ExcursionList";
 import Register from "./pages/Register";
 import GuideRegister from "./pages/GuideRegister";
 import GuideDashboard from "./pages/GuideDashboard";
+import ExcursionDetail from "./pages/ExcursionDetail";
 // import CitySelection from "./pages/CitySelection";
 // import ExcursionTypes from "./pages/ExcursionTypes";
 
@@ -14,6 +15,7 @@ const AppRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/booking" element={<Booking />} />
         <Route path="/excursions" element={<ExcursionList />} />
+        <Route path="/excursions/:id" element={<ExcursionDetail />} />
         <Route path="/guide-dashboard" element={<GuideDashboard />} />
         <Route path="/guide-register" element={<GuideRegister />} />
         <Route path="/register" element={<Register />} />
