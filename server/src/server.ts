@@ -1,10 +1,14 @@
 import { Tourists } from "./entity/Tourists";
 import { AppDataSource } from "./data-source";
-import express, { Express, Request, Response , Application } from 'express';
+//import express, { Express, Request, Response , Application } from 'express';
 import { Tours } from "./entity/Tours";
 import { Guides } from "./entity/Guides";
 
 import cors from "cors";
+import { Reservations } from "./entity/Reservations";
+
+import express, { Request, Response } from 'express';
+
 //import dotenv from "dotenv";
 
 //dotenv.config();
@@ -74,7 +78,13 @@ AppDataSource.initialize().then(() => {
     tour3.guide =guide3
     AppDataSource.manager.save(tour3)
 
-    
+    const tourist1 = new Tourists()
+    tourist1.touristID = 1
+    tourist1.firstName = "Pekka"
+    tourist1.lastName = "Elo"
+    tourist1.password = "password"
+    tourist1.phone = 2343213
+    AppDataSource.manager.save(tourist1)
   
 }).catch((error: any) => console.log(error))
 
@@ -88,6 +98,8 @@ app.get("/", (req, res) => {
     res.send("TourConnect API is running...");
 });
 
+
+//-------------------GET--------------------------
 app.get("/cities", async (req, res) => {
     const cities = await AppDataSource.manager.find(Tours, {select: { city: true }} );
     const cityList = cities.map(c => c.city);
@@ -111,6 +123,189 @@ app.get("/excursions", async (req, res) => {
         res.status(500).json({ error: "An error occurred while fetching excursions." });
     }
 });
+
+
+app.get("/excursions/:id",  async (req: Request<{ id: number }>, res: any) => {
+    
+    const { id } = req.params;
+  
+    try {
+      const tour = await AppDataSource.manager.findOne(Tours, {
+        where: { tourID: id }
+      });
+  
+      if (!tour) {
+        return res.status(404).json({ error: "Tour not found" });
+      }
+  
+      res.json(tour);
+    } catch (error) {
+      console.error("Error fetching tour:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
+
+
+//-------------------POST--------------------------
+
+interface CreateReservationRequest
+{
+    tourID: number
+    touristID: number
+    date: string
+    numberOfPeople: number
+    bill: number
+}
+
+app.post("/booking", async (req: Request, res: any) => {
+    try {
+        const reqData = req.body as CreateReservationRequest
+        
+        if (!reqData.tourID || !reqData.touristID || !reqData.date || !reqData.numberOfPeople|| !reqData.bill) {
+            return res.status(400).json({ error: "All fields are required" });
+          }
+          const parsedDate = new Date(reqData.date);
+          if (isNaN(parsedDate.getTime())) {
+            return res.status(400).json({ error: "Invalid date format" });
+          }
+      
+          if (reqData.numberOfPeople <= 0) {
+            return res.status(400).json({ error: "Number of people must be greater than zero" });
+          }
+
+    const newReservation = await AppDataSource.getRepository(Reservations).create()
+    newReservation.touristID = reqData.touristID
+    newReservation.tourID = reqData.tourID
+    newReservation.date = parsedDate
+    newReservation.numberOfPeople = reqData.numberOfPeople
+    newReservation.bill = reqData.bill
+
+
+    const result = await AppDataSource.getRepository(Reservations).save(newReservation)
+    res.json({
+        id : result.reservID
+    })
+    }
+    catch (error) {
+        console.error("Error creating reservation:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+
+})
+
+interface CreateRegisterRequest
+{
+    firstName: string
+    lastName: string
+    password: string
+    phone: number
+    }
+
+app.post("/register", async (req: Request, res: any) => {
+    try {
+        const reqData = req.body as CreateRegisterRequest
+        
+        if (!reqData.firstName || !reqData.lastName || !reqData.password|| !reqData.phone) {
+            return res.status(400).json({ error: "All fields are required" });
+          }
+        
+
+    const newTourists = await AppDataSource.getRepository(Tourists).create()
+    newTourists.firstName = reqData.firstName
+    newTourists.lastName = reqData.lastName
+    newTourists.password = reqData.password
+    newTourists.phone = reqData.phone
+
+
+    const result = await AppDataSource.getRepository(Tourists).save(newTourists)
+    res.json({
+        id : result.touristID
+    })
+    }
+    catch (error) {
+        console.error("Registration error:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+})
+
+interface CreateGuideRegisterRequest
+{
+    firstName: string
+    lastName: string
+    password: string
+    phone: number
+    description: string
+    photo: string
+    }
+
+app.post("/guides/register", async (req: Request, res: any) => {
+    try {
+        const reqData = req.body as CreateGuideRegisterRequest
+        
+        if (!reqData.firstName || !reqData.lastName || !reqData.password|| !reqData.phone|| !reqData.description) {
+            return res.status(400).json({ error: "All fields are required" });
+          }
+        
+    const newGuides = await AppDataSource.getRepository(Guides).create()
+    newGuides.firstName = reqData.firstName
+    newGuides.lastName = reqData.lastName
+    newGuides.password = reqData.password
+    newGuides.phone = reqData.phone
+    newGuides.description = reqData.description
+    newGuides.photo = reqData.photo
+
+    const result = await AppDataSource.getRepository(Guides).save(newGuides)
+    res.json({
+        id : result.guideID
+    })
+    }
+    catch (error) {
+        console.error("Registration error:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+
+
+})
+
+interface CreateToursRequest
+{
+    city: string
+    type: string
+    maxPerson: number
+    prisePerPerson: number
+    description: string
+    picture: string
+    }
+
+app.post("/excursions", async (req: Request, res: any) => {
+    try {
+        const reqData = req.body as CreateToursRequest
+        
+        if (!reqData.city || !reqData.type || !reqData.maxPerson|| !reqData.prisePerPerson|| !reqData.description|| !reqData.picture) {
+            return res.status(400).json({ error: "All fields are required" });
+          }
+        
+
+    const newTours = await AppDataSource.getRepository(Tours).create()
+    newTours.city = reqData.city
+    newTours.type = reqData.type
+    newTours. maxPerson = reqData.maxPerson
+    newTours.prisePerPerson = reqData.prisePerPerson
+    newTours.description = reqData.description
+    newTours.picture = reqData.picture
+
+    const result = await AppDataSource.getRepository(Tours).save(newTours)
+    res.json({
+        id : result.tourID
+    })
+    }
+    catch (error) {
+        console.error("Registration error:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+
+})
 
 
 app.listen(PORT, () => {

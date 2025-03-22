@@ -15,11 +15,14 @@ export class Reservations {
     @Column ("int")
     tourID: number
 
-    @Column("nvarchar", {length: 10})
+    @Column("int", {nullable: true })
     bill: number
 
+    @Column("int")
+    numberOfPeople: number
+
     @Column("date")   //(YYYY-MM-DD)
-    data: string
+    date: Date
 
     @JoinColumn({name : "touristID"})
     @ManyToOne(() => Tourists, (tourists)=>tourists.reservations)
