@@ -15,7 +15,7 @@ export class Tourists {
     @Column("nvarchar", {length: 50, nullable: true })
     lastName: string
 
-    @Column("nvarchar")
+    @Column("nvarchar", { length: 255, nullable: true })
     email: string
 
     @Column("nvarchar", {length: 10,})
