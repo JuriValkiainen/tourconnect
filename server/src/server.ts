@@ -21,6 +21,7 @@ AppDataSource.initialize().then(() => {
     guide.lastName = "Korhonen"
     guide.password= "test1"
     guide.description ="I am a good guide!"
+    guide.email="Mikko@dks.dsd"
     guide.phone = 123456789
     guide.photo = "https://cdn.pixabay.com/photo/2017/10/21/12/01/whiptail-wallaby-2874519_960_720.jpg"
     AppDataSource.manager.save(guide)
@@ -31,6 +32,7 @@ AppDataSource.initialize().then(() => {
     guide2.lastName = "Lehtinen"
     guide2.password= "test2"
     guide2.description ="I am a very good guide!"
+    guide2.email="Emilia@dks.dsd"
     guide2.phone = 1111114
     guide2.photo = "https://cdn.pixabay.com/photo/2025/03/09/16/02/hare-9457418_960_720.jpg"
     AppDataSource.manager.save(guide2)
@@ -41,6 +43,7 @@ AppDataSource.initialize().then(() => {
     guide3.lastName = "Mäkinen"
     guide3.password= "test3"
     guide3.description ="I am guide!"
+    guide3.email="eaj@dks.dsd"
     guide3.phone = 1333333
     guide3.photo = "https://cdn.pixabay.com/photo/2025/03/05/14/35/cat-9448800_1280.jpg"
     AppDataSource.manager.save(guide3)
@@ -82,6 +85,7 @@ AppDataSource.initialize().then(() => {
     tourist1.touristID = 1
     tourist1.firstName = "Pekka"
     tourist1.lastName = "Elo"
+    tourist1.email="Elo@dks.dsd"
     tourist1.password = "password"
     tourist1.phone = 2343213
     AppDataSource.manager.save(tourist1)
@@ -109,7 +113,6 @@ app.get("/cities", async (req, res) => {
 
 app.get("/excursions", async (req, res) => {
     const { city, type } = req.query; 
-   //проверить: http://localhost:5001/excursions?city=Turku&type=Walking%20around%20the%20city%20center
     const filters: any = {};
     if (city) filters.city = city;  
     if (type) filters.type = type;  
@@ -155,14 +158,14 @@ interface CreateReservationRequest
     touristID: number
     date: string
     numberOfPeople: number
-    bill: number
+    summa: number
 }
 
 app.post("/booking", async (req: Request, res: any) => {
     try {
         const reqData = req.body as CreateReservationRequest
         
-        if (!reqData.tourID || !reqData.touristID || !reqData.date || !reqData.numberOfPeople|| !reqData.bill) {
+        if (!reqData.tourID || !reqData.touristID || !reqData.date || !reqData.numberOfPeople|| !reqData.summa) {
             return res.status(400).json({ error: "All fields are required" });
           }
           const parsedDate = new Date(reqData.date);
@@ -179,7 +182,7 @@ app.post("/booking", async (req: Request, res: any) => {
     newReservation.tourID = reqData.tourID
     newReservation.date = parsedDate
     newReservation.numberOfPeople = reqData.numberOfPeople
-    newReservation.bill = reqData.bill
+    newReservation.summa = reqData.summa
 
 
     const result = await AppDataSource.getRepository(Reservations).save(newReservation)

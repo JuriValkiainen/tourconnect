@@ -15,6 +15,9 @@ export class Tourists {
     @Column("nvarchar", {length: 50, nullable: true })
     lastName: string
 
+    @Column("nvarchar")
+    email: string
+
     @Column("nvarchar", {length: 10,})
     password: string
 

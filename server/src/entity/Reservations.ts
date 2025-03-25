@@ -16,7 +16,7 @@ export class Reservations {
     tourID: number
 
     @Column("int", {nullable: true })
-    bill: number
+    summa: number
 
     @Column("int")
     numberOfPeople: number

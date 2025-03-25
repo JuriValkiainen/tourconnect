@@ -16,6 +16,9 @@ export class Guides {
     @Column("nvarchar", {length: 50})
     lastName: string
 
+    @Column("nvarchar", { length: 255, nullable: true })
+    email: string
+
     @Column("nvarchar", {length: 10})
     password: string
 
