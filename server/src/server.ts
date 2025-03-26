@@ -203,13 +203,14 @@ interface CreateRegisterRequest
     lastName: string
     password: string
     phone: number
+    email: string
     }
 
 app.post("/register", async (req: Request, res: any) => {
     try {
         const reqData = req.body as CreateRegisterRequest
         
-        if (!reqData.firstName || !reqData.lastName || !reqData.password|| !reqData.phone) {
+        if (!reqData.firstName || !reqData.lastName || !reqData.password|| !reqData.phone|| !reqData.email) {
             return res.status(400).json({ error: "All fields are required" });
           }
         
@@ -219,6 +220,7 @@ app.post("/register", async (req: Request, res: any) => {
     newTourists.lastName = reqData.lastName
     newTourists.password = reqData.password
     newTourists.phone = reqData.phone
+    newTourists.email = reqData.email
 
 
     const result = await AppDataSource.getRepository(Tourists).save(newTourists)
@@ -240,13 +242,14 @@ interface CreateGuideRegisterRequest
     phone: number
     description: string
     photo: string
+    email: string
     }
 
 app.post("/guides/register", async (req: Request, res: any) => {
     try {
         const reqData = req.body as CreateGuideRegisterRequest
         
-        if (!reqData.firstName || !reqData.lastName || !reqData.password|| !reqData.phone|| !reqData.description) {
+        if (!reqData.firstName || !reqData.lastName || !reqData.password|| !reqData.phone|| !reqData.description|| !reqData.email) {
             return res.status(400).json({ error: "All fields are required" });
           }
         
@@ -257,6 +260,7 @@ app.post("/guides/register", async (req: Request, res: any) => {
     newGuides.phone = reqData.phone
     newGuides.description = reqData.description
     newGuides.photo = reqData.photo
+    newGuides.email = reqData.email
 
     const result = await AppDataSource.getRepository(Guides).save(newGuides)
     res.json({
