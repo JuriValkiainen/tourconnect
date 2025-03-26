@@ -238,11 +238,11 @@ interface CreateGuideRegisterRequest
 {
     firstName: string
     lastName: string
+    email: string
     password: string
     phone: number
     description: string
     photo: string
-    email: string
     }
 
 app.post("/guides/register", async (req: Request, res: any) => {
@@ -256,6 +256,7 @@ app.post("/guides/register", async (req: Request, res: any) => {
     const newGuides = await AppDataSource.getRepository(Guides).create()
     newGuides.firstName = reqData.firstName
     newGuides.lastName = reqData.lastName
+    newGuides.email = reqData.email;
     newGuides.password = reqData.password
     newGuides.phone = reqData.phone
     newGuides.description = reqData.description

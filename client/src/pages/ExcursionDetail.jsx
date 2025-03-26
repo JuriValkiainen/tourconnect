@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import RegisterModal from "../components/RegisterModal";
 
 const ExcursionDetail = () => {
   const { id } = useParams();
   const [excursion, setExcursion] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     axios(`http://localhost:5001/excursions/${id}`)
@@ -19,6 +21,15 @@ const ExcursionDetail = () => {
         setLoading(false);
       });
   }, [id]);
+
+// В компоненте ExcursionDetail
+useEffect(() => {
+  if (isModalOpen) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = 'auto';
+  }
+}, [isModalOpen]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>❌ Error: {error}</p>;
@@ -33,7 +44,13 @@ const ExcursionDetail = () => {
       <p>Price: {excursion.prisePerPerson} €</p>
       <p><strong>Guide:</strong> {excursion.guide ? excursion.guide.name : "Unknown"}</p>
       
-      <button className="w3-button w3-green w3-margin-top">Book Now</button>
+      <button className="w3-button w3-green w3-margin-top" onClick={() => setIsModalOpen(true)}>Book Now</button>
+
+      <RegisterModal 
+        isOpen={isModalOpen} 
+        closeModal={() => setIsModalOpen(false)}
+        excursion={excursion}
+      />
     </div>
   );
 };
