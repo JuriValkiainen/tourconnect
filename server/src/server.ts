@@ -236,6 +236,7 @@ interface CreateGuideRegisterRequest
 {
     firstName: string
     lastName: string
+    email: string
     password: string
     phone: number
     description: string
@@ -246,13 +247,14 @@ app.post("/guides/register", async (req: Request, res: any) => {
     try {
         const reqData = req.body as CreateGuideRegisterRequest
         
-        if (!reqData.firstName || !reqData.lastName || !reqData.password|| !reqData.phone|| !reqData.description) {
+        if (!reqData.firstName || !reqData.lastName || !reqData.email || !reqData.password|| !reqData.phone|| !reqData.description) {
             return res.status(400).json({ error: "All fields are required" });
           }
         
     const newGuides = await AppDataSource.getRepository(Guides).create()
     newGuides.firstName = reqData.firstName
     newGuides.lastName = reqData.lastName
+    newGuides.email = reqData.email;
     newGuides.password = reqData.password
     newGuides.phone = reqData.phone
     newGuides.description = reqData.description
