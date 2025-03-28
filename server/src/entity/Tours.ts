@@ -17,7 +17,7 @@ export class Tours {
     type: string
 
     @Column("int", {nullable: true })
-    prisePerPerson: number
+    pricePerPerson: number
 
     @Column("int", {nullable: true })
     maxPerson: number
