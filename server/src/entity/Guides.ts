@@ -16,14 +16,14 @@ export class Guides {
     @Column("nvarchar", {length: 50})
     lastName: string
 
-    @Column("nvarchar", { length: 255, nullable: true })
+    @Column("nvarchar", { length: 50, nullable: true })
     email: string
 
-    @Column("nvarchar", {length: 10})
+    @Column("nvarchar", { length: 512, nullable: true})
     password: string
 
-    @Column("int", {nullable: true })
-    phone: number
+    @Column("nvarchar", {length: 50, nullable: true })
+    phone: string
 
     @Column("text") 
     description: string

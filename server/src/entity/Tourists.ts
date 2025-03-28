@@ -18,11 +18,17 @@ export class Tourists {
     @Column("nvarchar", { length: 255, nullable: true })
     email: string
 
-    @Column("nvarchar", {length: 10,})
+    @Column("nvarchar", {length: 255, nullable: true})
     password: string
 
-    @Column("int")
-    phone: number
+    @Column("nvarchar",  {nullable: true })
+    phone: string
+
+    @Column({ type: "bit", default: false })
+    isVerified: boolean
+
+    @Column("varchar", {length: 512, nullable: true })
+    verificationToken: string
    
     @JoinColumn({name : "touristID"})
     @OneToMany(() => Reservations, (reserv) => reserv.tourist)
