@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany,
     JoinColumn } from "typeorm"
     
 import { Reservations } from "./Reservations"
+import { Reviews } from "./Reviews"
 
 @Entity()
 export class Tourists {
@@ -29,12 +30,10 @@ export class Tourists {
 
     @Column("varchar", {length: 512, nullable: true })
     verificationToken: string
-   
-    @JoinColumn({name : "touristID"})
+    
     @OneToMany(() => Reservations, (reserv) => reserv.tourist)
     reservations: Reservations[]
 
-    @JoinColumn({name : "touristID"})
-    @OneToMany(() => Reservations, (reserv) => reserv.tourist)
-    reviews: Reservations[]
+    @OneToMany(() => Reviews, (reserv) => reserv.tourist)
+    reviews: Reviews[]
 }
