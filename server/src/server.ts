@@ -1,8 +1,9 @@
 import { Tourists } from "./entity/Tourists";
 import { AppDataSource } from "./data-source";
-//import express, { Express, Request, Response, Application } from 'express';
+
 import { Tours } from "./entity/Tours";
 import { Guides } from "./entity/Guides";
+import { FindOptionsWhere } from "typeorm";
 
 import cors from "cors";
 import { Reservations } from "./entity/Reservations";
@@ -29,7 +30,57 @@ app.get("/", (req, res) => {
     res.send("TourConnect API is running...");
 });
 
-//-------------------GET--------------------------
+//---------------- function to verify JWT tokens----------
+
+function  verifyGuideToken (req: Request, res: any, next : NextFunction) { 
+  const token = req.header ('Authorization')?.replace("Bearer ", "").trim(); 
+  if (!token) {
+       return res.status(401).json ( { error : ' Access denied ' } ) ; 
+      }
+        try { 
+          const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
+          const role = decoded["role"]
+          if (role != "guide") {
+                  return res.status(401).json ( { error : ' Access denied ' } ) ; 
+                 }
+
+          req.user = {
+          id: decoded['id'],  
+          email: decoded['email'],
+          role: decoded['role']
+          }
+
+          next()
+      }    
+  
+      catch ( error ) {
+       res.status ( 401 ) .json ( { error : ' Invalid token' } );
+       } 
+      }; 
+  
+  
+  function  verifyTouristToken (req: Request, res: any, next : NextFunction) { 
+  const token = req.header ('Authorization')?.replace("Bearer ", "").trim(); 
+      if (!token) {
+           return res.status(401).json ( { error : ' Access denied ' } ) ; 
+           }
+          
+          try { 
+                  const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
+                  const role = decoded["role"]
+  
+                  if (role != "tourist") {
+                          return res.status(401).json ( { error : ' Access denied ' } ) ; 
+                         }
+                  next();
+              }    
+          
+          catch ( error ) {
+               res.status ( 401 ) .json ( { error : error} );
+              }
+           }; 
+  
+
 app.get("/cities", async (req, res) => {
     const cities = await AppDataSource.manager.find(Tours, {select: { city: true }} );
     const cityList = cities.map(c => c.city);
@@ -37,6 +88,7 @@ app.get("/cities", async (req, res) => {
     res.json(cityList)
 });
 
+// Список всех экскурсий
 app.get("/excursions", async (req, res) => {
     const { city, type } = req.query; 
     const filters: any = {};
@@ -53,11 +105,9 @@ app.get("/excursions", async (req, res) => {
     }
 });
 
-
-app.get("/excursions/:id",  async (req: Request<{ id: number }>, res: any) => {
-    
+// Экскурсия по id
+app.get("/excursions/:id",  async (req: Request<{ id: number }>, res: any) => { 
     const { id } = req.params;
-  
     try {
       const tour = await AppDataSource.manager.findOne(Tours, {
         where: { tourID: id }
@@ -74,53 +124,111 @@ app.get("/excursions/:id",  async (req: Request<{ id: number }>, res: any) => {
     }
   });
 
+//Возвращает профиль гида
+  app.get('/api/guides/me', verifyGuideToken, async (req: Request, res: any) => {
+    try {
 
-//---------------- function to verify JWT tokens----------
 
-function  verifyGuideToken (req: Request, res: any, next : NextFunction) { 
-const token = req.header ('Authorization')?.replace("Bearer ", "").trim(); 
-if (!token) {
-     return res.status(401).json ( { error : ' Access denied ' } ) ; 
+      if (!req.user) {
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
+  
+      const { id: guideID } = req.user as { id: number; email: string; role: string }
+      
+      if (!guideID) {
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
+      const guideRepo = AppDataSource.getRepository(Guides);
+
+      const guide = await guideRepo.findOne({where: { guideID },
+      //relations: ['tours', 
+       // 'lang', 'reviews'] 
+      })
+      if (!guide) {
+        return res.status(404).json({ error: 'Guide not found' });
+      }
+
+      const profil = {Name: guide.firstName, 
+        LastName: guide.lastName, 
+        Phone: guide.phone, 
+        email: guide.email, 
+        description: guide.description, 
+        photo: guide.photo}
+
+      res.json(profil);
+
+  } catch (error) {
+    console.error('Error fetching guide:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+//Возвращает список экскурсий данного гида
+  app.get('/api/guides/:guideID/tours', verifyGuideToken, async (req: Request, res: any) => {
+      try {
+        const { id: guideID } = req.user as { id: number; email: string; role: string }
+        
+        if (!guideID) {
+          return res.status(401).json({ error: 'Unauthorized' });
+        }
+    
+        const guideRepo = AppDataSource.getRepository(Guides);
+        const guide = await guideRepo.findOne({ where: { guideID }, relations: ['tours'] });
+    
+        if (!guide) {
+          return res.status(404).json({ error: 'Guide not found' });
+        }
+    
+        res.json(guide.tours);
+      } catch (error) {
+        console.error('Error fetching tours:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    });
+
+//Возвращает список бронирований данного гида
+  app.get('/api/guides/:guideID/bookings', verifyGuideToken, async (req: Request, res: any) => {
+    try {
+      const { id: guideID } = req.user as { id: number; email: string; role: string }
+      
+      if (!guideID) {
+        return res.status(401).json({ error: 'Unauthorized' })
+      }
+  
+      const guideRepo = AppDataSource.getRepository(Guides)
+      const guide = await guideRepo.findOne({ 
+        where: { guideID }, 
+        relations: ['tours', 'tours.reservations', 'tours.reservations.tourist']
+       });
+  
+      if (!guide) {
+        return res.status(404).json({ error: 'Guide not found' })
+      }
+
+      const bookings = guide.tours.flatMap(tour => 
+        tour.reservations.map(reservation => { 
+          const tourist = reservation.tourist || {}
+          return {
+        tourName: tour.city,
+        touristsfirstName: `${reservation.tourist.firstName}`,
+        touristslastName: `${reservation.tourist.lastName}`,
+        touristsEmail: reservation.tourist.email,  
+        touristsPhone: reservation.tourist.phone,  
+        reservationDate: reservation.date,  
+        numberOfPeople: reservation.numberOfPeople,  
+        summa: reservation.summa  
+      }
+    })
+  )
+
+      res.json(bookings)
+    } catch (error) {
+      console.error('Error fetching tours:', error)
+      res.status(500).json({ error: 'Internal server error' })
     }
+  });
 
-    try { 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
-        const role = decoded["role"]
-        if (role != "guide") {
-                return res.status(401).json ( { error : ' Access denied ' } ) ; 
-               }
-        next();
-    }    
-
-    catch ( error ) {
-     res.status ( 401 ) .json ( { error : ' Invalid token' } );
-     } 
-    }; 
-
-
-function  verifyTouristToken (req: Request, res: any, next : NextFunction) { 
-const token = req.header ('Authorization')?.replace("Bearer ", "").trim(); 
-    if (!token) {
-         return res.status(401).json ( { error : ' Access denied ' } ) ; 
-         }
-        
-        try { 
-                const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
-                const role = decoded["role"]
-
-                if (role != "tourist") {
-                        return res.status(401).json ( { error : ' Access denied ' } ) ; 
-                       }
-                next();
-            }    
-        
-        catch ( error ) {
-             res.status ( 401 ) .json ( { error : error} );
-            }
-         }; 
-
-
-//-------------------POST--------------------------
+// Бронирование экскурсий
 interface CreateReservationRequest
 {
     tourID: number
@@ -165,6 +273,7 @@ app.post("/booking", verifyTouristToken, async (req: Request, res: any) => {
     }
 })
 
+//регистрация туриста
 interface CreateRegisterRequest
 {
     firstName: string
@@ -174,7 +283,6 @@ interface CreateRegisterRequest
     email: string
     }
 
-    
 app.post("/register", async (req: Request, res: any) => {
    
     try {
@@ -223,6 +331,7 @@ app.post("/register", async (req: Request, res: any) => {
     }
 })
 
+//регистрация гида
 interface CreateGuideRegisterRequest
 {
     firstName: string
@@ -257,7 +366,6 @@ app.post("/guides/register", async (req: Request, res: any) => {
     const newGuides = await AppDataSource.getRepository(Guides).create()
     newGuides.firstName = reqData.firstName
     newGuides.lastName = reqData.lastName
-    newGuides.email = reqData.email;
     newGuides.password = hashedPassword
     newGuides.phone = reqData.phone
     newGuides.description = reqData.description
@@ -286,6 +394,106 @@ app.post("/guides/register", async (req: Request, res: any) => {
     }
 })
 
+// Oбновление данных личного кабинета гида
+type UpdateGuideRegisterRequest = Omit<CreateGuideRegisterRequest, "password">
+  
+app.put("/api/guides/me", verifyGuideToken, async (req: Request, res: any) => {
+
+try {
+    const { id: guideID } = req.user as { id: number; email: string; role: string }
+          
+    if (!guideID) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+    const reqData = req.body as UpdateGuideRegisterRequest
+    
+    if (!reqData.firstName || !reqData.lastName || !reqData.phone|| !reqData.description|| !reqData.email) {
+        return res.status(400).json({ error: "All fields are required" });
+      }  
+      
+    const guideRepo = AppDataSource.getRepository(Guides);
+    const guide = await guideRepo.findOne({ where: { guideID } });
+
+    if (!guide) {
+    return res.status(404).json({ error: "Guide not found" });
+    }
+
+    if (reqData.email && reqData.email !== guide.email) {
+      const existingUserE = await guideRepo.findOne({ where: { email: reqData.email } });
+      if (existingUserE) {
+          return res.status(400).json({ error: "A user with this email is already registered" });
+      }
+  }
+
+  if (reqData.phone && reqData.phone !== guide.phone) {
+      const existingUserP = await guideRepo.findOne({ where: { phone: reqData.phone } });
+      if (existingUserP) {
+          return res.status(400).json({ error: "A user with this phone is already registered" });
+      }
+  }
+    
+guide.firstName = reqData.firstName
+guide.lastName = reqData.lastName
+guide.phone = reqData.phone
+guide.description = reqData.description
+guide.photo = reqData.photo
+guide.email = reqData.email
+
+ await guideRepo.save(guide);
+return res.status(200).json({ success: true });
+  }
+
+catch (error) {
+  console.error("Registration error:", error);
+  return res.status(500).json({ error: "Internal server error" });
+}
+})
+
+//Аутентификация гида
+  interface CreateGuideLoginRequest
+  {
+      email: string
+      password: string
+      }
+
+      app.post("/guides/login", async (req: Request, res: any) => {
+        try {
+        const { email, password } = req.body as CreateGuideLoginRequest
+
+        if (!email || !password) {
+          return res.status(400).json({ error: 'Email and password are required' });
+        }
+
+        const guideRepo = AppDataSource.getRepository(Guides)
+        const guide = await guideRepo.findOne({ where: { email } })
+
+        if (!guide || !(await bcrypt.compare(password, guide.password))) {
+          return res.status(401).json({ error: 'Invalid credentials' });
+      }
+
+      if (!process.env.JWT_SECRET) {
+        console.error('JWT_SECRET is not defined');
+        return res.status(500).json({ error: 'Internal server error' });
+      }
+
+      const token = jwt.sign(
+        { id: guide.guideID,
+          email: guide.email,
+          role: 'guide' },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+      )
+
+      res.json({ token })
+  }
+
+   catch (error) {
+    console.error('Login error:', error)
+    res.status(500).json({ error: 'Internal server error' });
+  }
+})
+
+// Cоздание экскурсии
 interface CreateToursRequest
 {
     city: string
@@ -294,15 +502,28 @@ interface CreateToursRequest
     pricePerPerson: number
     description: string
     picture: string
+    guideID: number
     }
 
-app.post("/excursions", verifyGuideToken, async (req: Request, res: any) => {
+app.post("/api/tours", verifyGuideToken, async (req: Request, res: any) => {
     try {
+
+      const { id: guideID } = req.user as { id: number; email: string; role: string }
+            
+      if (!guideID) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
         const reqData = req.body as CreateToursRequest
         
         if (!reqData.city || !reqData.type || !reqData.maxPerson|| !reqData.pricePerPerson|| !reqData.description|| !reqData.picture) {
             return res.status(400).json({ error: "All fields are required" });
           }
+
+          const guide = await AppDataSource.getRepository(Guides).findOne({ where: { guideID } });
+    if (!guide) {
+      return res.status(404).json({ error: 'Guide not found' });
+    }
+
     const newTours = await AppDataSource.getRepository(Tours).create()
     newTours.city = reqData.city
     newTours.type = reqData.type
@@ -310,6 +531,7 @@ app.post("/excursions", verifyGuideToken, async (req: Request, res: any) => {
     newTours.pricePerPerson = reqData.pricePerPerson
     newTours.description = reqData.description
     newTours.picture = reqData.picture
+    newTours.guide = guide
 
     const result = await AppDataSource.getRepository(Tours).save(newTours)
     res.json({
@@ -322,8 +544,85 @@ app.post("/excursions", verifyGuideToken, async (req: Request, res: any) => {
     }
 })
 
+//Редактирование экскурсий
+type UpdateToursRequest = Omit<CreateToursRequest, "guideID">
+  
+app.put("/api/tours/:tourID", verifyGuideToken, async (req: Request, res: any) => {
+  try {
+    const { id: guideID } = req.user as { id: number; email: string; role: string }
+          
+    if (!guideID) {
+    return res.status(401).json({ error: 'Unauthorized' })
+  }
+  const tourID = parseInt(req.params.tourID);
 
+  if (isNaN(tourID)) {
+    return res.status(400).json({ error: "Invalid tour ID" });
+  }
+    const reqData = req.body as UpdateToursRequest  
 
+    if (!reqData.city || !reqData.type || !reqData.maxPerson|| !reqData.pricePerPerson|| !reqData.description|| !reqData.picture) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+
+    const tourRepo = AppDataSource.getRepository(Tours);
+    const tour = await tourRepo.findOne({ where: { tourID: tourID,  guide: { guideID: guideID }} as FindOptionsWhere<Tours> 
+     });
+
+    if (!tour) {
+      return res.status(403).json({ error: "Tour not found or you do not have permission to edit it" });
+    }
+
+    tour.city = reqData.city
+    tour.type = reqData.type
+    tour. maxPerson = reqData.maxPerson
+    tour.pricePerPerson = reqData.pricePerPerson
+    tour.description = reqData.description
+    tour.picture = reqData.picture
+
+    await tourRepo.save(tour)
+    return res.status(200).json({ success: true })
+  
+}
+    catch (error) {
+        console.error("Registration error:", error)
+        res.status(500).json({ error: "Internal server error" })
+    }
+})  
+  
+// Удаление экскурсии
+app.delete("/api/tours/:tourID", verifyGuideToken, async (req: Request, res: any) => {
+  try {
+    const { id: guideID } = req.user as { id: number; email: string; role: string };
+          
+    if (!guideID) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    
+    const tourID = parseInt(req.params.tourID);
+    if (isNaN(tourID)) {
+      return res.status(400).json({ error: "Invalid tour ID" });
+    }
+
+    const tourRepo = AppDataSource.getRepository(Tours);
+
+    const tour = await tourRepo.findOne({
+      where: { tourID: tourID, guide: { guideID: guideID } },
+    });
+
+    if (!tour) {
+      return res.status(403).json({ error: "Tour not found or you do not have permission to delete it" });
+    }
+
+    await tourRepo.remove(tour);
+
+    return res.status(200).json({ success: true});
+  
+  } catch (error) {
+    console.error("Error while deleting the tour:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 
 app.listen(PORT, () => {

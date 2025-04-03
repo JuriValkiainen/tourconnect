@@ -28,11 +28,10 @@ export class Tours {
     @Column("nvarchar", {nullable: true })
     picture: string
 
-    @JoinColumn({name : "guideID"})
     @ManyToOne(() => Guides, (guide) => guide.tours)
+    @JoinColumn({name : "guideID"})
     guide: Guides
 
-    @JoinColumn({name : "tourID"})
     @OneToMany(() => Reservations, (reserv) => reserv.tours, { nullable: false })
     reservations: Reservations[]
  
