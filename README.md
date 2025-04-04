@@ -14,7 +14,7 @@ TourConnect is a travel application that connects users with local guides. It al
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/tourconnect.git
+   git clone https://github.com/AndreyGOIT/tourconnect.git
    ```
 2. Navigate to the project folder:
    ```sh
