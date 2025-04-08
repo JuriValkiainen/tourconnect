@@ -1,5 +1,5 @@
 import { AppDataSource } from "../data-source";
-import { Guides } from "../entitys/Guides";
+import { Guides } from "../entities/Guides";
 import { Router, Request, Response } from 'express';
 import bcrypt from "bcryptjs";
 import jwt, { JwtPayload } from "jsonwebtoken";

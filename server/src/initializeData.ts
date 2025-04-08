@@ -1,7 +1,7 @@
 import { AppDataSource } from "./data-source";
-import { Guides } from "./entitys/Guides";
-import { Tours } from "./entitys/Tours";
-import { Tourists } from "./entitys/Tourists";
+import { Guides } from "./entities/Guides";
+import { Tours } from "./entities/Tours";
+import { Tourists } from "./entities/Tourists";
 
 export const initializeDatabase = async () => {
     try {

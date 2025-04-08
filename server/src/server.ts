@@ -1,5 +1,5 @@
 import { AppDataSource } from "./data-source";
-import { Tours } from "./entitys/Tours";
+import { Tours } from "./entities/Tours";
 import cors from "cors";
 import express, { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from "jsonwebtoken";
