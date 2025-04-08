@@ -1,8 +1,12 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom";
 import CitySelection from "./CitySelection";
 
 const Header = () => {
+    const { t, i18n } = useTranslation();
+    const changeLanguage = (lang) => {
+    i18n.changeLanguage(lang)}
     const [activeTab, setActiveTab] = useState("City");
     const [selectedCity, setSelectedCity] = useState("");
     const [selectedDate, setSelectedDate] = useState("");
@@ -42,7 +46,7 @@ const Header = () => {
                 </div>
 
                 <div id="City" className="w3-container w3-white w3-padding-16 myLink" style={{ display: activeTab === "City" ? "block" : "none" }}>
-                    <h3>Select date and a city for your tour</h3>
+                    <h3>{t('select_date_city')}</h3>
                     <div className="w3-row-padding" style={{ margin: "0 -16px" }}>
                         <div className="w3-half">
                             <label>Date</label>
