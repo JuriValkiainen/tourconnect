@@ -8,7 +8,7 @@ export const initializeDatabase = async () => {
     await AppDataSource.initialize();
 
     const guide = new Guides()
-    guide.guideID = 1
+    // guide.guideID = 1
     guide.firstName = "Mikko"
     guide.lastName = "Korhonen"
     guide.password= "test1"
@@ -19,7 +19,7 @@ export const initializeDatabase = async () => {
     AppDataSource.manager.save(guide)
 
     const guide2 = new Guides()
-    guide2.guideID = 2
+    // guide2.guideID = 2
     guide2.firstName = "Emilia"
     guide2.lastName = "Lehtinen"
     guide2.password= "test2"
@@ -30,7 +30,7 @@ export const initializeDatabase = async () => {
     AppDataSource.manager.save(guide2)
 
     const guide3 = new Guides()
-    guide3.guideID = 3
+    // guide3.guideID = 3
     guide3.firstName = "Juha"
     guide3.lastName = "Mäkinen"
     guide3.password= "test3"
@@ -41,7 +41,7 @@ export const initializeDatabase = async () => {
     AppDataSource.manager.save(guide3)
 
     const tour = new Tours()
-     tour.tourID = 1
+    //  tour.tourID = 1
      tour.city = "Turku"
      tour.type = "Walking around the city center"
      tour.pricePerPerson = 20
@@ -52,7 +52,7 @@ export const initializeDatabase = async () => {
      AppDataSource.manager.save(tour)
 
     const tour2 = new Tours()
-    tour2.tourID = 2
+    // tour2.tourID = 2
     tour2.city = "Tampere"
     tour2.type = "Factory Tour"
     tour2.pricePerPerson= 25 
@@ -63,7 +63,7 @@ export const initializeDatabase = async () => {
     AppDataSource.manager.save(tour2)
 
     const tour3= new Tours()
-    tour3.tourID = 3
+    // tour3.tourID = 3
     tour3.city = "Rovaniemi"
     tour3.type = "Northern nature"
     tour3.pricePerPerson = 50
@@ -74,7 +74,7 @@ export const initializeDatabase = async () => {
     AppDataSource.manager.save(tour3)
 
     const tourist1 = new Tourists()
-    tourist1.touristID = 1
+    // tourist1.touristID = 1
     tourist1.firstName = "Pekka"
     tourist1.lastName = "Elo"
     tourist1.email="Elo@dks.dsd"

@@ -7,6 +7,7 @@ import GuideRegister from "./pages/GuideRegister";
 import GuideDashboard from "./pages/GuideDashboard";
 import ExcursionDetail from "./pages/ExcursionDetail";
 import Login from "./pages/Login";
+import Profile from "./pages/Profile";
 
 
 const AppRoutes = () => {
@@ -20,6 +21,7 @@ const AppRoutes = () => {
         <Route path="/guide-register" element={<GuideRegister />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     );
   };

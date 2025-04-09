@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Login = () => {
@@ -6,15 +7,28 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
     try {
-      const response = await axios.post("http://localhost:5001/tourists/login", { email, password });
-      console.log(response.data);
+      const response = await axios.post("http://localhost:5001/tourists/login", { 
+        email, 
+        password 
+        });
+        const { token } = response.data;
+
+        // Сохраняем токен в localStorage
+        localStorage.setItem("token", token);
+      
       setMessage("Login successful!");
+
+      // 4. Редирект на страницу профиля через пару секунд
+      setTimeout(() => {
+        navigate("/profile");
+      }, 1500);
     } catch (error) {
       console.error(error);
       setMessage("Login failed. Try again.");
