@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 const RegisterModal = ({ isOpen, closeModal, excursion, selectedDate }) => {
   const [formData, setFormData] = useState({
@@ -30,7 +30,7 @@ const RegisterModal = ({ isOpen, closeModal, excursion, selectedDate }) => {
       // 2. Расшифровываем токен, чтобы получить touristID
       let touristID;
       if (token) {
-        const decodedToken = jwt_decode(token);
+        const decodedToken = jwtDecode(token);
         touristID = decodedToken.id;
       }
       console.log("Получили touristID из токена пользователя: ", touristID);

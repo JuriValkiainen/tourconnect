@@ -24,6 +24,16 @@ const Profile = () => {
       .then((response) => {
         setUser(response.data);
         setLoading(false);
+
+        // Загружаем бронирования после получения ID
+      return axios.get(`http://localhost:5001/api/tourists/${response.data.touristID}/booking`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    })
+    .then((response) => {
+      setBookings(response.data);
       })
       .catch((error) => {
         setError(error.response?.data?.message || "Error loading profile");
@@ -31,26 +41,10 @@ const Profile = () => {
       });
   }, [navigate]);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/login");
-      return;
-    }
-    // Fetch bookings for the user
-    axios
-      .get("http://localhost:5001/api/tourists/bookings", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        setBookings(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching excursions:", error);
-      });
-  }, [navigate]);
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // удаляем токен
+    navigate("/"); // переадресация на главную
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>❌ Error: {error}</p>;
@@ -129,6 +123,9 @@ const Profile = () => {
             </div>
         </div>
         )}
+        <button onClick={handleLogout} className="w3-button w3-red w3-margin-bottom">
+        Logout
+        </button>
     </div>
   );
 };
