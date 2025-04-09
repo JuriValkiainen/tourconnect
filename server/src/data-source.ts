@@ -1,12 +1,12 @@
 import "reflect-metadata"
 import { DataSource } from "typeorm"
 import { config } from "dotenv";
-import { Guides } from "./entity/Guides"
-import { Tourists } from "./entity/Tourists"
-import { Languages } from "./entity/Languages"
-import { Reservations } from "./entity/Reservations"
-import { Reviews } from "./entity/Reviews"
-import { Tours } from "./entity/Tours"
+import { Guides } from "./entities/Guides"
+import { Tourists } from "./entities/Tourists"
+import { Languages } from "./entities/Languages"
+import { Reservations } from "./entities/Reservations"
+import { Reviews } from "./entities/Reviews"
+import { Tours } from "./entities/Tours"
 
 // Loading environment variables from .env file
 config();
