@@ -1,6 +1,6 @@
-import { Tourists } from "../entitys/Tourists";
+import { Tourists } from "../entities/Tourists";
 import { AppDataSource } from "../data-source";
-import { Reservations } from "../entitys/Reservations";
+import { Reservations } from "../entities/Reservations";
 import { Router, Request, Response } from 'express';
 import bcrypt from "bcryptjs";
 import jwt, { JwtPayload } from "jsonwebtoken";

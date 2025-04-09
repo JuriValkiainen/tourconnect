@@ -1,10 +1,11 @@
 import { AppDataSource } from "../data-source";
-import { Tours } from "../entitys/Tours";
-import { Guides } from "../entitys/Guides";
+import { Tours } from "../entities/Tours";
+import { Guides } from "../entities/Guides";
+import { Reservations } from "../entities/Reservations"
 import { Router, Request, Response } from 'express';
 import { verifyGuideToken } from '../server'
 import { verifyTouristToken } from '../server'
-
+import { FindOptionsWhere } from 'typeorm'
 const router = Router();
 
 // Список всех экскурсий
