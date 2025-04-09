@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Dialog } from "@headlessui/react";
 import axios from "axios";
+import jwt_decode from "jwt-decode";
 
-const RegisterModal = ({ isOpen, closeModal }) => {
+const RegisterModal = ({ isOpen, closeModal, excursion, selectedDate }) => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -20,10 +20,41 @@ const RegisterModal = ({ isOpen, closeModal }) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
+
     try {
-      const response = await axios.post("http://localhost:5001/register", formData);
-      console.log(response.data);
-      setMessage("Check your email to confirm registration.");
+      // 1. Регистрация пользователя
+      const registerResponse = await axios.post("http://localhost:5001/register", formData);
+      console.log("Новый зарегистрированный пользователь: ",registerResponse.data);
+      const { token } = registerResponse.data;
+      
+      // 2. Расшифровываем токен, чтобы получить touristID
+      let touristID;
+      if (token) {
+        const decodedToken = jwt_decode(token);
+        touristID = decodedToken.id;
+      }
+      console.log("Получили touristID из токена пользователя: ", touristID);
+      // 3. Создание брони
+      const bookingData = {
+        tourID: excursion.tourID,
+        touristID: touristID,
+        date: selectedDate,
+        numberOfPeople: 1, // или укажи как хочешь
+        summa: excursion.pricePerPerson * 1 // сумма за одного
+      };
+      
+      await axios.post("http://localhost:5001/bookings", bookingData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setMessage("Registration and booking were successful!");
+
+      // 4. Редирект на страницу логина через пару секунд
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 1500);
+
     } catch (error) {
       console.error(error);
       setMessage("Registration failed. Try again.");
@@ -76,6 +107,14 @@ const RegisterModal = ({ isOpen, closeModal }) => {
               className="w3-input w3-border w3-margin-bottom" 
             />
             <input 
+              type="tel" 
+              name="phone" 
+              placeholder="Phone" 
+              onChange={handleChange} 
+              required 
+              className="w3-input w3-border w3-margin-bottom" 
+            />
+            <input 
               type="password" 
               name="password" 
               placeholder="Password" 
@@ -94,22 +133,6 @@ const RegisterModal = ({ isOpen, closeModal }) => {
         </div>
       </div>
     </div>
-    // <Dialog open={isOpen} onClose={closeModal} className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-    //   <div className="bg-white p-6 rounded-lg w-96">
-    //     <h2 className="text-lg font-bold mb-4">Register</h2>
-    //     {message && <p className="text-sm text-green-600">{message}</p>}
-    //     <form onSubmit={handleSubmit} className="space-y-3">
-    //       <input name="firstName" placeholder="First Name" onChange={handleChange} required className="w-full p-2 border rounded" />
-    //       <input name="lastName" placeholder="Last Name" onChange={handleChange} required className="w-full p-2 border rounded" />
-    //       <input type="email" name="email" placeholder="Email" onChange={handleChange} required className="w-full p-2 border rounded" />
-    //       <input type="password" name="password" placeholder="Password" onChange={handleChange} required className="w-full p-2 border rounded" />
-    //       <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white p-2 rounded">
-    //         {loading ? "Registering..." : "Register"}
-    //       </button>
-    //     </form>
-    //     <button onClick={closeModal} className="mt-2 text-sm text-gray-500">Close</button>
-    //   </div>
-    // </Dialog>
   );
 };
 
