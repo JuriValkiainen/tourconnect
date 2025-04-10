@@ -51,8 +51,9 @@ const Profile = () => {
   if (!user) return <p>User not found.</p>;
 
   return (
+    <div className="w3-container" >
     <div className="w3-content" style={{ maxWidth: "1100px" }}>
-      <h2>Profile</h2>
+      <h2>🗂️ Profile Info:</h2>
       <p>First Name: {user.firstName} </p>
       <p>Last Name: {user.lastName} </p>
       <p>Email: {user.email}</p>
@@ -71,15 +72,15 @@ const Profile = () => {
                     <p><strong>People:</strong> {booking.numberOfPeople}</p>
                     <p><strong>Summa:</strong> €{booking.summa}</p>
                     
-                    <div className="w3-margin-top">
+                    <div className="w3-margin-top ">
                     <button 
-                        className="w3-button w3-blue w3-small w3-margin-right"
+                        className="w3-button w3-white w3-border w3-border-teal w3-round-large w3-small"
                         onClick={() => document.getElementById(`modal${index}`).style.display = 'block'}
                     >
                         🔍 Подробнее
                     </button>
                     <button 
-                        className="w3-button w3-red w3-small"
+                        className="w3-button w3-white w3-border w3-border-red w3-round-large w3-small "
                         onClick={() => console.log('Удалить бронь', booking.reservID)} // сюда можно вставить delete-запрос
                     >
                         🗑️ Удалить
@@ -123,9 +124,10 @@ const Profile = () => {
             </div>
         </div>
         )}
-        <button onClick={handleLogout} className="w3-button w3-red w3-margin-bottom">
+        <button onClick={handleLogout} className="w3-button w3-gray w3-margin-bottom">
         Logout
         </button>
+    </div>
     </div>
   );
 };
