@@ -9,7 +9,7 @@ const ExcursionList = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const city = searchParams.get("city"); // Get the "city" parameter from the URL
-  const date = searchParams.get("date") || new Date().toISOString().split("T")[0]; // Get the "date" parameter from the URL or use the current date
+  const date = searchParams.get("date"); // Get the "date" parameter from the URL
 
   const [excursions, setExcursions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -56,7 +56,9 @@ const ExcursionList = () => {
                   <p>{tour.description.split(" ").slice(0, 20).join(" ")}...</p>
                   <p>Maximum people: {tour.maxPerson}</p>
                   
-                  <Link to={`/excursions/${tour.tourID}`} className="w3-button w3-margin-bottom">Find out more</Link>
+                  <Link 
+                  to={`/excursions/${tour.tourID}`}
+                  state={{ date }} className="w3-button w3-margin-bottom">Find out more</Link>
                 </div>
               </div>
             ))

@@ -7,8 +7,9 @@ import GuideRegister from "./pages/GuideRegister";
 import GuideLogin from "./pages/GuideLogin";
 import GuideDashboard from "./pages/GuideDashboard";
 import ExcursionDetail from "./pages/ExcursionDetail";
-// import CitySelection from "./pages/CitySelection";
-// import ExcursionTypes from "./pages/ExcursionTypes";
+import Login from "./pages/Login";
+import Profile from "./pages/Profile";
+
 
 const AppRoutes = () => {
     return (
@@ -21,8 +22,8 @@ const AppRoutes = () => {
         <Route path="/guide-login" element={<GuideLogin />} />
         <Route path="/guide-dashboard" element={<GuideDashboard />} />
         <Route path="/register" element={<Register />} />
-        {/* <Route path="/city-selection" element={<CitySelection />} />
-        <Route path="/excursion-types" element={<ExcursionTypes />} /> */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     );
   };

@@ -10,10 +10,10 @@ const router = Router();
 
 // Список всех экскурсий
 router.get("/excursions", async (req, res) => {
-    const { city, type } = req.query; 
+    const { city, date } = req.query; 
     const filters: any = {};
     if (city) filters.city = city;  
-    if (type) filters.type = type;  
+    if (date) filters.type = date;  
     try {
             const tours = await AppDataSource.manager.find(Tours, {
             where: filters

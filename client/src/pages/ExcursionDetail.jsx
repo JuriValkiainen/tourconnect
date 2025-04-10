@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import axios from "axios";
 import RegisterModal from "../components/RegisterModal";
 
 const ExcursionDetail = () => {
+  const location = useLocation();
+  const passedDate = location.state?.date || new Date().toISOString().slice(0, 10); // ← вот она, выбранная дата или текущая дата если попал напрямую (вручную введя URL или перезагрузив страницу)
   const { id } = useParams();
   const [excursion, setExcursion] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -14,6 +16,7 @@ const ExcursionDetail = () => {
     axios(`http://localhost:5001/excursions/${id}`)
       .then((response) => {
         setExcursion(response.data);
+        console.log("excursion on it's page: ",response.data);
         setLoading(false);
       })
       .catch((error) => {
@@ -50,6 +53,7 @@ useEffect(() => {
         isOpen={isModalOpen} 
         closeModal={() => setIsModalOpen(false)}
         excursion={excursion}
+        selectedDate={passedDate}
       />
     </div>
   );
