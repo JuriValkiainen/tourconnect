@@ -130,7 +130,9 @@ router.get('/api/tourists/me', verifyTouristToken, async (req: Request, res: any
       return res.status(404).json({ error: 'Profil not found' });
     }
 
-    const profil = {firstName: tourist.firstName, 
+    const profil = {
+      touristID: tourist.touristID,
+      firstName: tourist.firstName, 
       lastName: tourist.lastName, 
       phone: tourist.phone, 
       email: tourist.email
@@ -145,7 +147,7 @@ router.get('/api/tourists/me', verifyTouristToken, async (req: Request, res: any
 });
 
 //Возвращает список бронирований данного туриста
-router.get('/api/tourists/:touristID/booking', verifyTouristToken, async (req: Request, res: any) => {
+router.get('/api/tourists/booking', verifyTouristToken, async (req: Request, res: any) => {
   try {
     const { id: touristID } = req.user as { id: number; email: string; role: string }
     
