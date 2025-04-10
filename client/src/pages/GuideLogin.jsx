@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import axios from "axios";
 
 import Newsletter from "../components/Newsletter";
 import Contact from "../components/Contact";
@@ -28,22 +29,10 @@ const GuideLogin = () => {
     setSuccessMessage("");
 
     try {
-      const response = await fetch("http://localhost:5001/guides/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await axios.post("/guides/login", formData);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        setError(errorData.error || "Login failed.");
-        return;
-      }
-
-      const result = await response.json();
-      console.log("Login successful:", result);
+      // ✅ Сохраняем токен
+      localStorage.setItem("guideToken", response.data.token);
 
       setSuccessMessage("Login successful!");
 
@@ -53,8 +42,8 @@ const GuideLogin = () => {
       }, 2000);
 
     } catch (err) {
-      console.error("Error during login:", err);
-      setError("Server error. Please try again later.");
+      console.error("Login error:", err);
+      setError(err.response?.data?.error || "Login failed. Please try again.");
     }
   };
 
