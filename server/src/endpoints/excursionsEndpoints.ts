@@ -13,7 +13,7 @@ router.get("/excursions", async (req, res) => {
     const { city, date } = req.query; 
     const filters: any = {};
     if (city) filters.city = city;  
-    if (date) filters.type = date;  
+    //if (date) filters.type = date;  // Date filtering is not used at the moment  
     try {
             const tours = await AppDataSource.manager.find(Tours, {
             where: filters
