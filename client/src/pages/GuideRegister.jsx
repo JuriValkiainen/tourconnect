@@ -48,7 +48,7 @@ const GuideRegister = () => {
           firstName: formData.firstName,
           lastName: formData.lastName,
           email: formData.email,
-          phone: parseInt(formData.phone),
+          phone: formData.phone,
           password: formData.password,
           description: formData.description,
           photo: formData.photo,
