@@ -31,7 +31,6 @@ const GuideLogin = () => {
     try {
       const response = await axios.post("/guides/login", formData);
 
-      // ✅ Сохраняем токен
       localStorage.setItem("guideToken", response.data.token);
 
       setSuccessMessage("Login successful!");
