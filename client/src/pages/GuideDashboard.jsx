@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"
 import axios from "axios";
 import HeroImage from "../components/HeroImage";
 import Newsletter from "../components/Newsletter";
@@ -103,6 +104,13 @@ const GuideDashboard = () => {
     fetchData();
   }, []);
 
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("guideToken");
+    navigate("/");
+  };
+
   const handleProfileChange = (e) => {
     setEditForm({ ...editForm, [e.target.name]: e.target.value });
   };
@@ -119,6 +127,22 @@ const GuideDashboard = () => {
     } catch (err) {
       console.error("Failed to update profile:", err);
       alert("Error updating profile. Please try again.");
+    }
+  };
+
+  const handleDeleteProfile = async () => {
+    if (!window.confirm("Are you sure you want to delete your profile? This action cannot be undone.")) return;
+
+    try {
+      const token = localStorage.getItem("guideToken");
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+
+      await axios.delete("/api/guides/me", config);
+      localStorage.removeItem("guideToken");
+      window.location.href = "/";
+    } catch (err) {
+      console.error("Failed to delete profile:", err);
+      alert("Failed to delete profile. This feature may not be implemented yet.");
     }
   };
 
@@ -202,7 +226,7 @@ const GuideDashboard = () => {
           <div className="w3-row-padding">
             <div className="w3-col s12 m6">
               <img
-                src={guide.photo || "https://via.placeholder.com/300"}
+                src={`https://api.dicebear.com/7.x/initials/svg?seed=${guide.firstName}%20${guide.lastName}`}
                 alt="Guide"
                 style={{ width: "50%", borderRadius: "8px" }}
               />
@@ -213,9 +237,14 @@ const GuideDashboard = () => {
               <p><strong>Phone:</strong> {guide.phone}</p>
               <p><strong>Description:</strong></p>
               <p>{guide.description}</p>
-              <button className="w3-button w3-blue w3-round-large w3-margin-top" onClick={() => setIsEditingProfile(true)}>
-                Edit Profile
-              </button>
+              <div className="w3-margin-top">
+                <button className="w3-button w3-blue w3-round-large w3-margin-right" onClick={() => setIsEditingProfile(true)}>
+                  Edit Profile
+                </button>
+                <button className="w3-button w3-red w3-round-large" onClick={handleDeleteProfile}>
+                  Delete Profile
+                </button>
+              </div>
             </div>
           </div>
         ) : (
@@ -319,25 +348,47 @@ const GuideDashboard = () => {
         <div className="w3-container w3-padding-32">
           <h1 className="w3-center" style={{ fontSize: "calc(24px + 2vw)" }}>Guide Dashboard</h1>
 
-          <div className="w3-hide-small w3-bar w3-border-bottom w3-margin-top">
-            {["Profile", "My Tours", "Bookings"].map((tab) => (
+          <div className="w3-hide-small w3-bar w3-border-bottom w3-margin-top" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingLeft: 0, paddingRight: 0 }}>
+            <div className="w3-bar" style={{ display: "flex", gap: 0 }}>
+              {["Profile", "My Tours", "Bookings"].map((tab) => (
+                <button
+                  key={tab}
+                  className={`w3-bar-item w3-button ${activeTab === tab ? "w3-border-bottom w3-border-red" : ""}`}
+                  onClick={() => setActiveTab(tab)}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+            <div>
               <button
-                key={tab}
-                className={`w3-bar-item w3-button ${activeTab === tab ? "w3-border-bottom w3-border-red" : ""}`}
-                onClick={() => setActiveTab(tab)}
+                className="w3-button w3-red w3-round-large"
+                onClick={handleLogout}
               >
-                {tab}
+                Logout
               </button>
-            ))}
+            </div>
           </div>
 
           <div className="w3-hide-medium w3-hide-large w3-margin-top">
-            <select className="w3-select w3-border" value={activeTab} onChange={(e) => setActiveTab(e.target.value)}>
+            <select
+              className="w3-select w3-border"
+              value={activeTab}
+              onChange={(e) => {
+                if (e.target.value === "Logout") {
+                  handleLogout();
+                } else {
+                  setActiveTab(e.target.value);
+                }
+              }}
+            >
               <option value="Profile">Profile</option>
               <option value="My Tours">My Tours</option>
               <option value="Bookings">Bookings</option>
+              <option value="Logout">Logout</option>
             </select>
           </div>
+
 
           <div className="w3-padding w3-white w3-card w3-round-large w3-margin-top">
             {renderTabContent()}
