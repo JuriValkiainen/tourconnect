@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
 const CitySelection = ({ selectedCity, onCitySelect }) => {
@@ -7,11 +7,17 @@ const CitySelection = ({ selectedCity, onCitySelect }) => {
   const [filteredCities, setFilteredCities] = useState([]);
   const [inputWidth, setInputWidth] = useState("auto");
 
+  const containerRef = useRef(null);
+
   useEffect(() => {
     axios.get("http://localhost:5001/cities")
-      .then(response => setCities(response.data))
+      .then(response => {
+        const uniqueCities = [...new Set(response.data)];
+        setCities(uniqueCities);
+      })
       .catch(error => console.error("Error fetching cities:", error));
   }, []);
+
   useEffect(() => {
     if (inputValue.length > 0) {
       setFilteredCities(
@@ -21,11 +27,7 @@ const CitySelection = ({ selectedCity, onCitySelect }) => {
       setFilteredCities([]);
     }
   }, [inputValue, cities]);
-  useEffect(() => {
-    if (cities.includes(inputValue)) {
-      setTimeout(() => setFilteredCities([]), 100);
-    }
-  }, [inputValue]);
+
   useEffect(() => {
     const inputElement = document.getElementById("city-input");
     if (inputElement) {
@@ -33,37 +35,66 @@ const CitySelection = ({ selectedCity, onCitySelect }) => {
     }
   }, [inputValue]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setFilteredCities([]);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="w3-container" style={{ position: "relative" }}>
+    <div className="w3-container" style={{ position: "relative" }} ref={containerRef}>
       <input
         id="city-input"
         className="w3-input w3-border"
         type="text"
         placeholder="Enter city"
         value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        onFocus={() => setFilteredCities(cities)}
+        autoComplete="off"
+        onChange={(e) => {
+          const value = e.target.value;
+          setInputValue(value);
+          onCitySelect(value);
+        }}
+        onFocus={() => {
+          if (cities.length > 0) {
+            setFilteredCities(cities.filter(city =>
+              city.toLowerCase().includes(inputValue.toLowerCase())
+            ));
+          }
+        }}
+        onBlur={() => {
+          // небольшая задержка, чтобы дать обработаться клику по пункту
+          setTimeout(() => setFilteredCities([]), 100);
+        }}
       />
       {filteredCities.length > 0 && (
-        <ul 
-          className="w3-ul w3-border" 
-          style={{ 
-            maxHeight: "150px", 
-            overflowY: "auto", 
-            position: "absolute", 
-            background: "white", 
-            zIndex: 10, 
-            width: inputWidth
+        <ul
+          className="w3-ul w3-border"
+          style={{
+            maxHeight: "150px",
+            overflowY: "auto",
+            position: "absolute",
+            background: "white",
+            zIndex: 10,
+            width: inputWidth,
+            marginTop: "4px"
           }}>
           {filteredCities.map((city, index) => (
-            <li 
-              key={index} 
+            <li
+              key={index}
               className="w3-hover-light-gray"
               style={{ cursor: "pointer", padding: "8px" }}
-              onClick={() => {
+              onMouseDown={() => {
                 setInputValue(city);
                 onCitySelect(city);
-                setFilteredCities([]);
+                // список сам скроется в onBlur
               }}
             >
               {city}
