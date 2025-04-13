@@ -1,5 +1,18 @@
 {
     "select_date_city": "Valitse päivämäärä ja kaupunki",
-    "become_guide": "Ryhdy oppaaksi"
+    "navBtn_guide": "Opas",
+    "dropdownGuide_register": "Rekisteröityminen oppaana",
+    "dropdownGuide_login": "Opas login",
+    "dropdownGuide_dashboard": "Opas dashboard",
+    "navBtn_traveler": "Matkailija",
+    "dropdownTrav_register": "Register as Traveler",
+    "dropdownTrav_login": "Traveler Login",
+    "dropdownTrav_profile": "Traveler Profile",
+    "header_alert": "Valitse kaupunki ja päivämäärä ennen hakua.",
+    "header_selectCity_panel": "Valitse kaupunki",
+    "header_selectCity_date": "Päivämäärä",
+    "header_selectCity_city": "Kaupunki",
+    "header_selectCity_btn": "Etsi retkiä",
+    "citySelection_placeholder": "Kirjoita kaupunki"
 }
 

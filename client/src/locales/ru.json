@@ -1,4 +1,18 @@
 {
-"select_date_city": "Выберите дату и город для вашего тура",
-"become_guide": "Стань гидом"
+    "select_date_city": "Выберите дату и город для вашего тура",
+    "navBtn_guide": "Гид",
+    "navBtn_traveler": "Путешественник",
+    "dropdownGuide_register": "Зарегистрироваться как гид",
+    "dropdownGuide_login": "Логин гида",
+    "dropdownGuide_dashboard": "Панель управления гида",
+    "dropdownTrav_register": "Зарегистрироваться как путешественник",
+    "dropdownTrav_login": "Логин путешественника",
+    "dropdownTrav_profile": "Профиль путешественника",
+    "header_alert": "Пожалуйста, выберите город и дату перед поиском.",
+    "header_selectCity_panel": "Выберите город",
+    "header_selectCity_date": "Дата",
+    "header_selectCity_city": "Город",
+    "header_selectCity_btn": "Найти экскурсии",
+    "citySelection_placeholder": "Введите город"
+
 }
