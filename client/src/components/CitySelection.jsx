@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const CitySelection = ({ selectedCity, onCitySelect }) => {
   const [cities, setCities] = useState([]);
@@ -8,6 +9,7 @@ const CitySelection = ({ selectedCity, onCitySelect }) => {
   const [inputWidth, setInputWidth] = useState("auto");
 
   const containerRef = useRef(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     axios.get("http://localhost:5001/cities")
@@ -54,7 +56,7 @@ const CitySelection = ({ selectedCity, onCitySelect }) => {
         id="city-input"
         className="w3-input w3-border"
         type="text"
-        placeholder="Enter city"
+        placeholder={t('citySelection_placeholder')}
         value={inputValue}
         autoComplete="off"
         onChange={(e) => {

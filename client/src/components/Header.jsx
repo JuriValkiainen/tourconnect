@@ -4,19 +4,22 @@ import { useNavigate } from "react-router-dom";
 import CitySelection from "./CitySelection";
 
 const Header = () => {
-    const { t, i18n } = useTranslation();
-    const changeLanguage = (lang) => {
-    i18n.changeLanguage(lang)}
+    const { t } = useTranslation();
+    
     const [activeTab, setActiveTab] = useState("City");
     const [selectedCity, setSelectedCity] = useState("");
     const [selectedDate, setSelectedDate] = useState("");
     const navigate = useNavigate();
 
+    const showAlert = (message) => {
+        alert(message);
+      };
+
     const handleSearch = () => {
         if (selectedCity && selectedDate) {
             navigate(`/excursions?city=${encodeURIComponent(selectedCity)}&date=${selectedDate}`);
         } else {
-            alert("Please select a city and date before searching.");
+            showAlert(t('header_alert'));
         }
     };
 
@@ -29,7 +32,7 @@ const Header = () => {
                         className={`w3-bar-item w3-button tablink ${activeTab === "City" ? "w3-red" : ""}`}
                         onClick={() => setActiveTab("City")}
                     >
-                        <i className="fa fa-city w3-margin-right"></i>Select city
+                        <i className="fa fa-city w3-margin-right"></i>{t('header_selectCity_panel')}
                     </button>
                     <button
                         className={`w3-bar-item w3-button tablink ${activeTab === "Hotel" ? "w3-red" : ""}`}
@@ -49,7 +52,7 @@ const Header = () => {
                     <h3>{t('select_date_city')}</h3>
                     <div className="w3-row-padding" style={{ margin: "0 -16px" }}>
                         <div className="w3-half">
-                            <label>Date</label>
+                            <label>{t('header_selectCity_date')}</label>
                             <input
                                 className="w3-input w3-border"
                                 type="date"
@@ -59,7 +62,7 @@ const Header = () => {
                         </div>
 
                         <div className="w3-half">
-                            <label>City</label>
+                            <label>{t('header_selectCity_city')}</label>
                             <CitySelection
                                 selectedCity={selectedCity}
                                 onCitySelect={(city) => setSelectedCity(city)}
@@ -69,7 +72,7 @@ const Header = () => {
 
                     <p>
                         <button className="w3-button w3-dark-grey" onClick={handleSearch}>
-                            Find excursions
+                            {t('header_selectCity_btn')}
                         </button>
                     </p>
                 </div>

@@ -1,4 +1,18 @@
 {
     "select_date_city": "Select date and city for your tour",
-    "become_guide": "Become a Guide"
+    "navBtn_guide": "Guide",
+    "dropdownGuide_register": "Register as Guide",
+    "dropdownGuide_login": "Guide Login",
+    "dropdownGuide_dashboard": "Guide Dashboard",
+    "navBtn_traveler": "Traveler",
+    "dropdownTrav_register": "Register as Traveler",
+    "dropdownTrav_login": "Traveler Login",
+    "dropdownTrav_profile": "Traveler Profile",
+    "header_alert": "Please select a city and date before searching.",
+    "header_selectCity_panel": "Select City",
+    "header_selectCity_date": "Date",
+    "header_selectCity_city": "City",
+    "header_selectCity_btn": "Find excursions",
+    "citySelection_placeholder": "Enter city"
+
 }

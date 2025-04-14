@@ -1,11 +1,12 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from "./LanguageSelector.jsx";
 import GuideDropdown from "./GuideDropdown";
+import TouristDropdown from "./TouristDropdown";
+import  logo from '../assets/Logo_TourConnect_blue.png';
 
 const NavigationBar = () => {
-  const { t, i18n } = useTranslation();
-  const location = useLocation();
+  const {  i18n } = useTranslation();
 
   const changeLanguage = (lang) => {
     i18n.changeLanguage(lang);
@@ -24,7 +25,11 @@ const NavigationBar = () => {
       {/* Left — Logo */}
       <Link to="/" className="w3-button w3-text-red w3-hover-red">
         <b>
-          <i className="fa fa-map-marker w3-margin-right"></i>TourConnect
+        <img 
+          src={logo} 
+          alt="TourConnect Logo" 
+          style={{ height: '30px', marginRight: '8px', marginBottom: '4px' }} 
+        />TourConnect
         </b>
       </Link>
 
@@ -34,6 +39,7 @@ const NavigationBar = () => {
       </div>
 
       {/* Right — Guide Dropdown (was 'Become a Guide') */}
+      <TouristDropdown />
       <GuideDropdown />
     </div>
   );
