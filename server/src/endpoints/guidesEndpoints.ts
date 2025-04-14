@@ -268,5 +268,34 @@ router.get('/api/guides/:guideID/tours', verifyGuideToken, async (req: Request, 
          res.status(500).json({ error: 'Internal server error' })
        }
      });
+
+     // Удаление гида
+     router.delete("/api/guides/me", verifyGuideToken, async (req: Request, res: any) => {
+       try {
+         const { id: guideID } = req.user as { id: number; email: string; role: string };
+               
+         if (!guideID) {
+           return res.status(401).json({ error: 'Unauthorized' });
+         }
+         
+         const guideRepo = AppDataSource.getRepository(Guides);
+     
+         const guide = await guideRepo.findOne({
+           where: { guideID: guideID },
+         });
+     
+         if (!guide) {
+           return res.status(403).json({ error: "Guide not found or you do not have permission to delete it" });
+         }
+     
+         await guideRepo.remove(guide);
+     
+         return res.status(200).json({ success: true});
+       
+       } catch (error) {
+         console.error("Error while deleting the tour:", error);
+         res.status(500).json({ error: "Internal server error" });
+       }
+     });
     
  export default router;
