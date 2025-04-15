@@ -25,7 +25,7 @@ export class Guides {
     @Column("nvarchar", {length: 50, nullable: true })
     phone: string
 
-    @Column("text") 
+    @Column("nvarchar", {length: 4000}) 
     description: string
 
     @Column("text", {nullable: true })
