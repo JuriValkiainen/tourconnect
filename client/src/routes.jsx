@@ -10,6 +10,7 @@ import GuideDashboard from "./pages/GuideDashboard";
 import ExcursionDetail from "./pages/ExcursionDetail";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
+import VerifyEmail from "./pages/VerifyEmail";
 
 
 const AppRoutes = () => {
@@ -32,6 +33,7 @@ const AppRoutes = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/verify-email" element={<VerifyEmail />} />
     </Routes>
   );
 };

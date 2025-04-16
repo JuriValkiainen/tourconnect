@@ -39,13 +39,13 @@ useEffect(() => {
   if (!excursion) return <p>Excursion not found.</p>;
 
   return (
-    <div className="w3-content" style={{ maxWidth: "1100px" }}>
+    <div className="w3-content" style={{ maxWidth: "1100px", marginBottom: "15px" }}>
       <h2>{excursion.city} - {excursion.type}</h2>
       {excursion.picture && <img src={excursion.picture} alt={excursion.type} style={{ width: "100%" }} />}
       <p>{excursion.description}</p>
       <p>Max people: {excursion.maxPerson}</p>
-      <p>Price: {excursion.prisePerPerson} €</p>
-      <p><strong>Guide:</strong> {excursion.guide ? excursion.guide.name : "Unknown"}</p>
+      <p>Price: {excursion.pricePerPerson} €</p>
+      <p><strong>Guide:</strong> {excursion.guide ? excursion.guide.firstName : "Unknown"}</p>
       
       <button className="w3-button w3-green w3-margin-top" onClick={() => setIsModalOpen(true)}>Book Now</button>
 

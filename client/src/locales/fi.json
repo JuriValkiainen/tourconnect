@@ -13,6 +13,16 @@
     "header_selectCity_date": "Päivämäärä",
     "header_selectCity_city": "Kaupunki",
     "header_selectCity_btn": "Etsi retkiä",
-    "citySelection_placeholder": "Kirjoita kaupunki"
+    "citySelection_placeholder": "Kirjoita kaupunki",
+    "footer_slogan": "Löydämme oppaita, luomme vaikutelmia!",
+    "footer_tourists_title": "Matkailijoille",
+    "footer_tourists_search": "Etsi retkiä",
+    "footer_tourists_reviews": "Arvostelut",
+    "footer_tourists_blog": "Matkablogi",
+    "footer_guides_title": "Oppaille",
+    "footer_guides_become": "Ryhdy oppaaksi",
+    "footer_guides_profile": "Henkilökohtainen tili",
+    "footer_guides_support": "Tukea",
+    "footer_bottom": "Tietosuojakäytäntö"
 }
 

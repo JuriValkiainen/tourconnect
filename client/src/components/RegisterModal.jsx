@@ -43,6 +43,7 @@ const RegisterModal = ({ isOpen, closeModal, excursion, selectedDate }) => {
         touristID = decodedToken.id;
       }
       console.log("Получили touristID из токена пользователя: ", touristID);
+      console.log("Экскурсия переданная в модалку: ", excursion);
       // 3. Создание брони
       const bookingData = {
         tourID: excursion.tourID,
@@ -143,7 +144,8 @@ const RegisterModal = ({ isOpen, closeModal, excursion, selectedDate }) => {
                   onClick={() => navigate("/login")}
                   className="w3-button w3-border w3-light-grey w3-round-large w3-block"
                 >
-                  <FaSignInAlt /> Already registered?
+                  <FaSignInAlt style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '8px' }} />
+                  <span style={{ display: 'inline-block', verticalAlign: 'middle' }}/>Already registered?
                 </button>
               </div>
             </div>

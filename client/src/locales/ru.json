@@ -13,6 +13,15 @@
     "header_selectCity_date": "Дата",
     "header_selectCity_city": "Город",
     "header_selectCity_btn": "Найти экскурсии",
-    "citySelection_placeholder": "Введите город"
-
+    "citySelection_placeholder": "Введите город",
+    "footer_slogan": "Находим гидов, создаём впечатления!",
+    "footer_tourists_title": "Туристам",
+    "footer_tourists_search": "Поиск туров",
+    "footer_tourists_reviews": "Отзывы",
+    "footer_tourists_blog": "Блог путешествий",
+    "footer_guides_title": "Гидам",
+    "footer_guides_become": "Стать гидом",
+    "footer_guides_profile": "Личный кабинет",
+    "footer_guides_support": "Поддержка",
+    "footer_bottom": "Политика конфиденциальности"
 }

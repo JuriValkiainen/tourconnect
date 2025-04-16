@@ -22,8 +22,12 @@ const Profile = () => {
         },
       })
       .then((response) => {
+        console.log("Response data as user in Profile:", response.data);
         setUser(response.data);
         setLoading(false);
+
+        console.log("Токен перед запросом бронирований:", token);
+        console.log("ID пользователя для запроса бронирований:", response.data.touristID);
 
         // Загружаем бронирования после получения ID
       return axios.get(`http://localhost:5001/api/tourists/${response.data.touristID}/booking`, {
@@ -33,6 +37,7 @@ const Profile = () => {
       });
     })
     .then((response) => {
+      console.log("Response data as bookings in Profile:", response.data);
       setBookings(response.data);
       })
       .catch((error) => {
@@ -56,8 +61,9 @@ const Profile = () => {
       <h2>🗂️ Profile Info:</h2>
       <p>First Name: {user.firstName} </p>
       <p>Last Name: {user.lastName} </p>
-      <p>Email: {user.email}</p>
       <p>Phone: {user.phone}</p>
+      <p>Email: {user.email}</p>
+      <p>Email is verified: {user.isVerified ? '✅' : '❌'}</p>
       <hr />
       {bookings && bookings.length > 0 && (
         <div className="w3-margin-top">

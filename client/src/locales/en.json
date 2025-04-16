@@ -13,6 +13,16 @@
     "header_selectCity_date": "Date",
     "header_selectCity_city": "City",
     "header_selectCity_btn": "Find excursions",
-    "citySelection_placeholder": "Enter city"
+    "citySelection_placeholder": "Enter city",
+    "footer_slogan": "We find guides, create impressions!",
+    "footer_tourists_title": "For tourists",
+    "footer_tourists_search": "Search tours",
+    "footer_tourists_reviews": "Reviews",
+    "footer_tourists_blog": "Travel Blog",
+    "footer_guides_title": "For guides",
+    "footer_guides_become": "Become a guide",
+    "footer_guides_profile": "Personal account",
+    "footer_guides_support": "Support",
+    "footer_bottom": "Privacy Policy"
 
 }

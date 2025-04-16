@@ -55,6 +55,7 @@ export function  verifyGuideToken (req: Request, res: any, next : NextFunction) 
               };  
 export function  verifyTouristToken (req: Request, res: any, next : NextFunction) { 
   const token = req.header ('Authorization')?.replace("Bearer ", "").trim(); 
+  console.log("сработал мидлвейр и токен в нем: ",token);
       if (!token) {
            return res.status(401).json ( { error : ' Access denied ' } ) ; 
            }
@@ -72,7 +73,7 @@ export function  verifyTouristToken (req: Request, res: any, next : NextFunction
             email: decoded['email'],
             role: decoded['role']
             }
-
+            console.log("req.user в мидлвейре проверки токена: ", req.user);
             next();
               }    
           
