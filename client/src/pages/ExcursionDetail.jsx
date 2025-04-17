@@ -25,7 +25,6 @@ const ExcursionDetail = () => {
       });
   }, [id]);
 
-// В компоненте ExcursionDetail
 useEffect(() => {
   if (isModalOpen) {
     document.body.style.overflow = 'hidden';

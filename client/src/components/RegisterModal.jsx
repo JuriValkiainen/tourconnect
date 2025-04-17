@@ -81,11 +81,11 @@ const RegisterModal = ({ isOpen, closeModal, excursion, selectedDate }) => {
         className="w3-modal-content w3-card-4 w3-animate-zoom"
         style={{ maxWidth: "600px" }}
       >
-        <div className="w3-container">
+        <div className="w3-container w3-padding-16">
           <span onClick={closeModal} className="w3-button w3-display-topright">
             &times;
           </span>
-          <h2>Register</h2>
+          <h2>Register as traveller</h2>
 
           {message && <p className="w3-text-green">{message}</p>}
 
