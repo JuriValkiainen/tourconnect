@@ -22,7 +22,7 @@ const Footer = () => {
               <img 
                 src={logo} 
                 alt="TourConnect Logo" 
-                style={{ height: '30px', marginRight: '8px', verticalAlign: 'middle' }} 
+                style={{ height: '30px', marginRight: '8px', verticalAlign: 'middle', borderRadius: '50%' }} 
               />
               <span style={{ color: "#ff5252", verticalAlign: 'middle' }}>TourConnect</span> {/* Brand color */}
               </b>
@@ -43,7 +43,7 @@ const Footer = () => {
           <ul className="w3-ul" style={{ border: "none" }}>
             <li>
             <RouterLink 
-              to="/tours" 
+              to="/" 
               className="w3-hover-text-red" 
               style={{ color: "white" }}
             >

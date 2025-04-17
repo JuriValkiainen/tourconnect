@@ -48,68 +48,105 @@ router.post("/register", async (req: Request, res: any) => {
             return res.status(400).json({ error: "All fields are required" });
           }
 
-          const existingUserE = await AppDataSource.getRepository(Tourists).findOne({ where: { email: reqData.email } });
+          const touristRepo = AppDataSource.getRepository(Tourists);
+
+          const existingUserE = await touristRepo.findOne({ where: { email: reqData.email } });
           if (existingUserE) {
-            return res.status(400).json({ error: "A user with this email is already registered" });
+            return res.status(400).json({ error: "Email already registered" });
           }
-          const existingUserP = await AppDataSource.getRepository(Tourists).findOne({ where: { phone: reqData.phone } });
+
+          const existingUserP = await touristRepo.findOne({ where: { phone: reqData.phone } });
           if (existingUserP) {
-            return res.status(400).json({ error: "A user with this phone is already registered" });
+            return res.status(400).json({ error: "Phone already registered" });
           }
+
 
     const hashedPassword = await bcrypt.hash(reqData.password, 10);
     const verificationToken = generateVerificationToken();
 
-    const newTourist = await AppDataSource.getRepository(Tourists).create({
+    const newTourist = touristRepo.create({
       firstName: reqData.firstName,
       lastName: reqData.lastName,
       password: hashedPassword,
       phone: reqData.phone,
       email: reqData.email,
       isVerified: false,
-      verificationToken: verificationToken,
+      verificationToken,
     });
 
-    const result = await AppDataSource.getRepository(Tourists).save(newTourist)
-
-    const jwtSecret = process.env.JWT_SECRET;
-    if (!jwtSecret) {
-        throw new Error("JWT_SECRET is not defined in environment variables");
-      }
+    const result = await touristRepo.save(newTourist);
 
     const token = jwt.sign(
-      { id: result.touristID, 
-        email: result.email, 
-        role: "tourist" },
-        jwtSecret
+      { id: result.touristID, email: result.email, role: "tourist" },
+      process.env.JWT_SECRET!,
+      { expiresIn: "1h" }
     );
 
-    // Отправка письма с верификацией
-    const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
+    res.status(201).json({
+      message: 'Регистрация успешна. Вы вошли в аккаунт.',
+      token,
+    });
+
+  } catch (error) {
+    console.error("Registration error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+})
+
+//--Запрос на повторную верификацию (по кнопке на клиенте)
+router.post("/verify-request", verifyTouristToken, async (req: Request, res: any) => {
+  try {
+    const { id: touristID } = req.user as { id: number; email: string };
+
+    const touristRepo = AppDataSource.getRepository(Tourists);
+    const tourist = await touristRepo.findOne({ where: { touristID } });
+
+    if (!tourist) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (tourist.isVerified) {
+      return res.status(400).json({ error: "Email already verified" });
+    }
+
+    // Обновляем или оставляем текущий токен
+    if (!tourist.verificationToken) {
+      tourist.verificationToken = generateVerificationToken();
+      await touristRepo.save(tourist);
+    }
+
+    const now = new Date();
+    if (tourist.lastVerificationEmailSent && (now.getTime() - tourist.lastVerificationEmailSent.getTime()) < 15 * 60 * 1000) {
+      return res.status(429).json({ error: "Письмо уже было отправлено недавно. Пожалуйста, подождите." });
+    }
+
+    tourist.lastVerificationEmailSent = now;
+    await touristRepo.save(tourist);
+
+    const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${tourist.verificationToken}`;
+
     const mailOptions = {
-        from: process.env.GMAIL_EMAIL,
-        to: reqData.email,
-        subject: 'Подтверждение адреса электронной почты',
-        html: `<p>Пожалуйста, перейдите по <a href="${verificationLink}">этой ссылке</a> для подтверждения вашего адреса электронной почты.</p>`,
+      from: process.env.GMAIL_EMAIL,
+      to: tourist.email,
+      subject: 'Подтверждение электронной почты',
+      html: `<p>Для подтверждения email нажмите <a href="${verificationLink}">здесь</a>.</p>`,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-          console.error('Ошибка при отправке письма верификации:', error);
-          // TODO: Рассмотреть стратегию обработки ошибки отправки (например, повторная попытка, логирование, уведомление администратора)
+        console.error('Ошибка при отправке письма:', error);
+        return res.status(500).json({ error: "Ошибка при отправке письма" });
       } else {
-          console.log('Письмо верификации отправлено:', info.response);
+        console.log('Письмо отправлено:', info.response);
+        res.status(200).json({ message: "Письмо с подтверждением отправлено на почту" });
       }
-  });
-   
-      res.status(201).json({ message: 'Регистрация прошла успешно. Пожалуйста, проверьте свою электронную почту для подтверждения.', token});
-   
-    }
-    catch (error) {
-        console.error("Registration error:", error);
-        res.status(500).json({ error: "Internal server error" });
-    }
-})
+    });
+
+  } catch (error) {
+    console.error("Ошибка верификации запроса:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 /**
  * @route GET /api/auth/verify-email
@@ -216,7 +253,8 @@ router.get('/api/tourists/me', verifyTouristToken, async (req: Request, res: any
       firstName: tourist.firstName, 
       lastName: tourist.lastName, 
       phone: tourist.phone, 
-      email: tourist.email
+      email: tourist.email,
+      isVerified: tourist.isVerified,
       }
       console.log('profile is created in endpoint /api/tourists/me: ', profile);
     res.json(profile);
@@ -263,5 +301,6 @@ router.get('/api/tourists/booking', verifyTouristToken, async (req: Request, res
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 export default router;

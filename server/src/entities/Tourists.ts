@@ -1,5 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany,
-    JoinColumn } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm"
     
 import { Reservations } from "./Reservations"
 import { Reviews } from "./Reviews"
@@ -30,6 +29,9 @@ export class Tourists {
 
     @Column("varchar", {length: 512, nullable: true })
     verificationToken: string
+
+    @Column({ type: "timestamp", nullable: true })
+    lastVerificationEmailSent?: Date;
     
     @OneToMany(() => Reservations, (reserv) => reserv.tourist)
     reservations: Reservations[]
