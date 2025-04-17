@@ -93,7 +93,7 @@ const Profile = () => {
   return (
     <>
       <div className="w3-container">
-        <div className="w3-content" style={{ maxWidth: "1100px" }}>
+        <div className="w3-content" style={{ maxWidth: "768px" }}>
           <h2>🗂️ Profile Info:</h2>
           <p>First Name: {user.firstName} </p>
           <p>Last Name: {user.lastName} </p>
