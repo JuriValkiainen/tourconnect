@@ -10,7 +10,17 @@ const Profile = () => {
   const navigate = useNavigate();
   const [bookings, setBookings] = useState([]);
   const [emailMessage, setEmailMessage] = useState("");
+  const [emailError, setEmailError] = useState("");
+
   const [sendingEmail, setSendingEmail] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+
+  useEffect(() => {
+    if (cooldown > 0) {
+      const timer = setTimeout(() => setCooldown(cooldown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [cooldown]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -25,15 +35,15 @@ const Profile = () => {
         },
       })
       .then((response) => {
-        console.log("Response data as user in Profile:", response.data);
+        // console.log("Response data as user in Profile:", response.data);
         setUser(response.data);
         setLoading(false);
 
-        console.log("Токен перед запросом бронирований:", token);
-        console.log(
-          "ID пользователя для запроса бронирований:",
-          response.data.touristID
-        );
+        // console.log("Токен перед запросом бронирований:", token);
+        // console.log(
+        //   "ID пользователя для запроса бронирований:",
+        //   response.data.touristID
+        // );
 
         // Загружаем бронирования после получения ID
         return axios.get(
@@ -46,7 +56,7 @@ const Profile = () => {
         );
       })
       .then((response) => {
-        console.log("Response data as bookings in Profile:", response.data);
+        // console.log("Response data as bookings in Profile:", response.data);
         setBookings(response.data);
       })
       .catch((error) => {
@@ -63,8 +73,10 @@ const Profile = () => {
   const sendVerificationEmail = async () => {
     setSendingEmail(true);
     setEmailMessage("");
-    const token = localStorage.getItem("token");
+    setEmailError("");
 
+    const token = localStorage.getItem("token");
+    
     try {
       const response = await axios.post(
         "http://localhost:5001/verify-request",
@@ -75,10 +87,13 @@ const Profile = () => {
           },
         }
       );
-      console.log("Verification email sent successfully:", response.data);
+      console.log("✅ Verification email sent successfully:", response.data);
+
       setEmailMessage("📧 Verification email sent! Check your inbox.");
+      setCooldown(60); // 1 минута
     } catch (err) {
-      setEmailMessage(
+      console.error("❌ Ошибка при отправке письма:", err);
+      setEmailError(
         err.response?.data?.message || "❌ Failed to send verification email"
       );
     } finally {
@@ -106,12 +121,19 @@ const Profile = () => {
               <button
                 onClick={sendVerificationEmail}
                 className="w3-button w3-orange w3-round"
-                disabled={sendingEmail}
+                disabled={sendingEmail || cooldown > 0}
               >
-                {sendingEmail ? "Sending..." : "Verify Email"}
+                {sendingEmail
+                ? "Sending..."
+                : cooldown > 0
+                ? `Try again in ${cooldown}s`
+                : "Verify Email"}
               </button>
+              {/* Успешное сообщение */}
               {emailMessage && <p className="w3-text-green">{emailMessage}</p>}
-            </div>
+            {/* Ошибки */}
+            {emailError && <p className="w3-text-red">{emailError}</p>}
+          </div>
           )}
           <hr />
           {bookings && bookings.length > 0 && (

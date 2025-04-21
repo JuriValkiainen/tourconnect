@@ -11,6 +11,8 @@ const VerifyEmail = () => {
     if (token) {
       const verifyToken = async () => {
         try {
+          // Выполните запрос на сервер для подтверждения токена
+          console.log("Проверяем токен в ф-ии VerifyEmail:", token);
           const response = await fetch(`/api/auth/verify-email?token=${token}`);
           const data = await response.json();
 
@@ -18,7 +20,7 @@ const VerifyEmail = () => {
             setVerificationStatus('Электронная почта успешно подтверждена!');
             // Опционально: перенаправить пользователя через несколько секунд
             setTimeout(() => {
-              navigate('/login'); // Или на другую страницу, например, '/profile'
+              navigate('/profile'); // Или на другую страницу, например, '/profile'
             }, 3000);
           } else {
             setVerificationStatus(`Ошибка подтверждения: ${data.error || 'Неверный токен'}`);

@@ -30,7 +30,7 @@ export class Tourists {
     @Column("varchar", {length: 512, nullable: true })
     verificationToken: string
 
-    @Column({ type: "timestamp", nullable: true })
+    @Column({ type: "datetime", nullable: true })
     lastVerificationEmailSent?: Date;
     
     @OneToMany(() => Reservations, (reserv) => reserv.tourist)

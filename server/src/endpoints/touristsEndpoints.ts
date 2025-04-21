@@ -6,18 +6,36 @@ import bcrypt from "bcryptjs";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { verifyTouristToken } from '../server';
 import nodemailer from 'nodemailer';
+import type SMTPTransport from 'nodemailer/lib/smtp-transport';
 import crypto from 'crypto';
 
 const router = Router();
 
-// Настройка nodemailer (заменить на данные Gmail в .env файле)
-const transporter = nodemailer.createTransport({
-  service: 'Gmail',
-  auth: {
-      user: process.env.GMAIL_EMAIL,
-      pass: process.env.GMAIL_PASSWORD,
-  },
+// Настройка nodemailer для отправки электронной почты
+console.log("EMAIL CONFIG:", {
+  host: process.env.EMAIL_HOST,
+  port: process.env.EMAIL_PORT,
+  user: process.env.EMAIL_USER,
+  pass: process.env.EMAIL_PASS,
 });
+// const transporter = nodemailer.createTransport({
+//   host: process.env.EMAIL_HOST,
+//   port: Number(process.env.EMAIL_PORT),
+//   secure: false, // Mailtrap использует незащищенное соединение по порту 2525
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS,
+//   },
+// } as SMTPTransport.Options);
+// Looking to send emails in production? Check out our Email API/SMTP product!
+const transporter = nodemailer.createTransport({
+  host: "sandbox.smtp.mailtrap.io",
+  port: 2525,
+  auth: {
+    user: "fad364f84916f0",
+    pass: "a33f8c8ffb10ea"
+  }
+}); 
 
 // Функция для генерации случайного токена
 const generateVerificationToken = () => {
@@ -96,11 +114,12 @@ router.post("/register", async (req: Request, res: any) => {
 //--Запрос на повторную верификацию (по кнопке на клиенте)
 router.post("/verify-request", verifyTouristToken, async (req: Request, res: any) => {
   try {
+    console.log("verify-request endpoint called", req.user);
     const { id: touristID } = req.user as { id: number; email: string };
 
     const touristRepo = AppDataSource.getRepository(Tourists);
     const tourist = await touristRepo.findOne({ where: { touristID } });
-
+    console.log("tourist найден в запросе на верификацию: ", tourist);
     if (!tourist) {
       return res.status(404).json({ error: "User not found" });
     }
@@ -116,7 +135,9 @@ router.post("/verify-request", verifyTouristToken, async (req: Request, res: any
     }
 
     const now = new Date();
-    if (tourist.lastVerificationEmailSent && (now.getTime() - tourist.lastVerificationEmailSent.getTime()) < 15 * 60 * 1000) {
+    console.log('lastVerificationEmailSent у найденного туриста:', tourist.lastVerificationEmailSent);
+    console.log('typeof lastVerificationEmailSent:', typeof tourist.lastVerificationEmailSent);
+    if (tourist.lastVerificationEmailSent && (now.getTime() - new Date(tourist.lastVerificationEmailSent).getTime()) < 1 * 60 * 1000) {
       return res.status(429).json({ error: "Письмо уже было отправлено недавно. Пожалуйста, подождите." });
     }
 
@@ -126,12 +147,12 @@ router.post("/verify-request", verifyTouristToken, async (req: Request, res: any
     const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${tourist.verificationToken}`;
 
     const mailOptions = {
-      from: process.env.GMAIL_EMAIL,
+      from: `"TourConnect" <${process.env.EMAIL_USER}>`,
       to: tourist.email,
       subject: 'Подтверждение электронной почты',
       html: `<p>Для подтверждения email нажмите <a href="${verificationLink}">здесь</a>.</p>`,
     };
-
+    console.log("Отправка письма на почту по эндпойнту /verify-request:", mailOptions);
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.error('Ошибка при отправке письма:', error);
@@ -172,9 +193,9 @@ router.get("/verify-email", async (req: Request, res: any) => {
       await AppDataSource.getRepository(Tourists).save(tourist);
 
       // Перенаправление пользователя на страницу успешной верификации на фронтенде
-      res.redirect(`${process.env.FRONTEND_URL}/email-verified`);
+      // res.redirect(`${process.env.FRONTEND_URL}/email-verified`);
       // Или можно отправить JSON-ответ:
-      // res.status(200).json({ message: "Email успешно верифицирован" });
+      res.status(200).json({ message: "Email успешно верифицирован" });
 
   } catch (error) {
       console.error("Ошибка верификации email:", error);
