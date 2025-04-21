@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const VerifyEmail = () => {
   const [searchParams] = useSearchParams();
@@ -8,22 +9,25 @@ const VerifyEmail = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("URL с токеном:", window.location.href);
+  }, []);
+
+  useEffect(() => {
     if (token) {
       const verifyToken = async () => {
         try {
-          // Выполните запрос на сервер для подтверждения токена
           console.log("Проверяем токен в ф-ии VerifyEmail:", token);
-          const response = await fetch(`/api/auth/verify-email?token=${token}`);
-          const data = await response.json();
-
-          if (response.ok) {
+          const response = await axios.get('http://localhost:5001/verify-email', {
+            params: { token }
+          });
+      
+          if (response.status === 200) {
             setVerificationStatus('Электронная почта успешно подтверждена!');
-            // Опционально: перенаправить пользователя через несколько секунд
             setTimeout(() => {
-              navigate('/profile'); // Или на другую страницу, например, '/profile'
+              navigate('/profile');
             }, 3000);
           } else {
-            setVerificationStatus(`Ошибка подтверждения: ${data.error || 'Неверный токен'}`);
+            setVerificationStatus(`Ошибка подтверждения: ${response.data.error || 'Неверный токен'}`);
           }
         } catch (error) {
           console.error('Ошибка при верификации email:', error);
