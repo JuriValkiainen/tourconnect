@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next"
 import axios from "axios";
 import Newsletter from "../components/Newsletter";
 import HeroImage from "../components/HeroImage";
@@ -10,6 +11,7 @@ const Login = () => {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,8 +49,8 @@ const Login = () => {
 
       {/* <!-- Page Title --> */}
       <div className="w3-container w3-margin-top">
-        <h2 className="w3-center w3-margin-top">Traveller Login</h2>
-        <p>Log in to your account.</p>
+        <h2 className="w3-center w3-margin-top">{t("login_title")}</h2>
+        <p>{t("login_text")}</p>
       </div>
       {/* <!-- Login Form --> */}
       <div
@@ -57,7 +59,7 @@ const Login = () => {
       >
         <div className="w3-card w3-white w3-padding-large w3-round-large w3-margin-top w3-margin-bottom w3-pad">
           <form onSubmit={handleSubmit}>
-          <label className="w3-text-black">Email</label>
+          <label className="w3-text-black">{t("login_email")}</label>
             <input
               type="email"
               placeholder="Email"
@@ -66,7 +68,7 @@ const Login = () => {
               required
               className="w3-input w3-border w3-round"
             />
-            <label className="w3-text-black">Password</label>
+            <label className="w3-text-black">{t("login_password")}</label>
             <input
               type="password"
               placeholder="Password"
@@ -79,7 +81,7 @@ const Login = () => {
             <button type="submit"
             className="w3-button w3-blue w3-round w3-margin-top"
             disabled={loading}>
-              {loading ? "Logging in..." : "Login"}
+              {loading ? t("login_btn_loading") : t("login_btn_login")}
             </button>
             </div>
           </form>
