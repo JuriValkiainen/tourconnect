@@ -43,6 +43,7 @@ const RegisterModal = ({ isOpen, closeModal, excursion, selectedDate }) => {
         touristID = decodedToken.id;
       }
       console.log("Получили touristID из токена пользователя: ", touristID);
+      console.log("Экскурсия переданная в модалку: ", excursion);
       // 3. Создание брони
       const bookingData = {
         tourID: excursion.tourID,
@@ -80,11 +81,11 @@ const RegisterModal = ({ isOpen, closeModal, excursion, selectedDate }) => {
         className="w3-modal-content w3-card-4 w3-animate-zoom"
         style={{ maxWidth: "600px" }}
       >
-        <div className="w3-container">
+        <div className="w3-container w3-padding-16">
           <span onClick={closeModal} className="w3-button w3-display-topright">
             &times;
           </span>
-          <h2>Register</h2>
+          <h2>Register as traveller</h2>
 
           {message && <p className="w3-text-green">{message}</p>}
 
@@ -143,7 +144,8 @@ const RegisterModal = ({ isOpen, closeModal, excursion, selectedDate }) => {
                   onClick={() => navigate("/login")}
                   className="w3-button w3-border w3-light-grey w3-round-large w3-block"
                 >
-                  <FaSignInAlt /> Already registered?
+                  <FaSignInAlt style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '8px' }} />
+                  <span style={{ display: 'inline-block', verticalAlign: 'middle' }}/>Already registered?
                 </button>
               </div>
             </div>
