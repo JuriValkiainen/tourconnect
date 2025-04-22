@@ -15,7 +15,7 @@ function App() {
         <NavigationBar />
         {showHeader && <Header />}
         <main>
-          <AppRoutes /> {/* Здесь рендерится текущая страница */}
+          <AppRoutes /> {/* The current page is rendered here */}
         </main>
         <Footer />
       </div>

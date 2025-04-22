@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next"
 import axios from "axios";
+import Newsletter from "../components/Newsletter";
+import HeroImage from "../components/HeroImage";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -8,21 +11,25 @@ const Login = () => {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  
+  const { t } = useTranslation();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
     try {
-      const response = await axios.post("http://localhost:5001/tourists/login", { 
-        email, 
-        password 
-        });
-        const { token } = response.data;
+      const response = await axios.post(
+        "http://localhost:5001/tourists/login",
+        {
+          email,
+          password,
+        }
+      );
+      const { token } = response.data;
 
-        // Сохраняем токен в localStorage
-        localStorage.setItem("token", token);
-      
+      // Сохраняем токен в localStorage
+      localStorage.setItem("token", token);
+
       setMessage("Login successful!");
 
       // 4. Редирект на страницу профиля через пару секунд
@@ -37,35 +44,53 @@ const Login = () => {
     }
   };
   return (
-      <>
-        <h3>Login</h3>
-        <p>Log in to your account.</p>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <button type="submit" disabled={loading}>
-            {loading ? "Logging in..." : "Login"}
-          </button>
-        </form>
-        {message && <p>{message}</p>}
-      </>
-    );
-  };
+    <>
+      <HeroImage />
 
-  export default Login;
+      {/* <!-- Page Title --> */}
+      <div className="w3-container w3-margin-top">
+        <h2 className="w3-center w3-margin-top">{t("login_title")}</h2>
+        <p>{t("login_text")}</p>
+      </div>
+      {/* <!-- Login Form --> */}
+      <div
+        className="w3-container"
+        style={{ maxWidth: "700px", margin: "auto" }}
+      >
+        <div className="w3-card w3-white w3-padding-large w3-round-large w3-margin-top w3-margin-bottom w3-pad">
+          <form onSubmit={handleSubmit}>
+          <label className="w3-text-black">{t("login_email")}</label>
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w3-input w3-border w3-round"
+            />
+            <label className="w3-text-black">{t("login_password")}</label>
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w3-input w3-border w3-round"
+            />
+            <div className="w3-center w3-margin-top">
+            <button type="submit"
+            className="w3-button w3-blue w3-round w3-margin-top"
+            disabled={loading}>
+              {loading ? t("login_btn_loading") : t("login_btn_login")}
+            </button>
+            </div>
+          </form>
+          {message && <p>{message}</p>}
+        </div>
+      </div>
+        <Newsletter />
+    </>
+  );
+};
 
-
-
-
+export default Login;

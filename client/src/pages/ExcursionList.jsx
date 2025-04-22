@@ -46,24 +46,36 @@ const ExcursionList = () => {
         <p>Travel with us and see city at its finest.</p>
         </div>
         {/* <!-- Excursion Cards --> */}
-        <div className="w3-row-padding">
+        <div className="excursions-grid">
           {excursions.length > 0 ? (
             excursions.map((tour) => (
-              <div key={tour.tourID} className="w3-half w3-margin-bottom">
-                {tour.picture && <img src={tour.picture} alt={tour.type} style={{ width: "100%" }} />}
-                <div className="w3-container w3-white">
+              <div key={tour.tourID} className="excursion-card">
+                {tour.picture && (
+                  <img 
+                    src={tour.picture} 
+                    alt={tour.type} 
+                    className="excursion-image"
+                  />
+                )}
+                <div className="excursion-content">
                   <h4>Type of excursion: {tour.type}</h4>
-                  <p>{tour.description.split(" ").slice(0, 20).join(" ")}...</p>
-                  <p>Maximum people: {tour.maxPerson}</p>
+                  <p>{tour.description.split(" ").slice(0, 30).join(" ")}...</p>
+                  {/* <p>Maximum people: {tour.maxPerson}</p> */}
                   
                   <Link 
-                  to={`/excursions/${tour.tourID}`}
-                  state={{ date }} className="w3-button w3-margin-bottom">Find out more</Link>
+                    to={`/excursions/${tour.tourID}`}
+                    state={{ date }} 
+                    className="excursion-button"
+                  >
+                    Find out more
+                  </Link>
                 </div>
               </div>
             ))
           ) : (
-            <p>No excursions available for {city} on {date}.</p>
+            <div className="no-excursions-message">
+              No excursions available for {city} on {date}.
+            </div>
           )}
         </div>
 

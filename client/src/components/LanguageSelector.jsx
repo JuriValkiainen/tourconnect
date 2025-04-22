@@ -42,6 +42,7 @@ const styles = {
     display: 'flex',
     gap: '10px',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   button: {
     width: `${size}px`,
