@@ -131,7 +131,8 @@ const GuideDashboard = () => {
   };
 
   const handleDeleteProfile = async () => {
-    if (!window.confirm("Are you sure you want to delete your profile? This action cannot be undone.")) return;
+    const confirmed = window.confirm("Are you sure you want to delete your prifile? This action cannot be undone.");
+    if (!confirmed) return;
 
     try {
       const token = localStorage.getItem("guideToken");
@@ -139,7 +140,8 @@ const GuideDashboard = () => {
 
       await axios.delete("/api/guides/me", config);
       localStorage.removeItem("guideToken");
-      window.location.href = "/";
+      alert("Your profile has been successfully deleted.");
+      navigate("/");
     } catch (err) {
       console.error("Failed to delete profile:", err);
       alert("Failed to delete profile. This feature may not be implemented yet.");
@@ -335,9 +337,33 @@ const GuideDashboard = () => {
           </div>
         );
       case "Bookings":
-        return <div className="w3-container"><h2>Bookings</h2></div>;
-      default:
-        return null;
+        return (
+          <div className="w3-container">
+            <h2>Bookings</h2>
+
+            {bookings.length > 0 ? (
+              <div className="w3-row-padding">
+                {bookings.map((booking) => (
+                  <div key={booking.reserviD} className="w3-col s12 m6 14 w3-margin-bottom">
+                    <div className="w3-card w3-padding w3-white w3-round-large">
+                      <h4 className="w3-text-dark-grey">
+                        {booking.tours.city}
+                      </h4>
+                      <p><strong>Date:</strong> {new Date(booking.date).toLocaleDateString()}</p>
+                      <p><strong>Tourist:</strong> {booking.tourist.firstName} {booking.touristlastName}</p>
+                      <p><strong>Email:</strong> {booking.tourist.email}</p>
+                      <p><strong>Phone:</strong> {booking.tourist.phone}</p>
+                      <p><strong>People:</strong> {booking.numberOfPeople}</p>
+                      <p><strong>Sum:</strong> €{booking.summa}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p>No bookings found.</p>          
+            )}
+          </div>
+        );
     }
   };
 
