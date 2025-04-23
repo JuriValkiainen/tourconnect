@@ -1,9 +1,11 @@
 import { AppDataSource } from "../data-source";
 import { Guides } from "../entities/Guides";
+import { Languages, LangTypes } from '../entities/Languages';
 import { Router, Request, Response } from 'express';
 import bcrypt from "bcryptjs";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { verifyGuideToken } from '../server'
+import { verifyGuideToken } from '../server';
+
 
 const router = Router();
  
@@ -17,15 +19,23 @@ interface CreateGuideRegisterRequest
     phone: string
     description: string
     photo: string
+    languages: LangTypes[]
     }
 router.post("/guides/register", async (req: Request, res: any) => {
    
     try {
         const reqData = req.body as CreateGuideRegisterRequest
         
-        if (!reqData.firstName || !reqData.lastName || !reqData.password|| !reqData.phone|| !reqData.description|| !reqData.email) {
-            return res.status(400).json({ error: "All fields are required" });
-          }
+        const isValidLang = (value: unknown): value is LangTypes =>
+          Object.values(LangTypes).includes(value as LangTypes);
+    
+        if (!reqData.firstName || !reqData.lastName || !reqData.phone|| 
+          !reqData.description|| !reqData.email|| !Array.isArray(reqData.languages) ||
+          reqData.languages.length === 0 ||
+          !reqData.languages.every(isValidLang)) {
+            return res.status(400).json({ error: "All fields are required and languages must be valid" });
+          }  
+          
           const existingUserE = await AppDataSource.getRepository(Guides).findOne({ where: { email: reqData.email } });
           if (existingUserE) {
             return res.status(400).json({ error: "A user with this email is already registered" });
@@ -38,16 +48,27 @@ router.post("/guides/register", async (req: Request, res: any) => {
 
     const hashedPassword = await bcrypt.hash(reqData.password, 10);
         
-    const newGuides = await AppDataSource.getRepository(Guides).create()
-    newGuides.firstName = reqData.firstName
-    newGuides.lastName = reqData.lastName
-    newGuides.password = hashedPassword
-    newGuides.phone = reqData.phone
-    newGuides.description = reqData.description
-    newGuides.photo = reqData.photo
-    newGuides.email = reqData.email
+    const guideRepo = AppDataSource.getRepository(Guides);
+    const newGuide = guideRepo.create({
+      firstName: reqData.firstName,
+      lastName: reqData.lastName,
+      password: hashedPassword,
+      phone: reqData.phone,
+      description: reqData.description,
+      photo: reqData.photo,
+      email: reqData.email
+    });
+    const savedGuide = await guideRepo.save(newGuide);
 
-    const result = await AppDataSource.getRepository(Guides).save(newGuides)
+const languageRepo = AppDataSource.getRepository(Languages);
+const languageEntities = reqData.languages.map((lang: LangTypes) => {
+  const langEntity = new Languages();
+  langEntity.language = lang;
+  langEntity.guide = savedGuide;
+  return langEntity;
+});
+
+await languageRepo.save(languageEntities);
     
     const jwtSecret = process.env.JWT_SECRET;
     if (!jwtSecret) {
@@ -55,12 +76,11 @@ router.post("/guides/register", async (req: Request, res: any) => {
       }
 
       const token = jwt.sign(
-        { id: result.guideID, email: result.email, role: "guide" },
+        { id: savedGuide.guideID, email: savedGuide.email, role: "guide" },
         jwtSecret
       );
    
       res.status(201).json({token});
-   
     }
     
     catch (error) {
@@ -68,6 +88,12 @@ router.post("/guides/register", async (req: Request, res: any) => {
         res.status(500).json({ error: "Internal server error" });
     }
 })
+
+// Получить список доступных языков
+router.get("/languages", async (req: Request, res: Response) => {
+  const languages = Object.values(LangTypes);
+  res.json(languages); 
+});
 
 //Аутентификация гида
 interface CreateGuideLoginRequest
@@ -116,7 +142,6 @@ interface CreateGuideLoginRequest
 router.get('/api/guides/me', verifyGuideToken, async (req: Request, res: any) => {
   try {
 
-
     if (!req.user) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
@@ -129,21 +154,26 @@ router.get('/api/guides/me', verifyGuideToken, async (req: Request, res: any) =>
     const guideRepo = AppDataSource.getRepository(Guides);
 
     const guide = await guideRepo.findOne({where: { guideID },
-    //relations: ['tours', 
-     // 'lang', 'reviews'] 
+    relations: [
+    // 'tours', 
+      'lang', 
+     // 'reviews'
+     ] 
     })
     if (!guide) {
       return res.status(404).json({ error: 'Guide not found' });
     }
 
-    const profil = {Name: guide.firstName, 
-      LastName: guide.lastName, 
-      Phone: guide.phone, 
+    const profile = {name: guide.firstName, 
+      lastName: guide.lastName, 
+      phone: guide.phone, 
       email: guide.email, 
       description: guide.description, 
-      photo: guide.photo}
+      photo: guide.photo,
+      languages: guide.lang.map(l => l.language)
+    }
 
-    res.json(profil);
+    return res.json(profile);
 
 } catch (error) {
   console.error('Error fetching guide:', error);
@@ -162,14 +192,20 @@ try {
     return res.status(401).json({ error: 'Unauthorized' });
   }
     const reqData = req.body as UpdateGuideRegisterRequest
-    
-    if (!reqData.firstName || !reqData.lastName || !reqData.phone|| !reqData.description|| !reqData.email) {
-        return res.status(400).json({ error: "All fields are required" });
+    const isValidLang = (value: unknown): value is LangTypes =>
+      Object.values(LangTypes).includes(value as LangTypes);
+
+    if (!reqData.firstName || !reqData.lastName || !reqData.phone|| 
+      !reqData.description|| !reqData.email|| !Array.isArray(reqData.languages) ||
+      reqData.languages.length === 0 ||
+      !reqData.languages.every(isValidLang)) {
+        return res.status(400).json({ error: "All fields are required and languages must be valid" });
       }  
       
     const guideRepo = AppDataSource.getRepository(Guides);
-    const guide = await guideRepo.findOne({ where: { guideID } });
+    const languageRepo = AppDataSource.getRepository(Languages);
 
+    const guide = await guideRepo.findOne({ where: { guideID },  relations: ["lang"], });
     if (!guide) {
     return res.status(404).json({ error: "Guide not found" });
     }
@@ -187,7 +223,7 @@ try {
           return res.status(400).json({ error: "A user with this phone is already registered" });
       }
   }
-    
+ 
 guide.firstName = reqData.firstName
 guide.lastName = reqData.lastName
 guide.phone = reqData.phone
@@ -195,7 +231,21 @@ guide.description = reqData.description
 guide.photo = reqData.photo
 guide.email = reqData.email
 
- await guideRepo.save(guide);
+await guideRepo.save(guide);
+
+if (guide.lang?.length) {
+  await languageRepo.remove(guide.lang);
+}
+
+const languageEntities = reqData.languages.map((lang: LangTypes) => {
+  const langEntity = new Languages();
+  langEntity.language = lang;
+  langEntity.guide = guide;
+  return langEntity;
+});
+
+await languageRepo.save(languageEntities);
+
 return res.status(200).json({ success: true });
   }
 

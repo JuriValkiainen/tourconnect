@@ -1,5 +1,5 @@
 import { AppDataSource } from "../data-source";
-import { Tours } from "../entities/Tours";
+import { Tours, TourType } from "../entities/Tours";
 import { Guides } from "../entities/Guides";
 import { Reservations } from "../entities/Reservations"
 import { Router, Request, Response } from 'express';
@@ -72,7 +72,7 @@ router.get("/excursions/:id",  async (req: Request<{ id: number }>, res: any) =>
 interface CreateToursRequest
 {
     city: string
-    type: string
+    type: TourType
     maxPerson: number
     pricePerPerson: number
     description: string
