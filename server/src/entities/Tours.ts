@@ -5,6 +5,15 @@ import { Entity, Column, PrimaryGeneratedColumn,
 import { Guides } from "./Guides"
 import { Reservations } from "./Reservations"
 
+export enum TourType {
+    Walk = "Walk",  
+    Food = "Food",
+    Museum = "Museum",
+    History = "History",
+    Outdoor = "Outdoor",
+    Kids = "Kids"
+
+}
 @Entity()
 export class Tours {
     @PrimaryGeneratedColumn()
@@ -14,7 +23,7 @@ export class Tours {
     city: string
 
     @Column("nvarchar")
-    type: string
+    type: TourType
 
     @Column("int", {nullable: true })
     pricePerPerson: number
@@ -28,7 +37,7 @@ export class Tours {
     @Column("nvarchar", {nullable: true })
     picture: string
 
-    @ManyToOne(() => Guides, (guide) => guide.tours)
+    @ManyToOne(() => Guides, (guide) => guide.tours, { onDelete: 'CASCADE' })
     @JoinColumn({name : "guideID"})
     guide: Guides
 
