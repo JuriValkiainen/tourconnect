@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next"
+import { useTranslation } from "react-i18next";
 import axios from "axios";
 import Newsletter from "../components/Newsletter";
 import HeroImage from "../components/HeroImage";
@@ -27,12 +27,12 @@ const Login = () => {
       );
       const { token } = response.data;
 
-      // Сохраняем токен в localStorage
+      // Save the token in local storage
       localStorage.setItem("token", token);
 
       setMessage("Login successful!");
 
-      // 4. Редирект на страницу профиля через пару секунд
+      // Redirect to the profile page after a short delay
       setTimeout(() => {
         navigate("/profile");
       }, 1500);
@@ -59,7 +59,7 @@ const Login = () => {
       >
         <div className="w3-card w3-white w3-padding-large w3-round-large w3-margin-top w3-margin-bottom w3-pad">
           <form onSubmit={handleSubmit}>
-          <label className="w3-text-black">{t("login_email")}</label>
+            <label className="w3-text-black">{t("login_email")}</label>
             <input
               type="email"
               placeholder="Email"
@@ -78,17 +78,19 @@ const Login = () => {
               className="w3-input w3-border w3-round"
             />
             <div className="w3-center w3-margin-top">
-            <button type="submit"
-            className="w3-button w3-blue w3-round w3-margin-top"
-            disabled={loading}>
-              {loading ? t("login_btn_loading") : t("login_btn_login")}
-            </button>
+              <button
+                type="submit"
+                className="w3-button w3-blue w3-round w3-margin-top"
+                disabled={loading}
+              >
+                {loading ? t("login_btn_loading") : t("login_btn_login")}
+              </button>
             </div>
           </form>
           {message && <p>{message}</p>}
         </div>
       </div>
-        <Newsletter />
+      <Newsletter />
     </>
   );
 };
