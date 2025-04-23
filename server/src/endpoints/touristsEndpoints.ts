@@ -8,6 +8,7 @@ import { verifyTouristToken } from '../server';
 import nodemailer from 'nodemailer';
 import type SMTPTransport from 'nodemailer/lib/smtp-transport';
 import crypto from 'crypto';
+import { Reviews } from "../entities/Reviews";
 
 const router = Router();
 
@@ -322,6 +323,48 @@ router.get('/api/tourists/booking', verifyTouristToken, async (req: Request, res
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+// Удаление туриста
+     router.delete("/api/tourists/me", verifyTouristToken, async (req: Request, res: any) => {
+       try {
+         const { id: touristID } = req.user as { id: number; email: string; role: string };
+               
+         if (!touristID) {
+           return res.status(401).json({ error: 'Unauthorized' });
+         }
+         
+         const touristRepo = AppDataSource.getRepository(Tourists);
+         const reviewsRepo = AppDataSource.getRepository(Reviews);
+     
+         const tourist = await touristRepo.findOne({
+           where: { touristID: touristID },
+         });
+     
+         if (!tourist) {
+           return res.status(403).json({ error: "Tourist not found or you do not have permission to delete it" });
+         }
+     
+         const fallbackTourist = await touristRepo.findOne({ where: { touristID: 1 } });
+         if (!fallbackTourist) {
+           return res.status(400).json({ error: "Fallback tourist with ID 1 not found" });
+         }
+
+         await reviewsRepo
+         .createQueryBuilder()
+         .update()
+         .set({ tourist: fallbackTourist })
+         .where("touristID = :id", { id: touristID })
+         .execute();
+
+         await touristRepo.remove(tourist);
+     
+         return res.status(200).json({ success: true});
+       
+       } catch (error) {
+         console.error("Error while deleting the tour:", error);
+         res.status(500).json({ error: "Internal server error" });
+       }
+     });
 
 
 export default router;

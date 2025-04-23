@@ -25,7 +25,7 @@ export class Reservations {
     date: Date
 
     @JoinColumn({name : "touristID"})
-    @ManyToOne(() => Tourists, (tourists)=>tourists.reservations)
+    @ManyToOne(() => Tourists, (tourists)=>tourists.reservations, { onDelete: 'CASCADE' })
     tourist:Tourists
 
     @JoinColumn({name : "tourID"})

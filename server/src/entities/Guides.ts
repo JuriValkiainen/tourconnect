@@ -31,13 +31,13 @@ export class Guides {
     @Column("text", {nullable: true })
     photo: string
 
-    @OneToMany(() => Tours, (tour)=> tour.guide)
+    @OneToMany(() => Tours, (tour)=> tour.guide, { cascade: true })
     tours: Tours[]
 
-    @OneToMany(() => Languages, (lang)=> lang.guide)
+    @OneToMany(() => Languages, (lang)=> lang.guide, { cascade: true })
     lang: Languages[]
 
-    @OneToMany(() => Reviews, (review)=> review.guide)
+    @OneToMany(() => Reviews, (review)=> review.guide,  { cascade: true })
     reviews: Reviews[]
 }
 

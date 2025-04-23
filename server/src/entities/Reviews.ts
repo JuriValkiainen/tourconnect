@@ -27,11 +27,11 @@ export class Reviews {
     rating: number
 
     @JoinColumn({name : "guideID"})
-    @ManyToOne(() => Guides, (guide) => guide.reviews)
+    @ManyToOne(() => Guides, (guide) => guide.reviews, { onDelete: 'CASCADE' })
     guide: Guides
 
     @JoinColumn({name : "touristID"})
-    @ManyToOne(() => Tourists, (tourists) => tourists.reviews)
+    @ManyToOne(() => Tourists, (tourists) => tourists.reviews, { onDelete: 'CASCADE' })
     tourist:Tourists
 
     @JoinColumn({name : "reservID"})
