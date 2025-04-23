@@ -29,7 +29,7 @@ export const initializeDatabase = async () => {
     moscowTour.pricePerPerson = 30;
     moscowTour.maxPerson = 10;
     moscowTour.description = "Explore the heart of Russia with a guided tour of Red Square, a UNESCO World Heritage Site. See the iconic St. Basil's Cathedral, Lenin's Mausoleum, and the Kremlin walls. Learn about Russia's tsarist and Soviet history while walking on centuries-old cobblestones.";
-    moscowTour.picture = "https://cdn.pixabay.com/photo/2016/11/29/08/41/moscow-1868707_1280.jpg";
+    moscowTour.picture = "https://cdn.pixabay.com/photo/2016/02/14/11/39/russia-1199330_1280.jpg";
     moscowTour.guide = russianGuide; // Предполагается, что `guide` уже определён
     await AppDataSource.manager.save(moscowTour);
 
@@ -39,7 +39,7 @@ export const initializeDatabase = async () => {
     petersburgTour.pricePerPerson = 40;
     petersburgTour.maxPerson = 8;
     petersburgTour.description = "Discover one of the world's largest art collections in the Winter Palace. The Hermitage houses masterpieces by Rembrandt, Da Vinci, and Michelangelo, along with golden treasures of Scythians. The tour includes the stunning interiors of the tsarist residence.";
-    petersburgTour.picture = "https://cdn.pixabay.com/photo/2017/08/07/22/11/hermitage-2606725_1280.jpg";
+    petersburgTour.picture = "https://cdn.pixabay.com/photo/2023/01/04/00/28/seagull-7695578_1280.jpg";
     petersburgTour.guide = russianGuide;
     await AppDataSource.manager.save(petersburgTour);
 
@@ -49,7 +49,7 @@ export const initializeDatabase = async () => {
     kazanTour.pricePerPerson = 25;
     kazanTour.maxPerson = 6;
     kazanTour.description = "Kazan is where Europe meets Asia. The Kazan Kremlin, a UNESCO site, combines Russian Orthodox and Tatar Muslim architecture. Visit the Qolşärif Mosque, the Annunciation Cathedral, and the leaning Soyembika Tower. Taste traditional Tatar dishes like echpochmak after the tour.";
-    kazanTour.picture = "https://cdn.pixabay.com/photo/2020/06/27/17/21/kazan-5346299_1280.jpg";
+    kazanTour.picture = "https://cdn.pixabay.com/photo/2017/11/08/23/23/russia-2932006_960_720.jpg";
     kazanTour.guide = russianGuide;
     await AppDataSource.manager.save(kazanTour);
 

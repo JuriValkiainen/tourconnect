@@ -44,6 +44,30 @@ router.get("/excursions/:id",  async (req: Request<{ id: number }>, res: any) =>
     }
   });
 
+  //  5 рандомных экскурсий 
+  router.get("/randomtours", async(req: Request, res: any) => {
+    try {
+      const tour = await AppDataSource.getRepository(Tours).createQueryBuilder("tours")
+      .addOrderBy("NEWID()").limit(5).getMany()
+
+      if (!tour|| tour.length === 0) {
+        return res.status(404).json({ error: "Tour not found" });
+      }
+
+      const tourreturn = tour.map(t => ({
+        tourID: t.tourID,
+        city: t.city,
+        picture: t.picture, 
+        }))
+  
+      res.json(tourreturn);
+         
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "An error occurred while fetching excursions." });
+    }
+});
+
 // Cоздание экскурсии 
 interface CreateToursRequest
 {
