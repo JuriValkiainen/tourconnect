@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 import Newsletter from "../components/Newsletter";
 import Contact from "../components/Contact";
@@ -15,17 +16,39 @@ const GuideRegister = () => {
     confirmPassword: "",
     description: "",
     photo: "",
+    languages: [],
   });
 
+  const [availableLanguages, setAvailableLanguages] = useState([]);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchLanguages = async () => {
+      try {
+        const res = await axios.get("http://localhost:5001/languages");
+        setAvailableLanguages(res.data);
+      } catch (err) {
+        console.error("Failed to load languages:", err);
+      }
+    };
+    fetchLanguages();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError("");
   };
 
-  const navigate = useNavigate();
+  const handleCheckboxChange = (lang) => {
+    const updatedLanguages = formData.languages.includes(lang)
+      ? formData.languages.filter((l) => l !== lang)
+      : [...formData.languages, lang];
+
+    setFormData({ ...formData, languages: updatedLanguages });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,17 +57,14 @@ const GuideRegister = () => {
     setSuccessMessage("");
 
     if (formData.password !== formData.confirmPassword) {
-      setError("Password do not match.");
+      setError("Passwords do not match.");
       return;
     }
 
     try {
-      const response = await fetch("http://localhost:5001/guides/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const response = await axios.post(
+        "http://localhost:5001/guides/register",
+        {
           firstName: formData.firstName,
           lastName: formData.lastName,
           email: formData.email,
@@ -52,21 +72,13 @@ const GuideRegister = () => {
           password: formData.password,
           description: formData.description,
           photo: formData.photo,
-        }),
-      });
+          languages: formData.languages,
+        }
+      );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        setError(errorData.error || "Registration failed.");
-        return;
-      }
-
-      const result = await response.json();
-      console.log("Guide registered with ID:", result.id);
-      setSuccessMessage("Registartion successful!");
-
+      setSuccessMessage("Registration successful!");
       setTimeout(() => {
-        setFormData ({
+        setFormData({
           firstName: "",
           lastName: "",
           email: "",
@@ -75,25 +87,26 @@ const GuideRegister = () => {
           confirmPassword: "",
           description: "",
           photo: "",
+          languages: [],
         });
       }, 2000);
 
       setTimeout(() => navigate("/guide-dashboard"), 2000);
-      
     } catch (err) {
       console.error("Error registering guide:", err);
-      setError("Server error. Please try again later.");
+      setError(
+        err.response?.data?.error || "Server error. Please try again later."
+      );
     }
   };
 
   return (
     <>
-
       <HeroImage />
 
       <div className="w3-container w3-margin-top">
         <h2 className="w3-center w3-margin-top">Register as a guide</h2>
-        <p>Join our platform and start offering your own excursions</p>
+        <p className="w3-center">Join our platform and start offering your own excursions</p>
       </div>
 
       <div className="w3-container" style={{ maxWidth: "700px", margin: "auto" }}>
@@ -117,9 +130,28 @@ const GuideRegister = () => {
               name="lastName"
               value={formData.lastName}
               onChange={handleChange}
-              placeholder="Last Name"
+              placeholder="Last name"
               required
             />
+
+            <label className="w3-text-black">Languages You Speak</label>
+            <div className="w3-row-padding w3-margin-top w3-margin-bottom">
+              {availableLanguages.map((lang, index) => (
+                <div key={lang} className="w3-third">
+                  <div className="w3-margin-bottom" style={{ display: "flex", alignItems: "center" }}>
+                    <input
+                      type="checkbox"
+                      className="w3-check"
+                      value={lang}
+                      checked={formData.languages.includes(lang)}
+                      onChange={() => handleCheckboxChange(lang)}
+                      style={{ marginRight: "8px" }}
+                    />
+                    <label className="w3-text-black" style={{ margin: 0 }}>{lang}</label>
+                  </div>
+                </div>
+              ))}
+            </div>
 
             <label className="w3-text-black">Email</label>
             <input
@@ -140,7 +172,7 @@ const GuideRegister = () => {
               value={formData.phone}
               onChange={handleChange}
               placeholder="Phone number"
-              required              
+              required
             />
 
             <label className="w3-text-black">Password</label>
@@ -202,7 +234,7 @@ const GuideRegister = () => {
               <button
                 type="submit"
                 className="w3-button w3-red w3-round-large"
-                style={{ width: "150px"}}
+                style={{ width: "150px" }}
               >
                 Register
               </button>
