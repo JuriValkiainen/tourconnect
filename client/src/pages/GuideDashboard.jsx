@@ -48,7 +48,14 @@ const GuideDashboard = () => {
   useEffect(() => {
     const token = localStorage.getItem("guideToken");
     if (!token) {
-      navigate("/guides/login");
+      navigate("/guide-login");
+    }
+  }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("guideToken");
+    if (!token) {
+      navigate("/guides-login");
       return;
     }
 
@@ -441,7 +448,7 @@ const GuideDashboard = () => {
                 ))}
               </div>
             ) : (
-              <p>No bookings found.</p>          
+              <p>No bookings found.</p>
             )}
           </div>
         );
