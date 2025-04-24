@@ -91,7 +91,8 @@ const GuideRegister = () => {
         });
       }, 2000);
 
-      setTimeout(() => navigate("/guide-dashboard"), 2000);
+      setTimeout(() => navigate("/guide-login"), 2000);
+
     } catch (err) {
       console.error("Error registering guide:", err);
       setError(
