@@ -57,6 +57,15 @@
     "profile_bookings_modal_price": "Общая цена:",
     "profile_bookings_modal_resID": "Идентификатор бронирования:",
     "profile_bookings_modal_btn_close": "Закрыть",
+
+    "profile_delete_account_title": "Удаление учетной записи",
+    "profile_delete_account_confirm": "Вы уверены, что хотите удалить свою учетную запись?",
+    "profile_delete_account_button": "Удалить",
+    "profile_delete_account_cancel": "Отмена",
+    "profile_delete_account_success": "Ваша учетная запись успешно удалена.",
+    "profile_delete_account_modalBtn_1": "Удаление...",
+    "profile_delete_account_modalBtn_2": "Удалить аккаунт",
+
     "home_goodOffers_title1": "Отличные предложения прямо сейчас",
     "home_goodOffers_title2": "Куда вы пойдете дальше?",
     "reviews_title": "Отзывы туристов",
