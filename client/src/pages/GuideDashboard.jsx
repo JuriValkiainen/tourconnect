@@ -46,11 +46,14 @@ const GuideDashboard = () => {
   });
 
   useEffect(() => {
+    const token = localStorage.getItem("guideToken");
+    if (!token) {
+      navigate("/guides/login");
+      return;
+    }
+
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem("guideToken");
-        if (!token) return;
-
         const config = {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -58,27 +61,27 @@ const GuideDashboard = () => {
         };
 
         const guideRes = await axios.get("/api/guides/me", config);
-        setGuideLanguages(guideRes.data.languages || []);
+        setGuideLanguages(Array.isArray(guideRes.data.languages) ? guideRes.data.languages : []);
 
         const typesRes = await axios.get("/tourtypes");
-        setTourTypes(typesRes.data || []);
+        setTourTypes(Array.isArray(typesRes.data) ? typesRes.data : []);
         const guideData = guideRes.data;
         const guideID = guideData.guideID || guideData.id;
 
         setGuide({
-          firstName: guideData.Name,
-          lastName: guideData.LastName,
+          firstName: guideData.name,
+          lastName: guideData.lastName,
           email: guideData.email,
-          phone: guideData.Phone,
+          phone: guideData.phone,
           description: guideData.description,
           photo: guideData.photo,
         });
 
         setEditForm({
-          firstName: guideData.Name,
-          lastName: guideData.LastName,
+          firstName: guideData.name,
+          lastName: guideData.lastName,
           email: guideData.email,
-          phone: guideData.Phone,
+          phone: guideData.phone,
           description: guideData.description,
           photo: guideData.photo,
         });
@@ -174,6 +177,7 @@ const GuideDashboard = () => {
         pricePerPerson: "",
         description: "",
         picture: "",
+        language: "",
       });
 
       setIsAddingTour(false);
@@ -287,9 +291,14 @@ const GuideDashboard = () => {
         return (
           <div className="w3-container">
             <h2>My Tours</h2>
-            <button className="w3-button w3-green w3-round-large w3-margin-bottom" onClick={() => setIsAddingTour(!isAddingTour)}>
-              {isAddingTour ? "Cancel" : "Add New Tour"}
-            </button>
+            {!isAddingTour && (
+              <button
+                className="w3-button w3-green w3-round-large w3-margin-bottom"
+                onClick={() => setIsAddingTour(true)}
+              >
+                Add New Tour
+              </button>
+            )}
 
             {isAddingTour && (
               <form onSubmit={handleNewTourSubmit} className="w3-margin-bottom">
@@ -323,7 +332,22 @@ const GuideDashboard = () => {
                 <input className="w3-input w3-border w3-margin-bottom" name="pricePerPerson" type="number" value={newTourForm.pricePerPerson} onChange={handleNewTourChange} placeholder="Price Per Person" required />
                 <textarea className="w3-input w3-border w3-margin-bottom" name="description" value={newTourForm.description} onChange={handleNewTourChange} placeholder="Description" required />
                 <input className="w3-input w3-border w3-margin-bottom" name="picture" type="url" value={newTourForm.picture} onChange={handleNewTourChange} placeholder="Picture URL" />
-                <button type="submit" className="w3-button w3-blue w3-round-large">Submit Tour</button>
+                <div className="w3-margin-top w3-center">
+                  <button
+                    type="submit"
+                    className="w3-button w3-blue w3-round-large"
+                    style={{ marginRight: '24px' }}
+                  >
+                    Submit Tour
+                  </button>
+                  <button
+                    type="button"
+                    className="w3-button w3-red w3-round-large"
+                    onClick={() => setIsAddingTour(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
               </form>
             )}
 
