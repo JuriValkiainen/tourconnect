@@ -11,6 +11,9 @@ import ExcursionDetail from "./pages/ExcursionDetail";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import VerifyEmail from "./pages/VerifyEmail";
+import Blog from "./pages/Blog";
+import Reviews from "./pages/Reviews";
+import GuideSupport from "./pages/GuideSupport";
 
 
 const AppRoutes = () => {
@@ -34,6 +37,9 @@ const AppRoutes = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/verify-email" element={<VerifyEmail />} />
+      <Route path="/blog" element={<Blog />} />
+      <Route path="/reviews" element={<Reviews />} />
+      <Route path="/guide-support" element={<GuideSupport />} />
     </Routes>
   );
 };
