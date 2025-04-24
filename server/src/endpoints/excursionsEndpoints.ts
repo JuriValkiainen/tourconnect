@@ -36,14 +36,28 @@ router.get("/excursions/:id",  async (req: Request<{ id: number }>, res: any) =>
     const { id } = req.params;
     try {
       const tour = await AppDataSource.manager.findOne(Tours, {
-        where: { tourID: id }
+        where: { tourID: id },
+        relations: [
+          'guide'
+        ]
       });
-  
+      
       if (!tour) {
         return res.status(404).json({ error: "Tour not found" });
       }
-  
-      res.json(tour);
+
+      const tourinfo = {city: tour.city, 
+        type: tour.type,
+        pricePerPerson: tour.pricePerPerson,
+        maxPerson: tour.maxPerson,
+        description: tour.description,
+        picture: tour.picture,
+        guide:{
+          lastName: tour.guide.lastName, 
+          firstName: tour.guide.firstName
+        }
+      }
+      res.json(tourinfo);
     } catch (error) {
       console.error("Error fetching tour:", error);
       res.status(500).json({ error: "Internal server error" });
