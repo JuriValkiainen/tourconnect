@@ -68,6 +68,11 @@ router.get("/excursions/:id",  async (req: Request<{ id: number }>, res: any) =>
     }
 });
 
+router.get("/tourtypes", async (req: Request, res: Response) => {
+  const tourtypes = Object.values(TourType);
+  res.json(tourtypes); 
+});
+
 // Cоздание экскурсии 
 interface CreateToursRequest
 {
