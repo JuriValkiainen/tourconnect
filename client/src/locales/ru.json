@@ -110,6 +110,11 @@
     "register_form_password": "Пароль",
     "register_form_btn_1": "Регистрация...",
     "register_form_btn_2": "Регистрация",
-    "register_form_btn_link": "У вас уже есть аккаунт? Войти"
-    
+    "register_form_btn_link": "У вас уже есть аккаунт? Войти",
+    "home_randomtours_title": "Хорошие предложения прямо сейчас",
+    "home_randomtours_text": "Куда вы отправитесь дальше?",
+    "home_nature_title": "Исследуйте природу",
+    "home_nature_text": "Путешествуйте с нами и увидьте природу во всей её красе.",
+    "home_nature_text_card": "Ощутите захватывающую природу",
+    "home_nature_button": "Узнать больше"
 }

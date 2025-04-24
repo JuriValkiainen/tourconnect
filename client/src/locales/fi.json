@@ -110,6 +110,12 @@
     "register_form_password": "Salasana",
     "register_form_btn_1": "Rekisteröinti...",
     "register_form_btn_2": "Rekisteröidy",
-    "register_form_btn_link": "Onko sinulla jo tili? Kirjaudu sisään"
+    "register_form_btn_link": "Onko sinulla jo tili? Kirjaudu sisään",
+    "home_randomtours_title": "Hyviä tarjouksia juuri nyt",
+    "home_randomtours_text": "Mihin lähdet seuraavaksi?",
+    "home_nature_title": "Tutustu luontoon",
+    "home_nature_text": "Matkusta kanssamme ja koe luonto kauneimmillaan.",
+    "home_nature_text_card": "Koe henkeäsalpaava luonto kohteessa",
+    "home_nature_button": "Lue lisää"
 }
 
