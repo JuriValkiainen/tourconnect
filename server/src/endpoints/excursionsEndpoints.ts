@@ -47,6 +47,7 @@ router.get("/excursions/:id",  async (req: Request<{ id: number }>, res: any) =>
       }
 
       const tourinfo = {city: tour.city, 
+        tourID: tour.tourID,
         type: tour.type,
         pricePerPerson: tour.pricePerPerson,
         maxPerson: tour.maxPerson,
