@@ -57,6 +57,15 @@
     "profile_bookings_modal_price": "Yhteensä hinta:",
     "profile_bookings_modal_resID": "Varaustunnus:",
     "profile_bookings_modal_btn_close": "Sulje",
+
+    "profile_delete_account_title": "Tilin poistaminen",
+    "profile_delete_account_confirm": "Oletko varma, että haluat poistaa tilin?",
+    "profile_delete_account_button": "Poista",
+    "profile_delete_account_cancel": "Peruuta",
+    "profile_delete_account_success": "Tili poistettu onnistuneesti",
+    "profile_delete_account_modalBtn_1": "Poistaminen..",
+    "profile_delete_account_modalBtn_2": "Poista tili",
+
     "home_goodOffers_title1": "Hyvät tarjoukset juuri nyt",
     "home_goodOffers_title2": "Minne menet seuraavaksi?",
     "reviews_title": "Matkailijoiden arvostelut",
@@ -101,6 +110,12 @@
     "register_form_password": "Salasana",
     "register_form_btn_1": "Rekisteröinti...",
     "register_form_btn_2": "Rekisteröidy",
-    "register_form_btn_link": "Onko sinulla jo tili? Kirjaudu sisään"
+    "register_form_btn_link": "Onko sinulla jo tili? Kirjaudu sisään",
+    "home_randomtours_title": "Hyviä tarjouksia juuri nyt",
+    "home_randomtours_text": "Mihin lähdet seuraavaksi?",
+    "home_nature_title": "Tutustu luontoon",
+    "home_nature_text": "Matkusta kanssamme ja koe luonto kauneimmillaan.",
+    "home_nature_text_card": "Koe henkeäsalpaava luonto kohteessa",
+    "home_nature_button": "Lue lisää"
 }
 

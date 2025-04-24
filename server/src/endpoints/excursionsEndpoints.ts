@@ -25,29 +25,50 @@ router.get("/excursions", async (req, res) => {
     }
 });
 
+// Список доступных типов экскурсий
+router.get("/tourtypes", async (req: Request, res: Response) => {
+  const tourtypes = Object.values(TourType);
+  res.json(tourtypes); 
+});
+
 // Экскурсия по id экскурсии
 router.get("/excursions/:id",  async (req: Request<{ id: number }>, res: any) => { 
     const { id } = req.params;
     try {
       const tour = await AppDataSource.manager.findOne(Tours, {
-        where: { tourID: id }
+        where: { tourID: id },
+        relations: [
+          'guide'
+        ]
       });
-  
+      
       if (!tour) {
         return res.status(404).json({ error: "Tour not found" });
       }
-  
-      res.json(tour);
+
+      const tourinfo = {city: tour.city, 
+        type: tour.type,
+        pricePerPerson: tour.pricePerPerson,
+        maxPerson: tour.maxPerson,
+        description: tour.description,
+        picture: tour.picture,
+        guide:{
+          lastName: tour.guide.lastName, 
+          firstName: tour.guide.firstName
+        }
+      }
+      res.json(tourinfo);
     } catch (error) {
       console.error("Error fetching tour:", error);
       res.status(500).json({ error: "Internal server error" });
     }
   });
 
-  //  5 рандомных экскурсий 
+  //  5 рандомных экскурсий не о природе
   router.get("/randomtours", async(req: Request, res: any) => {
     try {
       const tour = await AppDataSource.getRepository(Tours).createQueryBuilder("tours")
+      .where("tours.type != :outdoorType", { outdoorType: "Outdoor" })
       .addOrderBy("NEWID()").limit(5).getMany()
 
       if (!tour|| tour.length === 0) {
@@ -71,6 +92,30 @@ router.get("/excursions/:id",  async (req: Request<{ id: number }>, res: any) =>
 router.get("/tourtypes", async (req: Request, res: Response) => {
   const tourtypes = Object.values(TourType);
   res.json(tourtypes); 
+
+//  2 рандомных экскурсий Outdoor
+router.get("/outdoortours", async(req: Request, res: any) => {
+  try {
+    const outdoortour = await AppDataSource.getRepository(Tours).createQueryBuilder("tours")
+    .where("tours.type = :outdoorType", { outdoorType: "Outdoor" })
+    .addOrderBy("NEWID()").limit(2).getMany()
+
+    if (!outdoortour|| outdoortour.length === 0) {
+      return res.status(404).json({ error: "Tour not found" });
+    }
+
+    const tourreturn = outdoortour.map(t => ({
+      tourID: t.tourID,
+      city: t.city,
+      picture: t.picture, 
+      }))
+
+    res.json(tourreturn);
+       
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "An error occurred while fetching excursions." });
+  }
 });
 
 // Cоздание экскурсии 

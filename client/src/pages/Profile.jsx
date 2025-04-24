@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import ExploreNature from "../components/ExploreNature";
-import { FaSignOutAlt } from "react-icons/fa";
+import { FaSignOutAlt, FaExclamationTriangle } from "react-icons/fa";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -16,6 +16,9 @@ const Profile = () => {
   const { t } = useTranslation();
   const [sendingEmail, setSendingEmail] = useState(false);
   const [cooldown, setCooldown] = useState(0);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
 
   useEffect(() => {
     if (cooldown > 0) {
@@ -63,6 +66,34 @@ const Profile = () => {
     navigate("/"); // переадресация на главную
   };
 
+  const handleDeleteAccount = async () => {
+    setDeleteLoading(true);
+    setDeleteError("");
+    
+    try {
+      const token = localStorage.getItem("token");
+      
+      await axios.delete("http://localhost:5001/api/tourists/me", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      // Удаляем токен и перенаправляем на главную
+      localStorage.removeItem("token");
+      navigate("/");
+      
+    } catch (error) {
+      console.error("Delete account error:", error);
+      setDeleteError(
+        error.response?.data?.error || 
+        "Failed to delete account. Please try again."
+      );
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
   const sendVerificationEmail = async () => {
     setSendingEmail(true);
     setEmailMessage("");
@@ -105,6 +136,62 @@ const Profile = () => {
 
   return (
     <>
+    {/* Модальное окно подтверждения удаления */}
+    {showDeleteModal && (
+        <div className="w3-modal" style={{ display: "block" }}>
+          <div 
+            className="w3-modal-content w3-card-4 w3-animate-zoom" 
+            style={{ maxWidth: "500px" }}
+          >
+            <div className="w3-container w3-padding-16">
+              <span 
+                onClick={() => setShowDeleteModal(false)} 
+                className="w3-button w3-display-topright"
+              >
+                &times;
+              </span>
+              
+              <div className="w3-center">
+                <FaExclamationTriangle 
+                  className="w3-text-red" 
+                  style={{ fontSize: "48px", margin: "16px 0" }} 
+                />
+              </div>
+              
+              <h3 className="w3-center">{t('profile_delete_account_title')}</h3>
+              <p className="w3-center">
+                {t('profile_delete_account_confirm')}
+              </p>
+              
+              <div className="w3-row w3-margin-top">
+                <div className="w3-half w3-padding">
+                  <button
+                    onClick={() => setShowDeleteModal(false)}
+                    className="w3-button w3-light-grey w3-block w3-round-large"
+                  >
+                    {t('profile_delete_account_cancel')}
+                  </button>
+                </div>
+                <div className="w3-half w3-padding">
+                  <button
+                    onClick={handleDeleteAccount}
+                    disabled={deleteLoading}
+                    className="w3-button w3-red w3-block w3-round-large"
+                  >
+                    {deleteLoading ? t('profile_delete_account_modalBtn_1') : t('profile_delete_account_modalBtn_2')}
+                  </button>
+                </div>
+              </div>
+              
+              {deleteError && (
+                <p className="w3-text-red w3-center">{deleteError}</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Основной контент профиля */}
       <div
         className="w3-container"
         style={{
@@ -394,6 +481,21 @@ const Profile = () => {
               </div>
             </div>
           )}
+
+          {/* Добавляем кнопку удаления аккаунта внизу профиля */}
+          <div className="w3-padding w3-center w3-margin-top">
+              <button
+                onClick={() => setShowDeleteModal(true)}
+                className="w3-button w3-round-large"
+                style={{
+                  background: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                  color: "white",
+                }}
+              >
+                <FaExclamationTriangle style={{ marginRight: "8px" }} />
+                {t("profile_delete_account_button")}
+              </button>
+            </div>
         </div>
       </div>
       <ExploreNature />

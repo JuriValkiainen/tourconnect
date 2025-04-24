@@ -57,6 +57,15 @@
     "profile_bookings_modal_price": "Total Price:",
     "profile_bookings_modal_resID": "Reservation ID:",
     "profile_bookings_modal_btn_close": "Close",
+
+    "profile_delete_account_title": "Confirm Account Deletion",
+    "profile_delete_account_confirm": "Are you sure you want to delete your account? This action cannot be undone. All your data will be permanently removed.",
+    "profile_delete_account_button": "Delete My Account",
+    "profile_delete_account_cancel": "Cancel",
+    "profile_delete_account_success": "Account deleted successfully",
+    "profile_delete_account_modalBtn_1": "Deleting...",
+    "profile_delete_account_modalBtn_2": "Delete Account",
+
     "home_goodOffers_title1": "Good Offers Right Now",
     "home_goodOffers_title2": "Where will you go next?",
     "reviews_title": "Traveler Reviews",
@@ -93,6 +102,12 @@
     "guideSupport_tabContacts_openHours_sat": "Sat-Sun:",
     "guideSupport_tabContacts_office": "Office Address:",
 
+    "home_randomtours_title": "Good Offers Right Now",
+    "home_randomtours_text": "Where will you go next?",
+    "home_nature_title": "Explore Nature",
+    "home_nature_text": "Travel with us and see nature at its finest.",
+    "home_nature_text_card": "Experience the breathtaking nature of",
+    "home_nature_button": "Find out more",
     "register_title": "Register as a Traveler",
     "register_form_firstName": "First Name",
     "register_form_lastName": "Last Name",
