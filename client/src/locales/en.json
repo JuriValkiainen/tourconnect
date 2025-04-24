@@ -102,6 +102,12 @@
     "guideSupport_tabContacts_openHours_sat": "Sat-Sun:",
     "guideSupport_tabContacts_office": "Office Address:",
 
+    "home_randomtours_title": "Good Offers Right Now",
+    "home_randomtours_text": "Where will you go next?",
+    "home_nature_title": "Explore Nature",
+    "home_nature_text": "Travel with us and see nature at its finest.",
+    "home_nature_text_card": "Experience the breathtaking nature of",
+    "home_nature_button": "Find out more",
     "register_title": "Register as a Traveler",
     "register_form_firstName": "First Name",
     "register_form_lastName": "Last Name",

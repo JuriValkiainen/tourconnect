@@ -366,5 +366,40 @@ router.get('/api/tourists/booking', verifyTouristToken, async (req: Request, res
        }
      });
 
+     // Удаление бронирования
+     router.delete("/api/bookings/me/:reservID", verifyTouristToken, async (req: Request, res: any) => {
+       try {
+         const { id: touristID } = req.user as { id: number; email: string; role: string };
+               
+         if (!touristID) {
+           return res.status(401).json({ error: 'Unauthorized' });
+         }
+         
+         const reservID = parseInt(req.params.reservID);
+         if (isNaN(reservID)) {
+           return res.status(400).json({ error: "Invalid reservID" });
+         }
+     
+         const reservRepo = AppDataSource.getRepository(Reservations);
+     
+         const reserv = await reservRepo.findOne({
+           where: { reservID: reservID, tourist: { touristID: touristID } },
+         });
+     
+         if (!reserv) {
+           return res.status(403).json({ error: "Reservation not found or you do not have permission to delete it" });
+         }
+     
+         await reservRepo.remove(reserv);
+     
+         return res.status(200).json({ success: true});
+       
+       } catch (error) {
+         console.error("Error while deleting the reservation:", error);
+         res.status(500).json({ error: "Internal server error" });
+       }
+     });
+     
+
 
 export default router;

@@ -14,46 +14,6 @@ export const initializeDatabase = async () => {
   return
   }
 
-    const russianGuide = new Guides();
-    russianGuide.firstName = "Иван";
-    russianGuide.lastName = "Петров";
-    russianGuide.password = await bcrypt.hash("russia2024", 10);
-    russianGuide.description = "Профессиональный гид с 10-летним опытом. Провожу увлекательные экскурсии по главным городам России. Специализация: история, архитектура и местные традиции.";
-    russianGuide.email = "ivan.petrov@tourconnect.ru";
-    russianGuide.phone = "+79161234567";
-    russianGuide.photo = "https://cdn.pixabay.com/photo/2018/01/17/07/06/laptop-3087585_1280.jpg"; // Фото гида (можно заменить)
-    await AppDataSource.manager.save(russianGuide);
-
-    const moscowTour = new Tours();
-    moscowTour.city = "Moscow";
-    moscowTour.type = TourType.Walk;
-    moscowTour.pricePerPerson = 30;
-    moscowTour.maxPerson = 10;
-    moscowTour.description = "Explore the heart of Russia with a guided tour of Red Square, a UNESCO World Heritage Site. See the iconic St. Basil's Cathedral, Lenin's Mausoleum, and the Kremlin walls. Learn about Russia's tsarist and Soviet history while walking on centuries-old cobblestones.";
-    moscowTour.picture = "https://cdn.pixabay.com/photo/2016/02/14/11/39/russia-1199330_1280.jpg";
-    moscowTour.guide = russianGuide; // Предполагается, что `guide` уже определён
-    await AppDataSource.manager.save(moscowTour);
-
-    const petersburgTour = new Tours();
-    petersburgTour.city = "Saint Petersburg";
-    petersburgTour.type = TourType.Museum;
-    petersburgTour.pricePerPerson = 40;
-    petersburgTour.maxPerson = 8;
-    petersburgTour.description = "Discover one of the world's largest art collections in the Winter Palace. The Hermitage houses masterpieces by Rembrandt, Da Vinci, and Michelangelo, along with golden treasures of Scythians. The tour includes the stunning interiors of the tsarist residence.";
-    petersburgTour.picture = "https://cdn.pixabay.com/photo/2023/01/04/00/28/seagull-7695578_1280.jpg";
-    petersburgTour.guide = russianGuide;
-    await AppDataSource.manager.save(petersburgTour);
-
-    const kazanTour = new Tours();
-    kazanTour.city = "Kazan";
-    kazanTour.type = TourType.History;
-    kazanTour.pricePerPerson = 25;
-    kazanTour.maxPerson = 6;
-    kazanTour.description = "Kazan is where Europe meets Asia. The Kazan Kremlin, a UNESCO site, combines Russian Orthodox and Tatar Muslim architecture. Visit the Qolşärif Mosque, the Annunciation Cathedral, and the leaning Soyembika Tower. Taste traditional Tatar dishes like echpochmak after the tour.";
-    kazanTour.picture = "https://cdn.pixabay.com/photo/2017/11/08/23/23/russia-2932006_960_720.jpg";
-    kazanTour.guide = russianGuide;
-    await AppDataSource.manager.save(kazanTour);
-
     const guide1 = new Guides()
     guide1.guideID = 1
     guide1.firstName = "Mikko"
@@ -87,6 +47,37 @@ export const initializeDatabase = async () => {
     guide3.photo = "https://cdn.pixabay.com/photo/2025/03/05/14/35/cat-9448800_1280.jpg"
     AppDataSource.manager.save(guide3)
 
+    const russianGuide = new Guides();
+    russianGuide.guideID = 4
+    russianGuide.firstName = "Иван";
+    russianGuide.lastName = "Петров";
+    russianGuide.password = await bcrypt.hash("russia2024", 10);
+    russianGuide.description = "Профессиональный гид с 10-летним опытом. Провожу увлекательные экскурсии по главным городам России. Специализация: история, архитектура и местные традиции.";
+    russianGuide.email = "ivan.petrov@tourconnect.ru";
+    russianGuide.phone = "+79161234567";
+    russianGuide.photo = "https://cdn.pixabay.com/photo/2018/01/17/07/06/laptop-3087585_1280.jpg"; // Фото гида (можно заменить)
+    await AppDataSource.manager.save(russianGuide);
+
+
+    const deleted = new Tourists()
+    deleted.touristID = 1
+    deleted.firstName = "Deleted"
+    deleted.lastName = "Account"
+    deleted.email="deleted"
+    deleted.password = await bcrypt.hash("deleted", 10);
+    deleted.phone = "777"
+    AppDataSource.manager.save(deleted)
+
+    const tourist1 = new Tourists()
+    tourist1.touristID = 2
+    tourist1.firstName = "Pekka"
+    tourist1.lastName = "Elo"
+    tourist1.email="Elo@dks.dsd"
+    tourist1.password = await bcrypt.hash("test", 10);
+    tourist1.phone = "2343213"
+    AppDataSource.manager.save(tourist1)
+
+
     const tour1 = new Tours()
     tour1.tourID = 1
     tour1.city = "Turku"
@@ -112,31 +103,13 @@ export const initializeDatabase = async () => {
     const tour3= new Tours()
     tour3.tourID = 3
     tour3.city = "Rovaniemi"
-    tour3.type = TourType.Outdoor
+    tour3.type = TourType.Kids
     tour3.pricePerPerson = 50
     tour3.maxPerson = 3
     tour3.description ="Rovaniemi's most prominent landmarks include the Jätkänkynttilä bridge with its eternal flame over the Kemijoki river, the Arktikum Science Museum, which rises out of the bank of the Ounasjoki river, the Rovaniemi city hall, the Lappia Hall, which serves as a theatre, concert hall, and congress centre, and the library.The last three mentioned buildings are designed by Alvar Aalto. The Arktikum Science Museum is a comprehensive museum of Finland's, and the world's, Arctic regions."
     tour3.picture = "https://cdn.pixabay.com/photo/2020/05/26/09/35/rovaniemi-5222404_1280.jpg"
     tour3.guide =guide3
     AppDataSource.manager.save(tour3)
-
-    const tourist1 = new Tourists()
-    tourist1.touristID = 2
-    tourist1.firstName = "Pekka"
-    tourist1.lastName = "Elo"
-    tourist1.email="Elo@dks.dsd"
-    tourist1.password = await bcrypt.hash("test", 10);
-    tourist1.phone = "2343213"
-    AppDataSource.manager.save(tourist1)
-
-    const deleted = new Tourists()
-    deleted.touristID = 1
-    deleted.firstName = "Deleted"
-    deleted.lastName = "Account"
-    deleted.email="deleted"
-    deleted.password = await bcrypt.hash("deleted", 10);
-    deleted.phone = "777"
-    AppDataSource.manager.save(deleted)
 
     const tour4 = new Tours()
      tour4.tourID = 4
@@ -152,7 +125,7 @@ export const initializeDatabase = async () => {
     const tour5 = new Tours()
     tour5.tourID = 5
     tour5.city = "Cinque Terre"
-    tour5.type = TourType.Outdoor
+    tour5.type = TourType.Walk
     tour5.pricePerPerson= 25 
     tour5.maxPerson = 4
     tour5.description ="The Cinque Terre are a coastal area within Liguria, in the northwest of Italy. It lies in the west of La Spezia Province, and comprises five villages: Monterosso al Mare, Vernazza, Corniglia, Manarola, and Riomaggiore. The coastline, the five villages, and the surrounding hillsides are all part of the Cinque Terre National Park, a UNESCO World Heritage Site. The Cinque Terre area is a popular tourist destination. Over the centuries, people have built terraces on the rugged, steep landscape right up to the cliffs that overlook the Ligurian Sea. Paths, trains, and boats connect the villages as cars can only reach them with great difficulty from the outside via narrow and precarious mountain roads."
@@ -192,6 +165,62 @@ export const initializeDatabase = async () => {
     tour8.picture = "https://www.w3schools.com/w3images/paris.jpg"
     tour8.guide = guide2
     AppDataSource.manager.save(tour8)
+
+    const tour9 = new Tours()
+    tour9.tourID = 9
+    tour9.city = "Norway"
+    tour9.type = TourType.Outdoor
+    tour9.pricePerPerson= 100 
+    tour9.maxPerson = 10
+    tour9.description ="Western Norway, as well as other parts of historical regions of Norway, shares a common history with Denmark, the Faroe Islands and Iceland and to a lesser extent the Netherlands and Britain. For example, the Icelandic horse is a close relative of the Fjord horse and both the Faroese and Icelandic languages are based on the Old West Norse. In early Norse times, people from Western Norway became settlers at the Western Isles in the Northern Atlantic, Orkney, Shetland, the Faroe Islands and Iceland. During the Viking Age settlements were made at the Hebrides, Man and Ireland proper."
+    tour9.picture = "https://www.w3schools.com/w3images/ocean2.jpg"
+    tour9.guide = guide3
+    AppDataSource.manager.save(tour9)
+
+    const tour10 = new Tours()
+    tour10.tourID = 10
+    tour10.city = "Glockner"
+    tour10.type = TourType.Outdoor
+    tour10.pricePerPerson= 100 
+    tour10.maxPerson = 10
+    tour10.description ="The Glockner, is, at 3,798 metres above the Adriatic (12,461 ft), the highest mountain in Austria and highest mountain in the Alps east of the Brenner Pass. It is part of the larger Glockner Group of the Hohe Tauern range, situated along the main ridge of the Central Eastern Alps and the Alpine divide. The Pasterze, Austria's most extended glacier, lies on the Grossglockner's eastern slope. The characteristic pyramid-shaped peak actually consists of two pinnacles, the Großglockner and the Kleinglockner (3,770 m or 12,370 ft, from German: groß 'big', klein 'small'), separated by the Glocknerscharte col.."
+    tour10.picture = "https://www.w3schools.com/w3images/mountains2.jpg"
+    tour10.guide = guide1
+    AppDataSource.manager.save(tour10)
+    
+    const petersburgTour = new Tours();
+    petersburgTour.tourID = 11
+    petersburgTour.city = "Saint Petersburg";
+    petersburgTour.type = TourType.Museum;
+    petersburgTour.pricePerPerson = 40;
+    petersburgTour.maxPerson = 8;
+    petersburgTour.description = "Discover one of the world's largest art collections in the Winter Palace. The Hermitage houses masterpieces by Rembrandt, Da Vinci, and Michelangelo, along with golden treasures of Scythians. The tour includes the stunning interiors of the tsarist residence.";
+    petersburgTour.picture = "https://images.pexels.com/photos/20635059/pexels-photo-20635059/free-photo-of-maamerkki-iltahamara-valokuvaus-vaeltaminen.jpeg?auto=compress&cs=tinysrgb&w=600";
+    petersburgTour.guide = russianGuide;
+    await AppDataSource.manager.save(petersburgTour);
+
+    const moscowTour = new Tours();
+    moscowTour.tourID = 12
+    moscowTour.city = "Moscow";
+    moscowTour.type = TourType.Walk;
+    moscowTour.pricePerPerson = 30;
+    moscowTour.maxPerson = 10;
+    moscowTour.description = "Explore the heart of Russia with a guided tour of Red Square, a UNESCO World Heritage Site. See the iconic St. Basil's Cathedral, Lenin's Mausoleum, and the Kremlin walls. Learn about Russia's tsarist and Soviet history while walking on centuries-old cobblestones.";
+    moscowTour.picture = "https://images.pexels.com/photos/11042792/pexels-photo-11042792.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
+    moscowTour.guide = russianGuide; // Предполагается, что `guide` уже определён
+    await AppDataSource.manager.save(moscowTour);
+
+    const kazanTour = new Tours();
+    kazanTour.tourID = 13
+    kazanTour.city = "Kazan";
+    kazanTour.type = TourType.History;
+    kazanTour.pricePerPerson = 25;
+    kazanTour.maxPerson = 6;
+    kazanTour.description = "Kazan is where Europe meets Asia. The Kazan Kremlin, a UNESCO site, combines Russian Orthodox and Tatar Muslim architecture. Visit the Qolşärif Mosque, the Annunciation Cathedral, and the leaning Soyembika Tower. Taste traditional Tatar dishes like echpochmak after the tour.";
+    kazanTour.picture = "https://images.pexels.com/photos/8723822/pexels-photo-8723822.jpeg?auto=compress&cs=tinysrgb&w=600";
+    kazanTour.guide = russianGuide;
+    await AppDataSource.manager.save(kazanTour);
+
 
     }  
 catch(error) {
