@@ -10,6 +10,8 @@ const GuideDashboard = () => {
   const [guide, setGuide] = useState(null);
   const [tours, setTours] = useState([]);
   const [bookings, setBookings] = useState([]);
+  const [tourTypes, setTourTypes] = useState([]);
+  const [guideLanguages, setGuideLanguages] = useState([]);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isAddingTour, setIsAddingTour] = useState(false);
   const [editingTourId, setEditingTourId] = useState(null);
@@ -30,6 +32,7 @@ const GuideDashboard = () => {
     pricePerPerson: "",
     description: "",
     picture: "",
+    language: "",
   });
 
   const [editTourForm, setEditTourForm] = useState({
@@ -39,6 +42,7 @@ const GuideDashboard = () => {
     pricePerPerson: "",
     description: "",
     picture: "",
+    language: "",
   });
 
   useEffect(() => {
@@ -54,6 +58,10 @@ const GuideDashboard = () => {
         };
 
         const guideRes = await axios.get("/api/guides/me", config);
+        setGuideLanguages(guideRes.data.languages || []);
+
+        const typesRes = await axios.get("/tourtypes");
+        setTourTypes(typesRes.data || []);
         const guideData = guideRes.data;
         const guideID = guideData.guideID || guideData.id;
 
@@ -286,7 +294,31 @@ const GuideDashboard = () => {
             {isAddingTour && (
               <form onSubmit={handleNewTourSubmit} className="w3-margin-bottom">
                 <input className="w3-input w3-border w3-margin-bottom" name="city" value={newTourForm.city} onChange={handleNewTourChange} placeholder="City" required />
-                <input className="w3-input w3-border w3-margin-bottom" name="type" value={newTourForm.type} onChange={handleNewTourChange} placeholder="Type" required />
+                <select
+                  className="w3-select w3-border w3-margin-bottom"
+                  name="type"
+                  value={newTourForm.type}
+                  onChange={handleNewTourChange}
+                  required
+                >
+                  <option value="" disabled>Select Tour Type</option>
+                  {tourTypes.map((type) => (
+                    <option key={type} value={type}>{type}</option>
+                  ))}
+                </select>
+
+                <select
+                  className="w3-select w3-border w3-margin-bottom"
+                  name="language"
+                  value={newTourForm.language}
+                  onChange={handleNewTourChange}
+                  required
+                >
+                  <option value="" disabled>Select Tour Language</option>
+                  {guideLanguages.map((lang) => (
+                    <option key={lang} value={lang}>{lang}</option>
+                  ))}
+                </select>
                 <input className="w3-input w3-border w3-margin-bottom" name="maxPerson" type="number" value={newTourForm.maxPerson} onChange={handleNewTourChange} placeholder="Max People" required />
                 <input className="w3-input w3-border w3-margin-bottom" name="pricePerPerson" type="number" value={newTourForm.pricePerPerson} onChange={handleNewTourChange} placeholder="Price Per Person" required />
                 <textarea className="w3-input w3-border w3-margin-bottom" name="description" value={newTourForm.description} onChange={handleNewTourChange} placeholder="Description" required />
@@ -305,7 +337,31 @@ const GuideDashboard = () => {
                         {editingTourId === tour.tourID ? (
                           <form onSubmit={handleEditTourSubmit} className="w3-margin-top">
                             <input className="w3-input w3-border w3-margin-bottom" name="city" value={editTourForm.city} onChange={handleEditTourChange} required />
-                            <input className="w3-input w3-border w3-margin-bottom" name="type" value={editTourForm.type} onChange={handleEditTourChange} required />
+                            <select
+                              className="w3-select w3-border w3-margin-bottom"
+                              name="type"
+                              value={editTourForm.type}
+                              onChange={handleEditTourChange}
+                              required
+                            >
+                              <option value="" disabled>Select Tour Type</option>
+                              {tourTypes.map((type) => (
+                                <option key={type} value={type}>{type}</option>
+                              ))}
+                            </select>
+
+                            <select
+                              className="w3-select w3-border w3-margin-bottom"
+                              name="language"
+                              value={editTourForm.language}
+                              onChange={handleEditTourChange}
+                              required
+                            >
+                              <option value="" disabled>Select Tour Language</option>
+                              {guideLanguages.map((lang) => (
+                                <option key={lang} value={lang}>{lang}</option>
+                              ))}
+                            </select>
                             <input className="w3-input w3-border w3-margin-bottom" name="maxPerson" type="number" value={editTourForm.maxPerson} onChange={handleEditTourChange} required />
                             <input className="w3-input w3-border w3-margin-bottom" name="pricePerPerson" type="number" value={editTourForm.pricePerPerson} onChange={handleEditTourChange} required />
                             <textarea className="w3-input w3-border w3-margin-bottom" name="description" value={editTourForm.description} onChange={handleEditTourChange} required />
@@ -317,6 +373,7 @@ const GuideDashboard = () => {
                           <>
                             <h4>{tour.city}</h4>
                             <p><strong>Type:</strong> {tour.type}</p>
+                            <p><strong>Language:</strong> {tour.language}</p>
                             <p><strong>Price:</strong> €{tour.pricePerPerson}</p>
                             <p><strong>Max People:</strong> {tour.maxPerson}</p>
                             <p>{tour.description.slice(0, 100)}...</p>
