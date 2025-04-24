@@ -8,6 +8,7 @@ export default defineConfig({
     proxy: {
       '/guides': 'http://localhost:5001',
       '/api': 'http://localhost:5001',
+      '/tourtypes': 'http://localhost:5001',
     },
   },
 })

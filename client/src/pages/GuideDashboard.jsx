@@ -10,6 +10,8 @@ const GuideDashboard = () => {
   const [guide, setGuide] = useState(null);
   const [tours, setTours] = useState([]);
   const [bookings, setBookings] = useState([]);
+  const [tourTypes, setTourTypes] = useState([]);
+  const [guideLanguages, setGuideLanguages] = useState([]);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isAddingTour, setIsAddingTour] = useState(false);
   const [editingTourId, setEditingTourId] = useState(null);
@@ -30,6 +32,7 @@ const GuideDashboard = () => {
     pricePerPerson: "",
     description: "",
     picture: "",
+    language: "",
   });
 
   const [editTourForm, setEditTourForm] = useState({
@@ -39,14 +42,25 @@ const GuideDashboard = () => {
     pricePerPerson: "",
     description: "",
     picture: "",
+    language: "",
   });
 
   useEffect(() => {
+    const token = localStorage.getItem("guideToken");
+    if (!token) {
+      navigate("/guide-login");
+    }
+  }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("guideToken");
+    if (!token) {
+      navigate("/guides-login");
+      return;
+    }
+
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem("guideToken");
-        if (!token) return;
-
         const config = {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -54,23 +68,27 @@ const GuideDashboard = () => {
         };
 
         const guideRes = await axios.get("/api/guides/me", config);
+        setGuideLanguages(Array.isArray(guideRes.data.languages) ? guideRes.data.languages : []);
+
+        const typesRes = await axios.get("/tourtypes");
+        setTourTypes(Array.isArray(typesRes.data) ? typesRes.data : []);
         const guideData = guideRes.data;
         const guideID = guideData.guideID || guideData.id;
 
         setGuide({
-          firstName: guideData.Name,
-          lastName: guideData.LastName,
+          firstName: guideData.name,
+          lastName: guideData.lastName,
           email: guideData.email,
-          phone: guideData.Phone,
+          phone: guideData.phone,
           description: guideData.description,
           photo: guideData.photo,
         });
 
         setEditForm({
-          firstName: guideData.Name,
-          lastName: guideData.LastName,
+          firstName: guideData.name,
+          lastName: guideData.lastName,
           email: guideData.email,
-          phone: guideData.Phone,
+          phone: guideData.phone,
           description: guideData.description,
           photo: guideData.photo,
         });
@@ -131,7 +149,8 @@ const GuideDashboard = () => {
   };
 
   const handleDeleteProfile = async () => {
-    if (!window.confirm("Are you sure you want to delete your profile? This action cannot be undone.")) return;
+    const confirmed = window.confirm("Are you sure you want to delete your prifile? This action cannot be undone.");
+    if (!confirmed) return;
 
     try {
       const token = localStorage.getItem("guideToken");
@@ -139,7 +158,8 @@ const GuideDashboard = () => {
 
       await axios.delete("/api/guides/me", config);
       localStorage.removeItem("guideToken");
-      window.location.href = "/";
+      alert("Your profile has been successfully deleted.");
+      navigate("/");
     } catch (err) {
       console.error("Failed to delete profile:", err);
       alert("Failed to delete profile. This feature may not be implemented yet.");
@@ -166,6 +186,7 @@ const GuideDashboard = () => {
         pricePerPerson: "",
         description: "",
         picture: "",
+        language: "",
       });
 
       setIsAddingTour(false);
@@ -279,19 +300,63 @@ const GuideDashboard = () => {
         return (
           <div className="w3-container">
             <h2>My Tours</h2>
-            <button className="w3-button w3-green w3-round-large w3-margin-bottom" onClick={() => setIsAddingTour(!isAddingTour)}>
-              {isAddingTour ? "Cancel" : "Add New Tour"}
-            </button>
+            {!isAddingTour && (
+              <button
+                className="w3-button w3-green w3-round-large w3-margin-bottom"
+                onClick={() => setIsAddingTour(true)}
+              >
+                Add New Tour
+              </button>
+            )}
 
             {isAddingTour && (
               <form onSubmit={handleNewTourSubmit} className="w3-margin-bottom">
                 <input className="w3-input w3-border w3-margin-bottom" name="city" value={newTourForm.city} onChange={handleNewTourChange} placeholder="City" required />
-                <input className="w3-input w3-border w3-margin-bottom" name="type" value={newTourForm.type} onChange={handleNewTourChange} placeholder="Type" required />
+                <select
+                  className="w3-select w3-border w3-margin-bottom"
+                  name="type"
+                  value={newTourForm.type}
+                  onChange={handleNewTourChange}
+                  required
+                >
+                  <option value="" disabled>Select Tour Type</option>
+                  {tourTypes.map((type) => (
+                    <option key={type} value={type}>{type}</option>
+                  ))}
+                </select>
+
+                <select
+                  className="w3-select w3-border w3-margin-bottom"
+                  name="language"
+                  value={newTourForm.language}
+                  onChange={handleNewTourChange}
+                  required
+                >
+                  <option value="" disabled>Select Tour Language</option>
+                  {guideLanguages.map((lang) => (
+                    <option key={lang} value={lang}>{lang}</option>
+                  ))}
+                </select>
                 <input className="w3-input w3-border w3-margin-bottom" name="maxPerson" type="number" value={newTourForm.maxPerson} onChange={handleNewTourChange} placeholder="Max People" required />
                 <input className="w3-input w3-border w3-margin-bottom" name="pricePerPerson" type="number" value={newTourForm.pricePerPerson} onChange={handleNewTourChange} placeholder="Price Per Person" required />
                 <textarea className="w3-input w3-border w3-margin-bottom" name="description" value={newTourForm.description} onChange={handleNewTourChange} placeholder="Description" required />
                 <input className="w3-input w3-border w3-margin-bottom" name="picture" type="url" value={newTourForm.picture} onChange={handleNewTourChange} placeholder="Picture URL" />
-                <button type="submit" className="w3-button w3-blue w3-round-large">Submit Tour</button>
+                <div className="w3-margin-top w3-center">
+                  <button
+                    type="submit"
+                    className="w3-button w3-blue w3-round-large"
+                    style={{ marginRight: '24px' }}
+                  >
+                    Submit Tour
+                  </button>
+                  <button
+                    type="button"
+                    className="w3-button w3-red w3-round-large"
+                    onClick={() => setIsAddingTour(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
               </form>
             )}
 
@@ -305,7 +370,31 @@ const GuideDashboard = () => {
                         {editingTourId === tour.tourID ? (
                           <form onSubmit={handleEditTourSubmit} className="w3-margin-top">
                             <input className="w3-input w3-border w3-margin-bottom" name="city" value={editTourForm.city} onChange={handleEditTourChange} required />
-                            <input className="w3-input w3-border w3-margin-bottom" name="type" value={editTourForm.type} onChange={handleEditTourChange} required />
+                            <select
+                              className="w3-select w3-border w3-margin-bottom"
+                              name="type"
+                              value={editTourForm.type}
+                              onChange={handleEditTourChange}
+                              required
+                            >
+                              <option value="" disabled>Select Tour Type</option>
+                              {tourTypes.map((type) => (
+                                <option key={type} value={type}>{type}</option>
+                              ))}
+                            </select>
+
+                            <select
+                              className="w3-select w3-border w3-margin-bottom"
+                              name="language"
+                              value={editTourForm.language}
+                              onChange={handleEditTourChange}
+                              required
+                            >
+                              <option value="" disabled>Select Tour Language</option>
+                              {guideLanguages.map((lang) => (
+                                <option key={lang} value={lang}>{lang}</option>
+                              ))}
+                            </select>
                             <input className="w3-input w3-border w3-margin-bottom" name="maxPerson" type="number" value={editTourForm.maxPerson} onChange={handleEditTourChange} required />
                             <input className="w3-input w3-border w3-margin-bottom" name="pricePerPerson" type="number" value={editTourForm.pricePerPerson} onChange={handleEditTourChange} required />
                             <textarea className="w3-input w3-border w3-margin-bottom" name="description" value={editTourForm.description} onChange={handleEditTourChange} required />
@@ -317,6 +406,7 @@ const GuideDashboard = () => {
                           <>
                             <h4>{tour.city}</h4>
                             <p><strong>Type:</strong> {tour.type}</p>
+                            <p><strong>Language:</strong> {tour.language}</p>
                             <p><strong>Price:</strong> €{tour.pricePerPerson}</p>
                             <p><strong>Max People:</strong> {tour.maxPerson}</p>
                             <p>{tour.description.slice(0, 100)}...</p>
@@ -335,9 +425,33 @@ const GuideDashboard = () => {
           </div>
         );
       case "Bookings":
-        return <div className="w3-container"><h2>Bookings</h2></div>;
-      default:
-        return null;
+        return (
+          <div className="w3-container">
+            <h2>Bookings</h2>
+
+            {bookings.length > 0 ? (
+              <div className="w3-row-padding">
+                {bookings.map((booking) => (
+                  <div key={booking.reserviD} className="w3-col s12 m6 14 w3-margin-bottom">
+                    <div className="w3-card w3-padding w3-white w3-round-large">
+                      <h4 className="w3-text-dark-grey">
+                        {booking.tours.city}
+                      </h4>
+                      <p><strong>Date:</strong> {new Date(booking.date).toLocaleDateString()}</p>
+                      <p><strong>Tourist:</strong> {booking.tourist.firstName} {booking.touristlastName}</p>
+                      <p><strong>Email:</strong> {booking.tourist.email}</p>
+                      <p><strong>Phone:</strong> {booking.tourist.phone}</p>
+                      <p><strong>People:</strong> {booking.numberOfPeople}</p>
+                      <p><strong>Sum:</strong> €{booking.summa}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p>No bookings found.</p>
+            )}
+          </div>
+        );
     }
   };
 
