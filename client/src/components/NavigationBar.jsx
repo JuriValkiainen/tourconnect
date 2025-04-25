@@ -35,7 +35,7 @@ const NavigationBar = () => {
             flex: 1,
             // flex: mobileMenuOpen ? 'none' : 1,
             // textAlign: window.innerWidth < 768 ? 'center' : 'left',
-            justifyContent: 'center'
+            justifyContent: 'center',
           }}
         >
           <b style={{fontSize: window.innerWidth < 768 ? '0.9em' : 'inherit'}}>
@@ -46,7 +46,7 @@ const NavigationBar = () => {
                 height: '30px', 
                 marginRight: '8px', 
                 marginBottom: '4px',
-                verticalAlign: 'middle'
+                verticalAlign: 'middle', borderRadius: '50%'
               }} 
             />
             TourConnect

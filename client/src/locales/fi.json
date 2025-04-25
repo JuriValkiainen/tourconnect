@@ -66,6 +66,13 @@
     "profile_delete_account_modalBtn_1": "Poistaminen..",
     "profile_delete_account_modalBtn_2": "Poista tili",
 
+    "profile_delete_tour_confirmation_title": "Varauksen poistaminen",
+    "profile_delete_tour_confirmation_message": "Oletko varma, että haluat poistaa varauksen? Tätä toimintoa ei voi kumota.",
+    "profile_delete_tour_error": "Virhe poistettaessa varausta. Yritä uudelleen.",
+    "profile_btn_delete_deleting": "Poistetaan...",
+    "profile_btn_delete_delete": "Poista",
+    "profile_btn_cancel": "Peruuta",
+
     "home_goodOffers_title1": "Hyvät tarjoukset juuri nyt",
     "home_goodOffers_title2": "Minne menet seuraavaksi?",
     "reviews_title": "Matkailijoiden arvostelut",

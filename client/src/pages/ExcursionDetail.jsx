@@ -42,11 +42,26 @@ useEffect(() => {
       <h2>{excursion.city} - {excursion.type}</h2>
       {excursion.picture && <img src={excursion.picture} alt={excursion.type} style={{ width: "100%" }} />}
       <p>{excursion.description}</p>
-      <p>Max people: {excursion.maxPerson}</p>
-      <p>Price: {excursion.pricePerPerson} €</p>
-      <p><strong>Guide:</strong> {excursion.guide ? excursion.guide.firstName : "Unknown"}</p>
+      {/* Гибкое решение с w3-row и кастомными стилями */}
+      <div className="w3-row" style={{ alignItems: 'center' }}>
+        <div className="w3-col l4 m6 s12 w3-padding-small">
+          <p className="w3-margin-0">
+            <strong>Max people:</strong> {excursion.maxPerson}</p>
+        </div>
+        <div className="w3-col l4 m6 s12 w3-padding-small">
+          <p className="w3-margin-0">
+            <strong>Price:</strong> {excursion.pricePerPerson} €</p>
+        </div>
+        <div className="w3-col l4 m12 s12 w3-padding-small">
+          <p className="w3-margin-0">
+            <strong>Guide: </strong> 
+            {excursion.guide ? `${excursion.guide.firstName} ${excursion.guide.lastName}` : "Unknown"}
+          </p>
+        </div>
+      </div>
       
-      <button className="w3-button w3-green w3-margin-top" onClick={() => setIsModalOpen(true)}>Book Now</button>
+      <button className="w3-button w3-round-large w3-padding w3-margin-top" 
+        style={{background: "#FF6B35", color: "white", boxShadow: "0 2px 5px rgba(0,0,0,0.2)"}} onClick={() => setIsModalOpen(true)}>Book Now</button>
 
       <RegisterModal 
         isOpen={isModalOpen} 
