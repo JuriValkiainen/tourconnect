@@ -66,6 +66,13 @@
     "profile_delete_account_modalBtn_1": "Удаление...",
     "profile_delete_account_modalBtn_2": "Удалить аккаунт",
 
+    "profile_delete_tour_confirmation_title": "Подтверждение удаления бронирования",
+    "profile_delete_tour_confirmation_message": "Вы уверены, что хотите удалить это бронирование? Это действие не может быть отменено.",
+    "profile_delete_tour_error": "Не удалось удалить бронь. Пожалуйста, попробуйте еще раз.",
+    "profile_btn_delete_deleting": "Удаление...",
+    "profile_btn_delete_delete": "Удалить",
+    "profile_btn_cancel": "Отмена",
+
     "home_goodOffers_title1": "Отличные предложения прямо сейчас",
     "home_goodOffers_title2": "Куда вы пойдете дальше?",
     "reviews_title": "Отзывы туристов",

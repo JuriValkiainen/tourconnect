@@ -16,7 +16,7 @@ const NavigationBar = () => {
 
   return (
     <>
-      {/* Основной навбар */}
+      {/* Basic Navigation Bar */}
       <div 
         className="w3-white w3-border-bottom w3-xlarge"
         style={{
@@ -27,15 +27,13 @@ const NavigationBar = () => {
           position: 'relative'
         }}
       >
-        {/* Логотип (центрируется на мобильных) */}
+        {/* Logo and Title */}
         <Link 
           to="/" 
           className="w3-button w3-text-red w3-hover-red"
           style={{
             flex: 1,
-            // flex: mobileMenuOpen ? 'none' : 1,
-            // textAlign: window.innerWidth < 768 ? 'center' : 'left',
-            justifyContent: 'center'
+            textAlign: window.innerWidth < 768 ? 'right' : 'left',
           }}
         >
           <b style={{fontSize: window.innerWidth < 768 ? '0.9em' : 'inherit'}}>
@@ -46,32 +44,32 @@ const NavigationBar = () => {
                 height: '30px', 
                 marginRight: '8px', 
                 marginBottom: '4px',
-                verticalAlign: 'middle'
+                verticalAlign: 'middle', borderRadius: '50%'
               }} 
             />
             TourConnect
           </b>
         </Link>
 
-        {/* Центральный блок (скрывается на мобильных) */}
+        {/* Center Buttons (hidden on mobile) */}
         <div 
           className="w3-hide-small" 
           style={{ 
             display: "flex", 
-            justifyContent: "center", 
+            justifyContent: "left", 
             flex: 1 
           }}
         >
           <LanguageSelector changeLanguage={changeLanguage} />
         </div>
 
-        {/* Правый блок (скрывается на мобильных) */}
+        {/* Right Buttons (hidden on mobile) */}
         <div className="w3-hide-small">
           <TouristDropdown />
           <GuideDropdown />
         </div>
 
-        {/* Гамбургер-меню (только на мобильных) */}
+        {/* Hamburger Menu Button (visible on mobile) */}
         <button 
           className="w3-button w3-xlarge w3-hide-medium w3-hide-large"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -87,7 +85,7 @@ const NavigationBar = () => {
         </button>
       </div>
 
-      {/* Мобильное меню (появляется при клике) */}
+      {/* Mobile Menu (visible on mobile) */}
       {mobileMenuOpen && (
         <div 
           className="w3-white w3-border-bottom w3-hide-medium w3-hide-large"

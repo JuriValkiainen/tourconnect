@@ -19,6 +19,7 @@ const Profile = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [deleteError, setDeleteError] = useState("");
+  const [bookingToDelete, setBookingToDelete] = useState(null);
 
   useEffect(() => {
     if (cooldown > 0) {
@@ -40,7 +41,6 @@ const Profile = () => {
         },
       })
       .then((response) => {
-        // console.log("Response data as user in Profile:", response.data);
         setUser(response.data);
         setLoading(false);
 
@@ -52,7 +52,7 @@ const Profile = () => {
         });
       })
       .then((response) => {
-        console.log("Response data as bookings in Profile:", response.data);
+        // console.log("Response data as bookings in Profile:", response.data);
         setBookings(response.data);
       })
       .catch((error) => {
@@ -62,8 +62,8 @@ const Profile = () => {
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); // удаляем токен
-    navigate("/"); // переадресация на главную
+    localStorage.removeItem("token"); // delete token from localStorage
+    navigate("/"); // redirect to login page
   };
 
   const handleDeleteAccount = async () => {
@@ -79,7 +79,7 @@ const Profile = () => {
         }
       });
 
-      // Удаляем токен и перенаправляем на главную
+// After successful deletion, remove the token from localStorage and navigate to the home page
       localStorage.removeItem("token");
       navigate("/");
       
@@ -88,6 +88,33 @@ const Profile = () => {
       setDeleteError(
         error.response?.data?.error || 
         "Failed to delete account. Please try again."
+      );
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
+  const handleDeleteBooking = async () => {
+    setDeleteLoading(true);
+    setDeleteError("");
+  
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(`http://localhost:5001/api/bookings/me/${bookingToDelete}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+  
+      // After successful deletion, remove the booking from the state
+      setBookings(prev => prev.filter(booking => booking.reservID !== bookingToDelete));
+      setBookingToDelete(null);
+      
+    } catch (error) {
+      console.error("Delete booking error:", error);
+      setDeleteError(
+        error.response?.data?.error || 
+        t("profile_delete_tour_error")
       );
     } finally {
       setDeleteLoading(false);
@@ -136,7 +163,7 @@ const Profile = () => {
 
   return (
     <>
-    {/* Модальное окно подтверждения удаления */}
+    {/* Delete Account Modal */}
     {showDeleteModal && (
         <div className="w3-modal" style={{ display: "block" }}>
           <div 
@@ -191,7 +218,7 @@ const Profile = () => {
         </div>
       )}
 
-      {/* Основной контент профиля */}
+      {/* Basic Information Section */}
       <div
         className="w3-container"
         style={{
@@ -388,9 +415,7 @@ const Profile = () => {
                               background: "rgba(244, 67, 54, 0.1)",
                               border: "1px solid rgba(244, 67, 54, 0.3)",
                             }}
-                            onClick={() =>
-                              console.log("Удалить бронь", booking.reservID)
-                            }
+                            onClick={() => setBookingToDelete(booking.reservID)}
                           >
                             {t("profile_bookings_btn_delete")}
                           </button>
@@ -482,8 +507,63 @@ const Profile = () => {
             </div>
           )}
 
-          {/* Добавляем кнопку удаления аккаунта внизу профиля */}
-          <div className="w3-padding w3-center w3-margin-top">
+          {/* Delete Booking Modal */}
+          {bookingToDelete && (
+            <div className="w3-modal" style={{ display: "block" }}>
+              <div 
+                className="w3-modal-content w3-card-4 w3-animate-zoom" 
+                style={{ maxWidth: "500px" }}
+              >
+                <div className="w3-container w3-padding-16">
+                  <span 
+                    onClick={() => setBookingToDelete(null)} 
+                    className="w3-button w3-display-topright"
+                  >
+                    &times;
+                  </span>
+                  
+                  <div className="w3-center">
+                    <FaExclamationTriangle 
+                      className="w3-text-red" 
+                      style={{ fontSize: "48px", margin: "16px 0" }} 
+                    />
+                  </div>
+                  
+                  <h3 className="w3-center">{t("profile_delete_tour_confirmation_title")}</h3>
+                  <p className="w3-center">
+                    {t("profile_delete_tour_confirmation_message")}
+                  </p>
+                  
+                  <div className="w3-row w3-margin-top">
+                    <div className="w3-half w3-padding">
+                      <button
+                        onClick={() => setBookingToDelete(null)}
+                        className="w3-button w3-light-grey w3-block w3-round-large"
+                      >
+                        {t("profile_btn_cancel")}
+                      </button>
+                    </div>
+                    <div className="w3-half w3-padding">
+                      <button
+                        onClick={handleDeleteBooking}
+                        disabled={deleteLoading}
+                        className="w3-button w3-red w3-block w3-round-large"
+                      >
+                        {deleteLoading ? t("profile_btn_delete_deleting") : t("profile_btn_delete_delete")}
+                      </button>
+                    </div>
+                  </div>
+                  
+                  {deleteError && (
+                    <p className="w3-text-red w3-center">{deleteError}</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Delete Account Button */}
+          <div className="w3-padding w3-center w3-margin-bottom">
               <button
                 onClick={() => setShowDeleteModal(true)}
                 className="w3-button w3-round-large"

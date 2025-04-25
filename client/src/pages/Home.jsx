@@ -7,7 +7,7 @@ const Home = () => {
   const [picTour, setPicTour] = useState([]);
   const navigate = useNavigate();
   const { t } = useTranslation();
-  
+
   const handleImageClick = (tour) => {
     navigate(`/excursions/${tour.tourID}`, {
       state: { date: new Date().toISOString().slice(0, 10) },
@@ -26,12 +26,13 @@ const Home = () => {
 
   const [outdoorTours, setOutdoorTours] = useState([]);
   useEffect(() => {
-    axios.get("http://localhost:5001/outdoortours")
-      .then(response => {
+    axios
+      .get("http://localhost:5001/outdoortours")
+      .then((response) => {
         const uniqueOutdoorTours = [...new Set(response.data)];
         setOutdoorTours(uniqueOutdoorTours);
       })
-      .catch(error => console.error("Error fetching pictures:", error));
+      .catch((error) => console.error("Error fetching pictures:", error));
   }, []);
 
   return (
@@ -67,8 +68,12 @@ const Home = () => {
                   transition: "transform 0.3s ease",
                   transform: "scale(1)",
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-                onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.transform = "scale(1.05)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.transform = "scale(1)")
+                }
               />
               <span className="w3-display-bottomleft w3-padding">
                 {picTour[0].city}
@@ -105,8 +110,12 @@ const Home = () => {
                           transition: "transform 0.3s ease",
                           transform: "scale(1)",
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-                        onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.transform = "scale(1.05)")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.transform = "scale(1)")
+                        }
                       />
                       <span className="w3-display-bottomleft w3-padding">
                         {picTour[i].city}
@@ -142,10 +151,14 @@ const Home = () => {
                           objectFit: "cover",
                           display: "block",
                           transition: "transform 0.3s ease",
-                          transform: "scale(1)"
+                          transform: "scale(1)",
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-                        onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.transform = "scale(1.05)")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.transform = "scale(1)")
+                        }
                       />
                       <span className="w3-display-bottomleft w3-padding">
                         {picTour[i].city}
@@ -160,34 +173,45 @@ const Home = () => {
 
       {/* <!-- Explore Nature --> */}
       <div className="w3-container">
-      <h3>{t("home_nature_title")}</h3>
-      <p>{t("home_nature_text")}</p>
-</div>
+        <h3>{t("home_nature_title")}</h3>
+        <p>{t("home_nature_text")}</p>
+      </div>
 
-<div className="w3-row-padding">
-  {outdoorTours.slice(0, 2).map((tour) => (
-    <div key={tour.tourID} className="w3-half w3-margin-bottom" style={{ display: 'flex', flexDirection: 'column' }}>
-      <div style={{ width: "100%", height: '270px', overflow: 'hidden' }}>
-        <img
-          src={tour.picture}
-          alt={tour.city}
-          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-        />
+      <div className="w3-row-padding">
+        {outdoorTours.slice(0, 2).map((tour) => (
+          <div
+            key={tour.tourID}
+            className="w3-half w3-margin-bottom"
+            style={{ display: "flex", flexDirection: "column" }}
+          >
+            <div style={{ width: "100%", height: "270px", overflow: "hidden" }}>
+              <img
+                src={tour.picture}
+                alt={tour.city}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  display: "block",
+                }}
+              />
+            </div>
+            <div className="w3-container w3-white">
+              <h3>{tour.city}</h3>
+              <p className="w3-opacity">Outdoor tour</p>
+              <p>
+                {t("home_nature_text_card")} {tour.city}
+              </p>
+              <button
+                className="w3-button w3-dark-grey w3-margin-bottom"
+                onClick={() => handleImageClick(tour)}
+              >
+                {t("home_nature_button")}
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
-      <div className="w3-container w3-white">
-        <h3>{tour.city}</h3>
-        <p className="w3-opacity">Outdoor tour</p>
-        <p>{t("home_nature_text_card")} {tour.city}</p>
-        <button
-          className="w3-button w3-dark-grey w3-margin-bottom"
-          onClick={() => handleImageClick(tour)}
-        >
-          {t("home_nature_button")}
-        </button>
-      </div>
-    </div>
-  ))}
-</div>
 
       {/* <!-- Newsletter --> */}
       <div className="w3-container">
