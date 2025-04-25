@@ -41,7 +41,6 @@ const Profile = () => {
         },
       })
       .then((response) => {
-        // console.log("Response data as user in Profile:", response.data);
         setUser(response.data);
         setLoading(false);
 
@@ -53,7 +52,7 @@ const Profile = () => {
         });
       })
       .then((response) => {
-        console.log("Response data as bookings in Profile:", response.data);
+        // console.log("Response data as bookings in Profile:", response.data);
         setBookings(response.data);
       })
       .catch((error) => {
@@ -63,8 +62,8 @@ const Profile = () => {
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); // удаляем токен
-    navigate("/"); // переадресация на главную
+    localStorage.removeItem("token"); // delete token from localStorage
+    navigate("/"); // redirect to login page
   };
 
   const handleDeleteAccount = async () => {
@@ -80,7 +79,7 @@ const Profile = () => {
         }
       });
 
-      // Удаляем токен и перенаправляем на главную
+// After successful deletion, remove the token from localStorage and navigate to the home page
       localStorage.removeItem("token");
       navigate("/");
       
@@ -107,7 +106,7 @@ const Profile = () => {
         }
       });
   
-      // Оптимистичное обновление UI
+      // After successful deletion, remove the booking from the state
       setBookings(prev => prev.filter(booking => booking.reservID !== bookingToDelete));
       setBookingToDelete(null);
       
@@ -164,7 +163,7 @@ const Profile = () => {
 
   return (
     <>
-    {/* Модальное окно подтверждения удаления */}
+    {/* Delete Account Modal */}
     {showDeleteModal && (
         <div className="w3-modal" style={{ display: "block" }}>
           <div 
@@ -219,7 +218,7 @@ const Profile = () => {
         </div>
       )}
 
-      {/* Основной контент профиля */}
+      {/* Basic Information Section */}
       <div
         className="w3-container"
         style={{
@@ -508,7 +507,7 @@ const Profile = () => {
             </div>
           )}
 
-          {/* Модальное окно подтверждения удаления брони */}
+          {/* Delete Booking Modal */}
           {bookingToDelete && (
             <div className="w3-modal" style={{ display: "block" }}>
               <div 
@@ -563,7 +562,7 @@ const Profile = () => {
             </div>
           )}
 
-          {/* Добавляем кнопку удаления аккаунта внизу профиля */}
+          {/* Delete Account Button */}
           <div className="w3-padding w3-center w3-margin-bottom">
               <button
                 onClick={() => setShowDeleteModal(true)}

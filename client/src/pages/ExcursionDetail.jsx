@@ -5,7 +5,7 @@ import RegisterModal from "../components/RegisterModal";
 
 const ExcursionDetail = () => {
   const location = useLocation();
-  const passedDate = location.state?.date || new Date().toISOString().slice(0, 10); // ← вот она, выбранная дата или текущая дата если попал напрямую (вручную введя URL или перезагрузив страницу)
+  const passedDate = location.state?.date || new Date().toISOString().slice(0, 10); // Default to today's date
   const { id } = useParams();
   const [excursion, setExcursion] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -25,13 +25,13 @@ const ExcursionDetail = () => {
       });
   }, [id]);
 
-useEffect(() => {
-  if (isModalOpen) {
-    document.body.style.overflow = 'hidden';
-  } else {
-    document.body.style.overflow = 'auto';
-  }
-}, [isModalOpen]);
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [isModalOpen]);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>❌ Error: {error}</p>;
@@ -42,7 +42,7 @@ useEffect(() => {
       <h2>{excursion.city} - {excursion.type}</h2>
       {excursion.picture && <img src={excursion.picture} alt={excursion.type} style={{ width: "100%" }} />}
       <p>{excursion.description}</p>
-      {/* Гибкое решение с w3-row и кастомными стилями */}
+      {/* Other excursion details */}
       <div className="w3-row" style={{ alignItems: 'center' }}>
         <div className="w3-col l4 m6 s12 w3-padding-small">
           <p className="w3-margin-0">
