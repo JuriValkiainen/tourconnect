@@ -13,6 +13,8 @@ initializeDatabase();
 import guidesRouter from "./endpoints/guidesEndpoints";
 import touristsRouter from "./endpoints/touristsEndpoints";
 import excursionsRouter from "./endpoints/excursionsEndpoints";
+import adminRouter from "./endpoints/adminEndpoints";
+
 
 const app = express();
 app.use(cors());
@@ -27,6 +29,7 @@ app.get("/", (req, res) => {
 app.use("/", guidesRouter);
 app.use("/", touristsRouter);
 app.use("/", excursionsRouter);
+app.use("/", adminRouter);
 
 export function verifyGuideToken(req: Request, res: any, next: NextFunction) {
   const token = req.header("Authorization")?.replace("Bearer ", "").trim();
@@ -85,13 +88,36 @@ export function verifyTouristToken(req: Request, res: any, next: NextFunction) {
   }
 }
 
+export function verifyAdminToken(req: Request, res: any, next: NextFunction) {
+  const token = req.header("Authorization")?.replace("Bearer ", "").trim();
+  if (!token) return res.status(401).json({ error: "Access denied" });
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
+    if (decoded["role"] !== "admin") {
+      return res.status(401).json({ error: "Access denied" });
+    }
+
+    req.user = {
+      id: decoded["id"],
+      email: decoded["email"],
+      role: decoded["role"],
+    };
+
+    next();
+  } catch (error) {
+    res.status(401).json({ error: "Invalid token" });
+  }
+}
+
 app.get("/cities", async (req, res) => {
   const cities = await AppDataSource.manager.find(Tours, {
     select: { city: true },
   });
   const cityList = cities.map((c) => c.city);
-  console.log(JSON.stringify(cities, null, 2));
-  res.json(cityList);
+  const uniqueCities = Array.from(new Set(cityList));
+  console.log(JSON.stringify(uniqueCities, null, 2));
+  res.json(uniqueCities);
 });
 
 app.listen(PORT, () => {

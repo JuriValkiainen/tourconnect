@@ -24,6 +24,8 @@
     "footer_guides_profile": "Personal account",
     "footer_guides_support": "Support",
     "footer_bottom": "Privacy Policy",
+    "footer_bottom_adminlink": "Admin panel",
+
     "login_title": "Traveller Login",
     "login_text": "Log in to your account",
     "login_email": "Email",
@@ -123,5 +125,15 @@
     "register_form_password": "Password",
     "register_form_btn_1": "Registering...",
     "register_form_btn_2": "Register",
-    "register_form_btn_link": "Already have an account? Login"
+    "register_form_btn_link": "Already have an account? Login",
+
+    "adminlogin_title": "Login as administrator",
+    "adminlogin_text": "Log in to admin account",
+    "adminlogin_email": "Email",
+    "adminlogin_password": "Password",
+    "adminlogin_btn_loading": "Logging in...",
+    "adminlogin_btn_login": "Login",
+    "admin-profile_title": "Admin Profile",
+    "admin-profile_info_icon": "Out",
+    "admin-profile_email": "Admin Email"
 }

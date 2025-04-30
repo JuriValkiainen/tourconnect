@@ -100,7 +100,14 @@ const Footer = () => {
       <div className="w3-border-top " style={{ borderColor: "rgba(255, 255, 255, 0.2) !important" }}>
         <p className="w3-center">
           © 2025 TourConnect | 
-          <a href="/privacy" className="w3-hover-text-red" style={{ color: "white", marginLeft: "8px" }}>{t('footer_bottom')}</a>
+          <a href="/privacy" className="w3-hover-text-red" style={{ color: "white", marginLeft: "8px" }}>{t('footer_bottom')}</a> |{' '}
+          <RouterLink 
+          to="/admin-login" 
+          className="w3-hover-text-red" 
+          style={{ color: "white"}}
+          >
+          {t('footer_bottom_adminlink')}
+          </RouterLink>
         </p>
       </div>
     </footer>

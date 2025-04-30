@@ -14,6 +14,8 @@ import VerifyEmail from "./pages/VerifyEmail";
 import Blog from "./pages/Blog";
 import Reviews from "./pages/Reviews";
 import GuideSupport from "./pages/GuideSupport";
+import AdminLogin from "./pages/AdminLogin";
+import AdminPanel from "./pages/AdminPanel";
 
 
 const AppRoutes = () => {
@@ -40,6 +42,8 @@ const AppRoutes = () => {
       <Route path="/blog" element={<Blog />} />
       <Route path="/reviews" element={<Reviews />} />
       <Route path="/guide-support" element={<GuideSupport />} />
+      <Route path="/admin-login" element={<AdminLogin />} />
+      <Route path="/admin-panel" element={<AdminPanel />} />
     </Routes>
   );
 };

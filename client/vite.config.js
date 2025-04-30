@@ -9,6 +9,7 @@ export default defineConfig({
       '/guides': 'http://localhost:5001',
       '/api': 'http://localhost:5001',
       '/tourtypes': 'http://localhost:5001',
+      // '/admin-login': 'http://localhost:5001',
     },
   },
 })
