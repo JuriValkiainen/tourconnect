@@ -123,5 +123,15 @@
     "home_nature_title": "Исследуйте природу",
     "home_nature_text": "Путешествуйте с нами и увидьте природу во всей её красе.",
     "home_nature_text_card": "Ощутите захватывающую природу",
-    "home_nature_button": "Узнать больше"
+    "home_nature_button": "Узнать больше",
+
+    "adminlogin_title": "Админ логин",
+    "adminlogin_text": "Войдите в систему",
+    "adminlogin_email": "Электронная почта",
+    "adminlogin_password": "Пароль",
+    "adminlogin_btn_loading": "Загрузка...",
+    "adminlogin_btn_login": "Войти",
+    "admin-profile_title": "Админ профиль",
+    "admin-profile_info_icon": "Выход",
+    "admin-profile_email": "Электронная почта администратора"
 }

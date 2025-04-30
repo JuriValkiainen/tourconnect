@@ -123,6 +123,16 @@
     "home_nature_title": "Tutustu luontoon",
     "home_nature_text": "Matkusta kanssamme ja koe luonto kauneimmillaan.",
     "home_nature_text_card": "Koe henkeäsalpaava luonto kohteessa",
-    "home_nature_button": "Lue lisää"
+    "home_nature_button": "Lue lisää",
+
+    "adminlogin_title": "Admin login",
+    "adminlogin_text": "Kirjaudu sisään",
+    "adminlogin_email": "Sähköposti",
+    "adminlogin_password": "Salasana",
+    "adminlogin_btn_loading": "Kirjautuminen sisään...",
+    "adminlogin_btn_login": "Kirjaudu sisään",
+    "admin-profile_title": "Admin Profile",
+    "admin-profile_info_icon": "Ulos",
+    "admin-profile_email": "Sähköposti"
 }
 
