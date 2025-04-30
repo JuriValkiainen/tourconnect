@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 import Newsletter from "../components/Newsletter";
 import Contact from "../components/Contact";
@@ -24,6 +25,8 @@ const GuideRegister = () => {
   const [successMessage, setSuccessMessage] = useState("");
 
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchLanguages = async () => {
@@ -57,7 +60,7 @@ const GuideRegister = () => {
     setSuccessMessage("");
 
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match.");
+      setError(t("guideRegister_passwords_do_not_match."));
       return;
     }
 
@@ -76,7 +79,7 @@ const GuideRegister = () => {
         }
       );
 
-      setSuccessMessage("Registration successful!");
+      setSuccessMessage(t("guiudeRegister_success"));
       setTimeout(() => {
         setFormData({
           firstName: "",
@@ -94,9 +97,9 @@ const GuideRegister = () => {
       setTimeout(() => navigate("/guide-login"), 2000);
 
     } catch (err) {
-      console.error("Error registering guide:", err);
+      console.error(t("guideRegister_error_registering"), err);
       setError(
-        err.response?.data?.error || "Server error. Please try again later."
+        err.response?.data?.error || t("guideRegister_error_server")
       );
     }
   };
@@ -106,36 +109,36 @@ const GuideRegister = () => {
       <HeroImage />
 
       <div className="w3-container w3-margin-top">
-        <h2 className="w3-center w3-margin-top">Register as a guide</h2>
-        <p className="w3-center">Join our platform and start offering your own excursions</p>
+        <h2 className="w3-center w3-margin-top">{t('guideRegister_title')}</h2>
+        <p className="w3-center">{t('guideRegister_subtitle')}</p>
       </div>
 
       <div className="w3-container" style={{ maxWidth: "700px", margin: "auto" }}>
         <div className="w3-card w3-white w3-padding-32 w3-round-large w3-margin-top w3-margin-bottom">
           <form onSubmit={handleSubmit}>
-            <label className="w3-text-black">First Name</label>
+            <label className="w3-text-black">{t('guideRegister_firstName')}</label>
             <input
               className="w3-input w3-border w3-margin-bottom"
               type="text"
               name="firstName"
               value={formData.firstName}
               onChange={handleChange}
-              placeholder="First name"
+              placeholder={t('guideRegister_firstName')}
               required
             />
 
-            <label className="w3-text-black">Last Name</label>
+            <label className="w3-text-black">{t('guideRegister_lastName')}</label>
             <input
               className="w3-input w3-border w3-margin-bottom"
               type="text"
               name="lastName"
               value={formData.lastName}
               onChange={handleChange}
-              placeholder="Last name"
+              placeholder={t('guideRegister_lastName')}
               required
             />
 
-            <label className="w3-text-black">Languages You Speak</label>
+            <label className="w3-text-black">{t('guideRegister_languages')}</label>
             <div className="w3-row-padding w3-margin-top w3-margin-bottom">
               {availableLanguages.map((lang, index) => (
                 <div key={lang} className="w3-third">
@@ -154,69 +157,69 @@ const GuideRegister = () => {
               ))}
             </div>
 
-            <label className="w3-text-black">Email</label>
+            <label className="w3-text-black">{t('guideRegister_email')}</label>
             <input
               className="w3-input w3-border w3-margin-bottom"
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="Your email"
+              placeholder={t('guideRegister_email')}
               required
             />
 
-            <label className="w3-text-black">Phone</label>
+            <label className="w3-text-black">{t('guideRegister_phone')}</label>
             <input
               className="w3-input w3-border w3-margin-bottom"
               type="tel"
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              placeholder="Phone number"
+              placeholder={t('guideRegister_phone')}
               required
             />
 
-            <label className="w3-text-black">Password</label>
+            <label className="w3-text-black">{t('guideRegister_password')}</label>
             <input
               className="w3-input w3-border w3-margin-bottom"
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="Choose a password"
+              placeholder={t('guideRegister_password')}
               required
             />
 
-            <label className="w3-text-black">Confirm Password</label>
+            <label className="w3-text-black">{t('guideRegister_confirmPassword')}</label>
             <input
               className="w3-input w3-border w3-margin-bottom"
               type="password"
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-              placeholder="Repeat your password"
+              placeholder={t('guideRegister_confirmPassword')}
               required
             />
 
-            <label className="w3-text-black">Short Description</label>
+            <label className="w3-text-black">{t('guideRegister_description_label')}</label>
             <textarea
               className="w3-input w3-border w3-margin-bottom"
               name="description"
               value={formData.description}
               onChange={handleChange}
-              placeholder="Tell something about yourself"
+              placeholder={t('guideRegister_description_placeholder')}
               rows="4"
               required
             ></textarea>
 
-            <label className="w3-text-black">Photo URL</label>
+            <label className="w3-text-black">{t('guideRegister_photo_label')}</label>
             <input
               className="w3-input w3-border w3-margin-bottom"
               type="url"
               name="photo"
               value={formData.photo}
               onChange={handleChange}
-              placeholder="Link to your photo"
+              placeholder={t('guideRegister_photo_placeholder')}
             />
 
             {error && (
@@ -231,13 +234,20 @@ const GuideRegister = () => {
               </div>
             )}
 
-            <div className="w3-center">
+            <div className="w3-center" style={{ display: "flex", justifyContent: "center", gap: "16px"}}>
               <button
                 type="submit"
-                className="w3-button w3-red w3-round-large"
-                style={{ width: "150px" }}
+                className="w3-button w3-green w3-round-large w3-padding"
               >
-                Register
+                {t('guideRegister_submit')}
+              </button>
+
+              <button
+                type="button"
+                className="w3-button w3-red w3-border w3-round-large"
+                onClick={() => navigate("/")}
+              >
+                {t('guideRegister_cancel')}
               </button>
             </div>
           </form>

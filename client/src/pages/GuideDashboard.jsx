@@ -4,9 +4,10 @@ import axios from "axios";
 import HeroImage from "../components/HeroImage";
 import Newsletter from "../components/Newsletter";
 import Contact from "../components/Contact";
+import { useTranslation } from "react-i18next";
 
 const GuideDashboard = () => {
-  const [activeTab, setActiveTab] = useState("Profile");
+  const [activeTab, setActiveTab] = useState("profile");
   const [guide, setGuide] = useState(null);
   const [tours, setTours] = useState([]);
   const [bookings, setBookings] = useState([]);
@@ -15,6 +16,12 @@ const GuideDashboard = () => {
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isAddingTour, setIsAddingTour] = useState(false);
   const [editingTourId, setEditingTourId] = useState(null);
+  const { t } = useTranslation();
+  const tabOptions = [
+    { key: "profile", label: t("guideDashboard_tab_profile") },
+    { key: "tours", label: t("guideDashboard_tab_tours") },
+    { key: "bookings", label: t("guideDashboard_tab_bookings") },
+  ];
 
   const [editForm, setEditForm] = useState({
     firstName: "",
@@ -144,12 +151,12 @@ const GuideDashboard = () => {
       setIsEditingProfile(false);
     } catch (err) {
       console.error("Failed to update profile:", err);
-      alert("Error updating profile. Please try again.");
+      alert(t("guideDashboard_update_profile_fail"));
     }
   };
 
   const handleDeleteProfile = async () => {
-    const confirmed = window.confirm("Are you sure you want to delete your prifile? This action cannot be undone.");
+    const confirmed = window.confirm(t("guideDashboard_delete_profile_confirm"));
     if (!confirmed) return;
 
     try {
@@ -158,10 +165,10 @@ const GuideDashboard = () => {
 
       await axios.delete("/api/guides/me", config);
       localStorage.removeItem("guideToken");
-      alert("Your profile has been successfully deleted.");
+      alert(t("guideDashboard_delete_profile_success"));
       navigate("/");
     } catch (err) {
-      console.error("Failed to delete profile:", err);
+      console.error(t("guideDashboard_delete_profile_fail"));
       alert("Failed to delete profile. This feature may not be implemented yet.");
     }
   };
@@ -192,7 +199,7 @@ const GuideDashboard = () => {
       setIsAddingTour(false);
     } catch (err) {
       console.error("Failed to add tour:", err);
-      alert("Error creating tour. Please try again.");
+      alert(t("guideDashboard_tours_create_fail"));
     }
   };
 
@@ -221,12 +228,12 @@ const GuideDashboard = () => {
       setEditingTourId(null);
     } catch (err) {
       console.error("Failed to update tour:", err);
-      alert("Error updating tour. Please try again.");
+      alert(t("guideDashboard_tours_update_fail"));
     }
   };
 
   const handleDeleteTour = async (tourID) => {
-    if (!window.confirm("Are you sure you want to delete this tour?")) return;
+    if (!window.confirm(t("guideDashboard_tours_delete_confirm"))) return;
     try {
       const token = localStorage.getItem("guideToken");
       const config = { headers: { Authorization: `Bearer ${token}` } };
@@ -235,13 +242,13 @@ const GuideDashboard = () => {
       setTours(tours.filter((tour) => tour.tourID !== tourID));
     } catch (err) {
       console.error("Failed to delete tour:", err);
-      alert("Error deleting tour. Please try again.");
+      alert(t("guideDashboard_tours_delete_fail"));
     }
   };
 
   const renderProfile = () => (
     <div className="w3-container">
-      <h2>Profile</h2>
+      <h2>{t("guideDashboard_tab_profile")}</h2>
       {guide ? (
         !isEditingProfile ? (
           <div className="w3-row-padding">
@@ -253,59 +260,59 @@ const GuideDashboard = () => {
               />
             </div>
             <div className="w3-col s12 m6 w3-left-align">
-              <p><strong>Name:</strong> {guide.firstName} {guide.lastName}</p>
-              <p><strong>Email:</strong> {guide.email}</p>
-              <p><strong>Phone:</strong> {guide.phone}</p>
-              <p><strong>Description:</strong></p>
+              <p><strong>{t("guideDashboard_profile_nameLabel")}:</strong> {guide.firstName} {guide.lastName}</p>
+              <p><strong>{t("guideDashboard_profile_emailLabel")}:</strong> {guide.email}</p>
+              <p><strong>{t("guideDashboard_profile_phoneLabel")}:</strong> {guide.phone}</p>
+              <p><strong>{t("guideDashboard_profile_descriptionLabel")}:</strong></p>
               <p>{guide.description}</p>
               <div className="w3-margin-top">
                 <button className="w3-button w3-blue w3-round-large w3-margin-right" onClick={() => setIsEditingProfile(true)}>
-                  Edit Profile
+                  {t("guideDashboard_profile_edit")}
                 </button>
                 <button className="w3-button w3-red w3-round-large" onClick={handleDeleteProfile}>
-                  Delete Profile
+                  {t("guideDashboard_profile_delete")}
                 </button>
               </div>
             </div>
           </div>
         ) : (
           <form onSubmit={handleProfileUpdate} className="w3-container w3-padding">
-            <label className="w3-text-black">First Name</label>
+            <label className="w3-text-black">{t("guideDashboard_profile_firstName")}</label>
             <input className="w3-input w3-border w3-margin-bottom" type="text" name="firstName" value={editForm.firstName} onChange={handleProfileChange} required />
-            <label className="w3-text-black">Last Name</label>
+            <label className="w3-text-black">{t("guideDashboard_profile_lastName")}</label>
             <input className="w3-input w3-border w3-margin-bottom" type="text" name="lastName" value={editForm.lastName} onChange={handleProfileChange} required />
-            <label className="w3-text-black">Email</label>
+            <label className="w3-text-black">{t("guideDashboard_profile_email")}</label>
             <input className="w3-input w3-border w3-margin-bottom" type="email" name="email" value={editForm.email} onChange={handleProfileChange} required />
-            <label className="w3-text-black">Phone</label>
+            <label className="w3-text-black">{t("guideDashboard_profile_phone")}</label>
             <input className="w3-input w3-border w3-margin-bottom" type="text" name="phone" value={editForm.phone} onChange={handleProfileChange} required />
-            <label className="w3-text-black">Description</label>
+            <label className="w3-text-black">{t("guideDashboard_profile_description")}</label>
             <textarea className="w3-input w3-border w3-margin-bottom" name="description" value={editForm.description} onChange={handleProfileChange} rows="4" required />
-            <label className="w3-text-black">Photo URL</label>
+            <label className="w3-text-black">{t("guideDashboard_profile_photo")}</label>
             <input className="w3-input w3-border w3-margin-bottom" type="url" name="photo" value={editForm.photo} onChange={handleProfileChange} />
-            <button type="submit" className="w3-button w3-green w3-round-large w3-margin-right">Save</button>
-            <button type="button" className="w3-button w3-gray w3-round-large" onClick={() => setIsEditingProfile(false)}>Cancel</button>
+            <button type="submit" className="w3-button w3-green w3-round-large w3-margin-right">{t("guideDashboard_profile_save")}</button>
+            <button type="button" className="w3-button w3-gray w3-round-large" onClick={() => setIsEditingProfile(false)}>{t("guideDashboard_profile_cancel")}</button>
           </form>
         )
       ) : (
-        <p>Loading...</p>
+        <p>{t("guideDashboard_profile_loading")}</p>
       )}
     </div>
   );
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case "Profile":
+      case "profile":
         return renderProfile();
-      case "My Tours":
+      case "tours":
         return (
           <div className="w3-container">
-            <h2>My Tours</h2>
+            <h2>{t("guideDashboard_tours_heading")}</h2>
             {!isAddingTour && (
               <button
                 className="w3-button w3-green w3-round-large w3-margin-bottom"
                 onClick={() => setIsAddingTour(true)}
               >
-                Add New Tour
+                {t("guideDashboard_tours_add")}
               </button>
             )}
 
@@ -319,7 +326,7 @@ const GuideDashboard = () => {
                   onChange={handleNewTourChange}
                   required
                 >
-                  <option value="" disabled>Select Tour Type</option>
+                  <option value="" disabled>{t("guideDashboard_tours_type")}</option>
                   {tourTypes.map((type) => (
                     <option key={type} value={type}>{type}</option>
                   ))}
@@ -332,29 +339,29 @@ const GuideDashboard = () => {
                   onChange={handleNewTourChange}
                   required
                 >
-                  <option value="" disabled>Select Tour Language</option>
+                  <option value="" disabled>{t("guideDashboard_tours_language")}</option>
                   {guideLanguages.map((lang) => (
                     <option key={lang} value={lang}>{lang}</option>
                   ))}
                 </select>
-                <input className="w3-input w3-border w3-margin-bottom" name="maxPerson" type="number" value={newTourForm.maxPerson} onChange={handleNewTourChange} placeholder="Max People" required />
-                <input className="w3-input w3-border w3-margin-bottom" name="pricePerPerson" type="number" value={newTourForm.pricePerPerson} onChange={handleNewTourChange} placeholder="Price Per Person" required />
-                <textarea className="w3-input w3-border w3-margin-bottom" name="description" value={newTourForm.description} onChange={handleNewTourChange} placeholder="Description" required />
-                <input className="w3-input w3-border w3-margin-bottom" name="picture" type="url" value={newTourForm.picture} onChange={handleNewTourChange} placeholder="Picture URL" />
+                <input className="w3-input w3-border w3-margin-bottom" name="maxPerson" type="number" value={newTourForm.maxPerson} onChange={handleNewTourChange} placeholder={t("guideDashboard_tours_maxPerson")} required />
+                <input className="w3-input w3-border w3-margin-bottom" name="pricePerPerson" type="number" value={newTourForm.pricePerPerson} onChange={handleNewTourChange} placeholder={t("guideDashboard_tours_pricePerPerson")} required />
+                <textarea className="w3-input w3-border w3-margin-bottom" name="description" value={newTourForm.description} onChange={handleNewTourChange} placeholder={t("guideDashboard_tours_description")} required />
+                <input className="w3-input w3-border w3-margin-bottom" name="picture" type="url" value={newTourForm.picture} onChange={handleNewTourChange} placeholder={t("guideDashboard_tours_picture")} />
                 <div className="w3-margin-top w3-center">
                   <button
                     type="submit"
                     className="w3-button w3-blue w3-round-large"
                     style={{ marginRight: '24px' }}
                   >
-                    Submit Tour
+                    {t("guideDashboard_tours_submit")}
                   </button>
                   <button
                     type="button"
                     className="w3-button w3-red w3-round-large"
                     onClick={() => setIsAddingTour(false)}
                   >
-                    Cancel
+                    {t("guideDashboard_tours_cancel")}
                   </button>
                 </div>
               </form>
@@ -377,7 +384,7 @@ const GuideDashboard = () => {
                               onChange={handleEditTourChange}
                               required
                             >
-                              <option value="" disabled>Select Tour Type</option>
+                              <option value="" disabled>{t("guideDashboard_tours_type")}</option>
                               {tourTypes.map((type) => (
                                 <option key={type} value={type}>{type}</option>
                               ))}
@@ -390,7 +397,7 @@ const GuideDashboard = () => {
                               onChange={handleEditTourChange}
                               required
                             >
-                              <option value="" disabled>Select Tour Language</option>
+                              <option value="" disabled>{t("guideDashboard_tours_language")}</option>
                               {guideLanguages.map((lang) => (
                                 <option key={lang} value={lang}>{lang}</option>
                               ))}
@@ -399,19 +406,19 @@ const GuideDashboard = () => {
                             <input className="w3-input w3-border w3-margin-bottom" name="pricePerPerson" type="number" value={editTourForm.pricePerPerson} onChange={handleEditTourChange} required />
                             <textarea className="w3-input w3-border w3-margin-bottom" name="description" value={editTourForm.description} onChange={handleEditTourChange} required />
                             <input className="w3-input w3-border w3-margin-bottom" name="picture" type="url" value={editTourForm.picture} onChange={handleEditTourChange} />
-                            <button type="submit" className="w3-button w3-blue w3-round-large w3-margin-right w3-margin-bottom">Save</button>
-                            <button type="button" className="w3-button w3-gray w3-round-large w3-margin-bottom" onClick={() => setEditingTourId(null)}>Cancel</button>
+                            <button type="submit" className="w3-button w3-blue w3-round-large w3-margin-right w3-margin-bottom">{t("guideDashboard_tours_save")}</button>
+                            <button type="button" className="w3-button w3-gray w3-round-large w3-margin-bottom" onClick={() => setEditingTourId(null)}>{t("guideDashboard_tours_cancel")}</button>
                           </form>
                         ) : (
                           <>
                             <h4>{tour.city}</h4>
-                            <p><strong>Type:</strong> {tour.type}</p>
-                            <p><strong>Language:</strong> {tour.language}</p>
-                            <p><strong>Price:</strong> €{tour.pricePerPerson}</p>
-                            <p><strong>Max People:</strong> {tour.maxPerson}</p>
+                            <p><strong>{t("guideDashboard_tours_card_type")}:</strong> {tour.type}</p>
+                            <p><strong>{t("guideDashboard_tours_card_language")}:</strong> {tour.language}</p>
+                            <p><strong>{t("guideDashboard_tours_card_price")}:</strong> €{tour.pricePerPerson}</p>
+                            <p><strong>{t("guideDashboard_tours_card_people")}:</strong> {tour.maxPerson}</p>
                             <p>{tour.description.slice(0, 100)}...</p>
-                            <button className="w3-button w3-yellow w3-small w3-round-large w3-margin-right w3-margin-bottom" onClick={() => handleEditTourClick(tour)}>Edit</button>
-                            <button className="w3-button w3-red w3-small w3-round-large w3-margin-bottom" onClick={() => handleDeleteTour(tour.tourID)}>Delete</button>
+                            <button className="w3-button w3-yellow w3-small w3-round-large w3-margin-right w3-margin-bottom" onClick={() => handleEditTourClick(tour)}>{t("guideDashboard_tours_edit")}</button>
+                            <button className="w3-button w3-red w3-small w3-round-large w3-margin-bottom" onClick={() => handleDeleteTour(tour.tourID)}>{t("guideDashboard_tours_delete")}</button>
                           </>
                         )}
                       </div>
@@ -420,14 +427,14 @@ const GuideDashboard = () => {
                 ))}
               </div>
             ) : (
-              <p>No tours found.</p>
+              <p>{t("guideDashboard_tours_no_tours")}</p>
             )}
           </div>
         );
-      case "Bookings":
+      case "bookings":
         return (
           <div className="w3-container">
-            <h2>Bookings</h2>
+            <h2>{t("guideDashboard_bookings_heading")}</h2>
 
             {bookings.length > 0 ? (
               <div className="w3-row-padding">
@@ -437,18 +444,18 @@ const GuideDashboard = () => {
                       <h4 className="w3-text-dark-grey">
                         {booking.tours.city}
                       </h4>
-                      <p><strong>Date:</strong> {new Date(booking.date).toLocaleDateString()}</p>
-                      <p><strong>Tourist:</strong> {booking.tourist.firstName} {booking.touristlastName}</p>
-                      <p><strong>Email:</strong> {booking.tourist.email}</p>
-                      <p><strong>Phone:</strong> {booking.tourist.phone}</p>
-                      <p><strong>People:</strong> {booking.numberOfPeople}</p>
-                      <p><strong>Sum:</strong> €{booking.summa}</p>
+                      <p><strong>{t("guideDashboard_bookings_date")}:</strong> {new Date(booking.date).toLocaleDateString()}</p>
+                      <p><strong>{t("guideDashboard_bookings_tourist")}:</strong> {booking.tourist.firstName} {booking.touristlastName}</p>
+                      <p><strong>{t("guideDashboard_bookings_email")}:</strong> {booking.tourist.email}</p>
+                      <p><strong>{t("guideDashboard_bookings_phone")}:</strong> {booking.tourist.phone}</p>
+                      <p><strong>{t("guideDashboard_bookings_people")}:</strong> {booking.numberOfPeople}</p>
+                      <p><strong>{t("guideDashboard_bookings_sum")}:</strong> €{booking.summa}</p>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <p>No bookings found.</p>
+              <p>{t("guideDashboard_bookings_no_bookings")}</p>
             )}
           </div>
         );
@@ -460,49 +467,52 @@ const GuideDashboard = () => {
       <HeroImage />
       <div className="w3-content" style={{ maxWidth: "1100px" }}>
         <div className="w3-container w3-padding-32">
-          <h1 className="w3-center" style={{ fontSize: "calc(24px + 2vw)" }}>Guide Dashboard</h1>
+          <h1 className="w3-center" style={{ fontSize: "calc(24px + 2vw)" }}>
+            {t("guideDashboard_title")}
+          </h1>
 
           <div className="w3-hide-small w3-bar w3-border-bottom w3-margin-top" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingLeft: 0, paddingRight: 0 }}>
             <div className="w3-bar" style={{ display: "flex", gap: 0 }}>
-              {["Profile", "My Tours", "Bookings"].map((tab) => (
+              {tabOptions.map(({ key, label }) => (
                 <button
-                  key={tab}
-                  className={`w3-bar-item w3-button ${activeTab === tab ? "w3-border-bottom w3-border-red" : ""}`}
-                  onClick={() => setActiveTab(tab)}
+                  key={key}
+                  className={`w3-bar-item w3-button ${activeTab === key ? "w3-border-bottom w3-border-red" : ""}`}
+                  onClick={() => setActiveTab(key)}
                 >
-                  {tab}
+                  {label}
                 </button>
               ))}
             </div>
             <div>
               <button
                 className="w3-button w3-red w3-round-large"
+                style={{ whiteSpace: "nowrap", display: "inline-block", width: "auto" }}
                 onClick={handleLogout}
               >
-                Logout
+                {t("guideDashboard_logout")}
               </button>
             </div>
           </div>
 
           <div className="w3-hide-medium w3-hide-large w3-margin-top">
             <select
-              className="w3-select w3-border"
+              className="w3-select w3-border w3-round-large"
+              style={{ width: "100%", maxWidth: "400px", margin: "0 auto", display: "block" }}
               value={activeTab}
               onChange={(e) => {
-                if (e.target.value === "Logout") {
+                if (e.target.value === "logout") {
                   handleLogout();
                 } else {
                   setActiveTab(e.target.value);
                 }
               }}
             >
-              <option value="Profile">Profile</option>
-              <option value="My Tours">My Tours</option>
-              <option value="Bookings">Bookings</option>
-              <option value="Logout">Logout</option>
+              <option value="profile">{t("guideDashboard_tab_profile")}</option>
+              <option value="tours">{t("guideDashboard_tab_tours")}</option>
+              <option value="bookings">{t("guideDashboard_tab_bookings")}</option>
+              <option value="logout">{t("guideDashboard_logout")}</option>
             </select>
           </div>
-
 
           <div className="w3-padding w3-white w3-card w3-round-large w3-margin-top">
             {renderTabContent()}

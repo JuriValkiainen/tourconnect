@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 import Newsletter from "../components/Newsletter";
 import Contact from "../components/Contact";
@@ -16,6 +17,7 @@ const GuideLogin = () => {
   const [successMessage, setSuccessMessage] = useState("");
 
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -33,7 +35,7 @@ const GuideLogin = () => {
 
       localStorage.setItem("guideToken", response.data.token);
 
-      setSuccessMessage("Login successful!");
+      setSuccessMessage(t("guideLogin_success"));
 
       setTimeout(() => {
         setFormData({ email: "", password: "" });
@@ -42,7 +44,7 @@ const GuideLogin = () => {
 
     } catch (err) {
       console.error("Login error:", err);
-      setError(err.response?.data?.error || "Login failed. Please try again.");
+      setError(err.response?.data?.error || t("guideLogin_fail"));
     }
   };
 
@@ -51,32 +53,32 @@ const GuideLogin = () => {
       <HeroImage />
 
       <div className="w3-container w3-margin-top">
-        <h2 className="w3-center w3-margin-top">Guide Login</h2>
-        <p>Access your dashboard and manage your excursions</p>
+        <h2 className="w3-center w3-margin-top">{t('guideLogin_title')}</h2>
+        <p>{t("guideLogin_subtitle")}</p>
       </div>
 
       <div className="w3-container" style={{ maxWidth: "700px", margin: "auto" }}>
         <div className="w3-card w3-white w3-padding-32 w3-round-large w3-margin-top w3-margin-bottom">
           <form onSubmit={handleSubmit}>
-            <label className="w3-text-black">Email</label>
+            <label className="w3-text-black">{t("guideLogin_email")}</label>
             <input
               className="w3-input w3-border w3-margin-bottom"
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="Your email"
+              placeholder={t("guideLogin_placeholder_email")}
               required
             />
 
-            <label className="w3-text-black">Password</label>
+            <label className="w3-text-black">{t("guideLogin_password")}</label>
             <input
               className="w3-input w3-border w3-margin-bottom"
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="Your password"
+              placeholder={t("guideLogin_placeholder_password")}
               required
             />
 
@@ -98,7 +100,7 @@ const GuideLogin = () => {
                 className="w3-button w3-red w3-round-large"
                 style={{ width: "150px" }}
               >
-                Login
+                {t("guideLogin_button")}
               </button>
             </div>
           </form>
