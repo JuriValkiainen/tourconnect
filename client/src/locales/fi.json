@@ -24,6 +24,8 @@
     "footer_guides_profile": "Henkilökohtainen tili",
     "footer_guides_support": "Tukea",
     "footer_bottom": "Tietosuojakäytäntö",
+    "footer_bottom_adminlink": "Hallintapaneeli",
+
     "login_title": "Matkailijan Login",
     "login_text": "Kirjaudu tilillesi",
     "login_email": "Sähköposti",
@@ -223,5 +225,15 @@
     "guideDashboard_bookings_people": "Henkilöä",
     "guideDashboard_bookings_sum": "Yhteensä",
     "guideDashboard_bookings_no_bookings": "Varauksia ei löytynyt."
+
+    "adminlogin_title": "Kirjaudu sisään järjestelmänvalvojana",
+    "adminlogin_text": "Sisään kirjautuminen",
+    "adminlogin_email": "Sähköposti",
+    "adminlogin_password": "Salasana",
+    "adminlogin_btn_loading": "Kirjautuminen sisään...",
+    "adminlogin_btn_login": "Kirjaudu sisään",
+    "admin-profile_title": "Admin Profile",
+    "admin-profile_info_icon": "Ulos",
+    "admin-profile_email": "Sähköposti"
 }
 

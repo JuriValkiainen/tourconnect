@@ -24,6 +24,8 @@
     "footer_guides_profile": "Personal account",
     "footer_guides_support": "Support",
     "footer_bottom": "Privacy Policy",
+    "footer_bottom_adminlink": "Admin panel",
+
     "login_title": "Traveller Login",
     "login_text": "Log in to your account",
     "login_email": "Email",
@@ -224,4 +226,13 @@
     "guideDashboard_bookings_sum": "Sum",
     "guideDashboard_bookings_no_bookings": "No bookings found."
 
+    "adminlogin_title": "Login as administrator",
+    "adminlogin_text": "Log in to admin account",
+    "adminlogin_email": "Email",
+    "adminlogin_password": "Password",
+    "adminlogin_btn_loading": "Logging in...",
+    "adminlogin_btn_login": "Login",
+    "admin-profile_title": "Admin Profile",
+    "admin-profile_info_icon": "Out",
+    "admin-profile_email": "Admin Email"
 }
