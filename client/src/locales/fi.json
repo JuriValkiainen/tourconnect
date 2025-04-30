@@ -24,6 +24,8 @@
     "footer_guides_profile": "Henkilökohtainen tili",
     "footer_guides_support": "Tukea",
     "footer_bottom": "Tietosuojakäytäntö",
+    "footer_bottom_adminlink": "Hallintapaneeli",
+
     "login_title": "Matkailijan Login",
     "login_text": "Kirjaudu tilillesi",
     "login_email": "Sähköposti",
@@ -125,8 +127,8 @@
     "home_nature_text_card": "Koe henkeäsalpaava luonto kohteessa",
     "home_nature_button": "Lue lisää",
 
-    "adminlogin_title": "Admin login",
-    "adminlogin_text": "Kirjaudu sisään",
+    "adminlogin_title": "Kirjaudu sisään järjestelmänvalvojana",
+    "adminlogin_text": "Sisään kirjautuminen",
     "adminlogin_email": "Sähköposti",
     "adminlogin_password": "Salasana",
     "adminlogin_btn_loading": "Kirjautuminen sisään...",

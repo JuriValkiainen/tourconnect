@@ -5,12 +5,12 @@ export class Admin {
   @PrimaryGeneratedColumn()
   adminID: number;
 
-  @Column({ unique: true })
+  @Column("nvarchar", { length: 255, unique: true })
   email: string;
 
-  @Column()
+  @Column("nvarchar", { length: 255, unique: true })
   password: string;
 
-  @Column({ default: "admin" })
+  @Column("nvarchar", { default: "admin" })
   role: string;
 }

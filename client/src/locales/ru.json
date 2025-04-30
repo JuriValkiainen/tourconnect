@@ -24,6 +24,8 @@
     "footer_guides_profile": "Личный кабинет",
     "footer_guides_support": "Поддержка",
     "footer_bottom": "Политика конфиденциальности",
+    "footer_bottom_adminlink": "Панель администратора",
+
     "login_title": "Вход для путешественников",
     "login_text": "Войдите в свою учетную запись",
     "login_email": "Электронная почта",
@@ -125,7 +127,7 @@
     "home_nature_text_card": "Ощутите захватывающую природу",
     "home_nature_button": "Узнать больше",
 
-    "adminlogin_title": "Админ логин",
+    "adminlogin_title": "Вход в систему как администратор",
     "adminlogin_text": "Войдите в систему",
     "adminlogin_email": "Электронная почта",
     "adminlogin_password": "Пароль",

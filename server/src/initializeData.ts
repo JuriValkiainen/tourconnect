@@ -251,6 +251,7 @@ export const initializeDatabase = async () => {
     admin.email = "tourconnectweb@gmail.com";
     admin.password = await bcrypt.hash("admin123", 10); // пароль можно сменить позже
     admin.role = "admin";
+    console.log("Admin created successfully!");
     await AppDataSource.manager.save(admin);
     }
 
