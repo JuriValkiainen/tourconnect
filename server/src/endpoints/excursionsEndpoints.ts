@@ -2,6 +2,7 @@ import { AppDataSource } from "../data-source";
 import { Tours, TourType } from "../entities/Tours";
 import { Guides } from "../entities/Guides";
 import { Reservations } from "../entities/Reservations"
+import { TourLanguages, TourLangTypes } from '../entities/TourLanguages';
 import { Router, Request, Response } from 'express';
 import { verifyGuideToken } from '../server'
 import { verifyTouristToken } from '../server'
@@ -29,6 +30,12 @@ router.get("/excursions", async (req, res) => {
 router.get("/tourtypes", async (req: Request, res: Response) => {
   const tourtypes = Object.values(TourType);
   res.json(tourtypes); 
+});
+
+// Получить список доступных языков экскурсии
+router.get("/tourlanguages", async (req: Request, res: Response) => {
+  const tourlanguages = Object.values(TourLangTypes);
+  res.json(tourlanguages); 
 });
 
 // Экскурсия по id экскурсии
@@ -129,6 +136,7 @@ interface CreateToursRequest
     description: string
     picture: string
     guideID: number
+    tourlanguages: TourLangTypes[]
     }
 router.post("/api/tours", verifyGuideToken, async (req: Request, res: any) => {
     try {
@@ -140,7 +148,14 @@ router.post("/api/tours", verifyGuideToken, async (req: Request, res: any) => {
     }
         const reqData = req.body as CreateToursRequest
         
-        if (!reqData.city || !reqData.type || !reqData.maxPerson|| !reqData.pricePerPerson|| !reqData.description|| !reqData.picture) {
+        const isValidLang = (value: unknown): value is TourLangTypes =>
+                  Object.values(TourLangTypes).includes(value as TourLangTypes);
+        
+        if (!reqData.city || !reqData.type || !reqData.maxPerson|| !reqData.pricePerPerson|| !reqData.description|| !reqData.picture
+          || !Array.isArray(reqData.tourlanguages) ||
+          reqData.tourlanguages.length === 0 ||
+          !reqData.tourlanguages.every(isValidLang)
+        ) {
             return res.status(400).json({ error: "All fields are required" });
           }
 
@@ -149,25 +164,39 @@ router.post("/api/tours", verifyGuideToken, async (req: Request, res: any) => {
       return res.status(404).json({ error: 'Guide not found' });
     }
 
-    const newTours = await AppDataSource.getRepository(Tours).create()
-    newTours.city = reqData.city
-    newTours.type = reqData.type
-    newTours. maxPerson = reqData.maxPerson
-    newTours.pricePerPerson = reqData.pricePerPerson
-    newTours.description = reqData.description
-    newTours.picture = reqData.picture
-    newTours.guide = guide
+    const tourRepo = await AppDataSource.getRepository(Tours);
+    const newTours = tourRepo.create({
+      city: reqData.city,
+      type: reqData.type,
+      maxPerson: reqData.maxPerson,
+      pricePerPerson: reqData.pricePerPerson,
+      description: reqData.description,
+      picture: reqData.picture,
+      guide: guide,
+    });
 
-    const result = await AppDataSource.getRepository(Tours).save(newTours)
+    const savedTour = await tourRepo.save(newTours);
+
+  const tourlanguageRepo = AppDataSource.getRepository(TourLanguages);
+  const tourlanguageEntities = reqData.tourlanguages.map((lang: TourLangTypes) => {
+  const tourlangEntity = new TourLanguages();
+  tourlangEntity.tourlanguage = lang;
+  tourlangEntity.tour = savedTour ;
+  return tourlangEntity;
+  });
+
+  await tourlanguageRepo.save(tourlanguageEntities);
+
     res.json({
-        id : result.tourID
-    })
-    }
+        id : savedTour.tourID
+    
+    });
+  }
     catch (error) {
         console.error("Registration error:", error);
         res.status(500).json({ error: "Internal server error" });
     }
-})
+});
 
 //Редактирование экскурсий 
 type UpdateToursRequest = Omit<CreateToursRequest, "guideID">
@@ -184,14 +213,22 @@ router.put("/api/tours/:tourID", verifyGuideToken, async (req: Request, res: any
   if (isNaN(tourID)) {
     return res.status(400).json({ error: "Invalid tour ID" });
   }
-    const reqData = req.body as UpdateToursRequest  
+    const reqData = req.body as UpdateToursRequest 
+    const isValidLang = (value: unknown): value is TourLangTypes =>
+      Object.values(TourLangTypes).includes(value as TourLangTypes); 
 
-    if (!reqData.city || !reqData.type || !reqData.maxPerson|| !reqData.pricePerPerson|| !reqData.description|| !reqData.picture) {
+    if (!reqData.city || !reqData.type || !reqData.maxPerson|| !reqData.pricePerPerson|| !reqData.description|| !reqData.picture
+      || !Array.isArray(reqData.tourlanguages) ||
+      reqData.tourlanguages.length === 0 ||
+      !reqData.tourlanguages.every(isValidLang)
+    ) {
       return res.status(400).json({ error: "All fields are required" });
     }
 
     const tourRepo = AppDataSource.getRepository(Tours);
-    const tour = await tourRepo.findOne({ where: { tourID: tourID,  guide: { guideID: guideID }} as FindOptionsWhere<Tours> 
+    const tourlanguageRepo = AppDataSource.getRepository(TourLanguages);
+    const tour = await tourRepo.findOne({ where: { tourID: tourID,  guide: { guideID: guideID }},
+      relations: ['tourlang']
      });
 
     if (!tour) {
@@ -206,6 +243,18 @@ router.put("/api/tours/:tourID", verifyGuideToken, async (req: Request, res: any
     tour.picture = reqData.picture
 
     await tourRepo.save(tour)
+    await tourlanguageRepo.remove(tour.tourlang);
+
+  const tourlanguageEntities = reqData.tourlanguages.map((tourlang: TourLangTypes) => {
+  const tourlangEntity = new TourLanguages();
+  tourlangEntity.tourlanguage = tourlang;
+  tourlangEntity.tour = tour;
+  return tourlangEntity;
+});
+
+await tourlanguageRepo.save(tourlanguageEntities);
+
+
     return res.status(200).json({ success: true })
   
 }

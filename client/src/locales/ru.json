@@ -224,8 +224,7 @@
     "guideDashboard_bookings_phone": "Телефон",
     "guideDashboard_bookings_people": "Человек",
     "guideDashboard_bookings_sum": "Сумма",
-    "guideDashboard_bookings_no_bookings": "Бронирования не найдены."
-
+    "guideDashboard_bookings_no_bookings": "Бронирования не найдены.",
     "adminlogin_title": "Вход в систему как администратор",
     "adminlogin_text": "Войдите в систему",
     "adminlogin_email": "Электронная почта",
