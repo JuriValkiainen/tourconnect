@@ -8,6 +8,7 @@ import { Reservations } from "./entities/Reservations"
 import { Reviews } from "./entities/Reviews"
 import { Tours } from "./entities/Tours"
 import { TourLanguages } from "./entities/TourLanguages";
+import { Admin } from "./entities/Admin";
 
 // Loading environment variables from .env file
 config();
@@ -23,7 +24,7 @@ export const AppDataSource = new DataSource({
         trustServerCertificate : true
     },
     logging: true,
-    entities: [Tourists, Guides, Languages, Reservations, Reviews, Tours, TourLanguages],
+    entities: [Tourists, Guides, Languages, Reservations, Reviews, Tours, Admin, TourLanguages],
     subscribers: [],
     migrations: [],
 })

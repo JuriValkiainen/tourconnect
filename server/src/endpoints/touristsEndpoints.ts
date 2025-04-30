@@ -13,12 +13,12 @@ import { Reviews } from "../entities/Reviews";
 const router = Router();
 
 // Настройка nodemailer для отправки электронной почты
-console.log("EMAIL CONFIG:", {
-  host: process.env.EMAIL_HOST,
-  port: process.env.EMAIL_PORT,
-  user: process.env.EMAIL_USER,
-  pass: process.env.EMAIL_PASS,
-});
+// console.log("EMAIL CONFIG:", {
+//   host: process.env.EMAIL_HOST,
+//   port: process.env.EMAIL_PORT,
+//   user: process.env.EMAIL_USER,
+//   pass: process.env.EMAIL_PASS,
+// });
 // const transporter = nodemailer.createTransport({
 //   host: process.env.EMAIL_HOST,
 //   port: Number(process.env.EMAIL_PORT),
