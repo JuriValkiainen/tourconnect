@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn,  ManyToOne, JoinColumn } from "typeorm"
-import { Guides } from "./Guides"
+import { Tours } from "./Tours"
 
 export enum LangTypes {
 English = "English",
@@ -14,7 +14,7 @@ Swedish = "Swedish"
 }
 
 @Entity()
-export class Languages {
+export class TourLanguages {
     @PrimaryGeneratedColumn()
     langID: number
 
@@ -24,8 +24,8 @@ export class Languages {
     @Column ("int")
     guideID: number
 
-    @JoinColumn({name : "guideID"})
-    @ManyToOne(() => Guides, (guide) => guide.lang, { onDelete: 'CASCADE' })
-    guide: Guides
+    @JoinColumn({name : "tourID"})
+    @ManyToOne(() => Tours, (tour) => tour.lang, { onDelete: 'CASCADE' })
+    tour: Tours
 
 }

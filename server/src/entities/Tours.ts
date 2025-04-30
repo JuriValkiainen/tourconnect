@@ -4,6 +4,7 @@ import { Entity, Column, PrimaryGeneratedColumn,
 
 import { Guides } from "./Guides"
 import { Reservations } from "./Reservations"
+import { TourLanguages } from "./TourLanguages"
 
 export enum TourType {
     Walk = "Walk",  
@@ -44,7 +45,8 @@ export class Tours {
     @OneToMany(() => Reservations, (reserv) => reserv.tours, { nullable: false })
     reservations: Reservations[]
  
-
+    @OneToMany(() => TourLanguages, (lang)=> lang.tour, { cascade: true })
+        lang: TourLanguages[]
 }
 
 
