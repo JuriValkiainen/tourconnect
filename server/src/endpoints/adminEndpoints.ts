@@ -18,7 +18,12 @@ router.post("/api/admin-login", async (req: Request, res: any) => {
   const { email, password } = req.body as CreateAdminLoginRequest;
   if (!email || !password) return res.status(400).json({ error: "Email and password are required" });
   console.log("admin's email: ", email);
-  const admin = await AppDataSource.getRepository(Admin).findOneBy({ email });
+
+  const allAdmins = await AppDataSource.getRepository(Admin).find();
+  console.log("All admins in DB:", allAdmins);
+
+  const normalizedEmail = email.trim().toLowerCase();
+  const admin = await AppDataSource.getRepository(Admin).findOneBy({ email: normalizedEmail });
   console.log("admin: ", admin);
   if (!admin) return res.status(401).json({ error: "Invalid email or password" });
 

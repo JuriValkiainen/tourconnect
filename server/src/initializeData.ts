@@ -10,6 +10,24 @@ export const initializeDatabase = async () => {
   try {
     await AppDataSource.initialize();
 
+    // Создание администратора, если он еще не создан
+    const adminCount = await AppDataSource.getRepository(Admin).count();
+    if (adminCount === 0) {
+      const admin = new Admin();
+      admin.email = "tourconnectweb@gmail.com".trim().toLowerCase();
+      admin.password = await bcrypt.hash("admin123", 10); // пароль можно сменить позже
+      admin.role = "admin";
+
+      try {
+        await AppDataSource.manager.save(admin);
+        console.log("✅ Admin created successfully!");
+      } catch (error) {
+        console.error("❌ Failed to create admin:", error);
+      }
+    } else {
+      console.log("ℹ️ Admin already exists in the database.");
+    }
+
     const dataCounter = await AppDataSource.getRepository(Guides).count();
     if (dataCounter > 0) {
       return;
@@ -25,7 +43,7 @@ export const initializeDatabase = async () => {
     guide1.phone = "123456789";
     guide1.photo =
       "https://cdn.pixabay.com/photo/2017/10/21/12/01/whiptail-wallaby-2874519_960_720.jpg";
-    AppDataSource.manager.save(guide1);
+    await AppDataSource.manager.save(guide1);
 
     const guide2 = new Guides();
     guide2.guideID = 2;
@@ -37,7 +55,7 @@ export const initializeDatabase = async () => {
     guide2.phone = "1111114";
     guide2.photo =
       "https://cdn.pixabay.com/photo/2025/03/09/16/02/hare-9457418_960_720.jpg";
-    AppDataSource.manager.save(guide2);
+    await AppDataSource.manager.save(guide2);
 
     const guide3 = new Guides();
     guide3.guideID = 3;
@@ -49,7 +67,7 @@ export const initializeDatabase = async () => {
     guide3.phone = "1333333";
     guide3.photo =
       "https://cdn.pixabay.com/photo/2025/03/05/14/35/cat-9448800_1280.jpg";
-    AppDataSource.manager.save(guide3);
+    await AppDataSource.manager.save(guide3);
 
     const russianGuide = new Guides();
     russianGuide.guideID = 4;
@@ -71,7 +89,7 @@ export const initializeDatabase = async () => {
     deleted.email = "deleted";
     deleted.password = await bcrypt.hash("deleted", 10);
     deleted.phone = "777";
-    AppDataSource.manager.save(deleted);
+    await AppDataSource.manager.save(deleted);
 
     const tourist1 = new Tourists();
     tourist1.touristID = 2;
@@ -80,7 +98,7 @@ export const initializeDatabase = async () => {
     tourist1.email = "Elo@dks.dsd";
     tourist1.password = await bcrypt.hash("test", 10);
     tourist1.phone = "2343213";
-    AppDataSource.manager.save(tourist1);
+    await AppDataSource.manager.save(tourist1);
 
     const tour1 = new Tours();
     tour1.tourID = 1;
@@ -93,7 +111,7 @@ export const initializeDatabase = async () => {
     tour1.picture =
       "https://cdn.pixabay.com/photo/2018/10/24/20/08/church-3771148_1280.jpg";
     tour1.guide = guide1;
-    AppDataSource.manager.save(tour1);
+    await AppDataSource.manager.save(tour1);
 
     const tour2 = new Tours();
     tour2.tourID = 2;
@@ -106,7 +124,7 @@ export const initializeDatabase = async () => {
     tour2.picture =
       "https://cdn.pixabay.com/photo/2020/11/18/16/10/buildings-5755827_960_720.jpg";
     tour2.guide = guide2;
-    AppDataSource.manager.save(tour2);
+    await AppDataSource.manager.save(tour2);
 
     const tour3 = new Tours();
     tour3.tourID = 3;
@@ -119,7 +137,7 @@ export const initializeDatabase = async () => {
     tour3.picture =
       "https://cdn.pixabay.com/photo/2020/05/26/09/35/rovaniemi-5222404_1280.jpg";
     tour3.guide = guide3;
-    AppDataSource.manager.save(tour3);
+    await AppDataSource.manager.save(tour3);
 
     const tour4 = new Tours();
     tour4.tourID = 4;
@@ -131,7 +149,7 @@ export const initializeDatabase = async () => {
       "New York, often called New York City (NYC), is the most populous city in the United States, located at the southern tip of New York State on one of the world's largest natural harbors. The city comprises five boroughs, each coextensive with a respective county. The city is the geographical and demographic center of both the Northeast megalopolis and the New York metropolitan area, the largest metropolitan area in the United States by both population and urban area. New York is a global center of finance and commerce, culture, technology, entertainment and media, academics and scientific output, the arts and fashion, and, as home to the headquarters of the United Nations, international diplomacy.";
     tour4.picture = "https://www.w3schools.com/w3images/newyork2.jpg";
     tour4.guide = guide1;
-    AppDataSource.manager.save(tour4);
+    await AppDataSource.manager.save(tour4);
 
     const tour5 = new Tours();
     tour5.tourID = 5;
@@ -143,7 +161,7 @@ export const initializeDatabase = async () => {
       "The Cinque Terre are a coastal area within Liguria, in the northwest of Italy. It lies in the west of La Spezia Province, and comprises five villages: Monterosso al Mare, Vernazza, Corniglia, Manarola, and Riomaggiore. The coastline, the five villages, and the surrounding hillsides are all part of the Cinque Terre National Park, a UNESCO World Heritage Site. The Cinque Terre area is a popular tourist destination. Over the centuries, people have built terraces on the rugged, steep landscape right up to the cliffs that overlook the Ligurian Sea. Paths, trains, and boats connect the villages as cars can only reach them with great difficulty from the outside via narrow and precarious mountain roads.";
     tour5.picture = "https://www.w3schools.com/w3images/cinqueterre.jpg";
     tour5.guide = guide2;
-    AppDataSource.manager.save(tour5);
+    await AppDataSource.manager.save(tour5);
 
     const tour6 = new Tours();
     tour6.tourID = 6;
@@ -155,7 +173,7 @@ export const initializeDatabase = async () => {
       "San Francisco, officially the City and County of San Francisco, is a commercial, financial, and cultural center within Northern California, United States. With a population of 827,526 residents as of 2024,  San Francisco is the fourth-most populous city in California and the 17th-most populous in the U.S.; with a land area of 46.9 square miles (121 square kilometers) at the upper end of the San Francisco Peninsula, it is the fifth-most densely populated U.S. county. Among U.S. cities proper with over 250,000 residents, San Francisco is ranked first by per capita income and sixth by aggregate income as of 2023. San Francisco anchors the 13th-most populous metropolitan statistical area in the U.S., with almost 4.6 million residents in 2023. The larger San Jose–San Francisco–Oakland combined statistical area, the fifth-largest urban region in the U.S., had a 2023 estimated population of over nine million.";
     tour6.picture = "https://www.w3schools.com/w3images/sanfran.jpg";
     tour6.guide = guide3;
-    AppDataSource.manager.save(tour6);
+    await AppDataSource.manager.save(tour6);
 
     const tour7 = new Tours();
     tour7.tourID = 7;
@@ -167,7 +185,7 @@ export const initializeDatabase = async () => {
       "Most believe the hypothesis that the origin of the name Pisa comes from Etruscan and means 'mouth', as Pisa is at the mouth of the Arno river. Although throughout history there have been several uncertainties about the origin of the city of Pisa, excavations made in the 1980s and 1990s found numerous archaeological remains, including the fifth century BC tomb of an Etruscan prince, proving the Etruscan origin of the city, and its role as a maritime city, showing that it also maintained trade relations with other Mediterranean civilizations. Ancient Roman authors referred to Pisa as an old city. Virgil, in his Aeneid, states that Pisa was already a great center by the times described; and gives the epithet of Alphēae to the city because it was said to have been founded by colonists from Pisa in Elis, near which the Alpheius river flowed. The Virgilian commentator Servius wrote that the Teuti founded the town 13 centuries before the start of the common era.";
     tour7.picture = "https://www.w3schools.com/w3images/pisa.jpg";
     tour7.guide = guide1;
-    AppDataSource.manager.save(tour7);
+    await AppDataSource.manager.save(tour7);
 
     const tour8 = new Tours();
     tour8.tourID = 8;
@@ -179,7 +197,7 @@ export const initializeDatabase = async () => {
       "Paris is a major railway, highway, and air-transport hub served by two international airports: Charles de Gaulle Airport, the third-busiest airport in Europe, and Orly Airport. Paris has one of the most sustainable transportation systems and is one of only two cities in the world that received the Sustainable Transport Award twice.[13] Paris is known for its museums and architectural landmarks: the Louvre received 8.9 million visitors in 2023, on track for keeping its position as the most-visited art museum in the world. The Musée d'Orsay, Musée Marmottan Monet and Musée de l'Orangerie are noted for their collections of French Impressionist art. The Pompidou Centre, Musée National d'Art Moderne, Musée Rodin and Musée Picasso are noted for their collections of modern and contemporary art. The historical district along the Seine in the city centre has been classified as a UNESCO World Heritage Site since 1991.";
     tour8.picture = "https://www.w3schools.com/w3images/paris.jpg";
     tour8.guide = guide2;
-    AppDataSource.manager.save(tour8);
+    await AppDataSource.manager.save(tour8);
 
     const tour9 = new Tours();
     tour9.tourID = 9;
@@ -191,7 +209,7 @@ export const initializeDatabase = async () => {
       "Western Norway, as well as other parts of historical regions of Norway, shares a common history with Denmark, the Faroe Islands and Iceland and to a lesser extent the Netherlands and Britain. For example, the Icelandic horse is a close relative of the Fjord horse and both the Faroese and Icelandic languages are based on the Old West Norse. In early Norse times, people from Western Norway became settlers at the Western Isles in the Northern Atlantic, Orkney, Shetland, the Faroe Islands and Iceland. During the Viking Age settlements were made at the Hebrides, Man and Ireland proper.";
     tour9.picture = "https://www.w3schools.com/w3images/ocean2.jpg";
     tour9.guide = guide3;
-    AppDataSource.manager.save(tour9);
+    await AppDataSource.manager.save(tour9);
 
     const tour10 = new Tours();
     tour10.tourID = 10;
@@ -203,7 +221,7 @@ export const initializeDatabase = async () => {
       "The Glockner, is, at 3,798 metres above the Adriatic (12,461 ft), the highest mountain in Austria and highest mountain in the Alps east of the Brenner Pass. It is part of the larger Glockner Group of the Hohe Tauern range, situated along the main ridge of the Central Eastern Alps and the Alpine divide. The Pasterze, Austria's most extended glacier, lies on the Grossglockner's eastern slope. The characteristic pyramid-shaped peak actually consists of two pinnacles, the Großglockner and the Kleinglockner (3,770 m or 12,370 ft, from German: groß 'big', klein 'small'), separated by the Glocknerscharte col..";
     tour10.picture = "https://www.w3schools.com/w3images/mountains2.jpg";
     tour10.guide = guide1;
-    AppDataSource.manager.save(tour10);
+    await AppDataSource.manager.save(tour10);
 
     const petersburgTour = new Tours();
     petersburgTour.tourID = 11;
@@ -244,16 +262,7 @@ export const initializeDatabase = async () => {
     kazanTour.guide = russianGuide;
     await AppDataSource.manager.save(kazanTour);
 
-    // Создание администратора, если он еще не создан
-    const adminCount = await AppDataSource.getRepository(Admin).count();
-    if (adminCount === 0) {
-    const admin = new Admin();
-    admin.email = "tourconnectweb@gmail.com";
-    admin.password = await bcrypt.hash("admin123", 10); // пароль можно сменить позже
-    admin.role = "admin";
-    console.log("Admin created successfully!");
-    await AppDataSource.manager.save(admin);
-    }
+    
 
   } catch (error) {
     console.log(error);

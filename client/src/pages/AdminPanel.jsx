@@ -2,6 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 // import axios from "axios";
+import { FaSignOutAlt } from "react-icons/fa";
 import ExploreNature from "../components/ExploreNature";
 
 const AdminPanel = () => {

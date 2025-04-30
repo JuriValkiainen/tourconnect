@@ -115,8 +115,9 @@ app.get("/cities", async (req, res) => {
     select: { city: true },
   });
   const cityList = cities.map((c) => c.city);
-  console.log(JSON.stringify(cities, null, 2));
-  res.json(cityList);
+  const uniqueCities = Array.from(new Set(cityList));
+  console.log(JSON.stringify(uniqueCities, null, 2));
+  res.json(uniqueCities);
 });
 
 app.listen(PORT, () => {
