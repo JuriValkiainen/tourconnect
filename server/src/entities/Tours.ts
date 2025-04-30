@@ -45,8 +45,8 @@ export class Tours {
     @OneToMany(() => Reservations, (reserv) => reserv.tours, { nullable: false })
     reservations: Reservations[]
  
-    @OneToMany(() => TourLanguages, (lang)=> lang.tour, { cascade: true })
-        lang: TourLanguages[]
+    @OneToMany(() => TourLanguages, (tourlang)=> tourlang.tour, { cascade: true })
+       tourlang: TourLanguages[]
 }
 
 

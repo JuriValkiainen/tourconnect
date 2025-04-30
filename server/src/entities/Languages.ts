@@ -9,7 +9,7 @@ German = "German",
 Mandarin = "Mandarin",
 Russian = "Russian",
 Arabic = "Arabic",
-Finnish = " Finnish",
+Finnish = "Finnish",
 Swedish = "Swedish"
 }
 
