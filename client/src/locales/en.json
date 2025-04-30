@@ -224,8 +224,7 @@
     "guideDashboard_bookings_phone": "Phone",
     "guideDashboard_bookings_people": "People",
     "guideDashboard_bookings_sum": "Sum",
-    "guideDashboard_bookings_no_bookings": "No bookings found."
-
+    "guideDashboard_bookings_no_bookings": "No bookings found.",
     "adminlogin_title": "Login as administrator",
     "adminlogin_text": "Log in to admin account",
     "adminlogin_email": "Email",

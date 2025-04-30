@@ -224,8 +224,7 @@
     "guideDashboard_bookings_phone": "Puhelin",
     "guideDashboard_bookings_people": "Henkilöä",
     "guideDashboard_bookings_sum": "Yhteensä",
-    "guideDashboard_bookings_no_bookings": "Varauksia ei löytynyt."
-
+    "guideDashboard_bookings_no_bookings": "Varauksia ei löytynyt.",
     "adminlogin_title": "Kirjaudu sisään järjestelmänvalvojana",
     "adminlogin_text": "Sisään kirjautuminen",
     "adminlogin_email": "Sähköposti",
