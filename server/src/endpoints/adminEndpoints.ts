@@ -1,6 +1,8 @@
 import { Router, Request, Response } from 'express';
 import { AppDataSource } from "../data-source";
 import { Admin } from "../entities/Admin";
+import { Subscribers } from "../entities/Subscribers";
+import { ContactUs } from "../entities/ContactUs";
 // import { Subscribers } from "../entities/Subscribers";
 // import { ContactMessages } from "../entities/ContactMessages";
 import bcrypt from "bcryptjs";
@@ -48,5 +50,91 @@ console.log("admin endpoints loaded")
 //   const messages = await AppDataSource.getRepository(ContactMessages).find();
 //   res.json(messages);
 // });
+
+
+  interface CreateSubscribersRequest
+  {
+      firstName: string
+      lastName: string
+      email: string
+      }
+  
+  router.post("/api/admin/subscribers", async (req: Request, res: any) => {
+     
+      try {
+          const reqData = req.body as CreateSubscribersRequest
+          
+          if (!reqData.firstName || !reqData.lastName || !reqData.email) {
+              return res.status(400).json({ error: "All fields are required" });
+            }
+  
+            const subscriberRepo = AppDataSource.getRepository(Subscribers);
+  
+            const existingUserE = await subscriberRepo.findOne({ where: { email: reqData.email } });
+            if (existingUserE) {
+              return res.status(400).json({ error: "Email already registered" });
+            }
+  
+      const newSubscriber = subscriberRepo.create({
+        firstName: reqData.firstName,
+        lastName: reqData.lastName,
+        email: reqData.email,
+
+      });
+  
+      const result = await subscriberRepo.save(newSubscriber);
+      return res.status(200).json({ success: true });
+
+    } catch (error) {
+      console.error("Registration error:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  })
+
+
+  interface CreateContactUsRequest
+  {
+      firstName: string
+      lastName: string
+      email: string
+      message: string
+      }
+
+  router.post("/api/admin/contact-us", async (req: Request, res: any) => {
+     
+    try {
+        const reqData = req.body as CreateContactUsRequest
+        
+        if (!reqData.firstName || !reqData.lastName || !reqData.email || !reqData.message) {
+            return res.status(400).json({ error: "All fields are required" });
+          }
+
+          const contactRepo = AppDataSource.getRepository(ContactUs);
+
+        const existingUser = await contactRepo.findOne({ where: {
+            email: reqData.email, message: reqData.message}});
+          if (existingUser) {
+            return res.status(400).json({ error: "Email already registered" });
+          }  
+
+    const newComtact = contactRepo.create({
+      firstName: reqData.firstName,
+      lastName: reqData.lastName,
+      email: reqData.email,
+      message: reqData.message
+
+    });
+
+    const result = await contactRepo.save(newComtact);
+    return res.status(200).json({ success: true });
+
+  } catch (error) {
+    console.error("Registration error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+})
+
+
+
 
 export default router;
