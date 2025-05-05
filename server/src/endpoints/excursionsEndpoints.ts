@@ -7,6 +7,7 @@ import { Router, Request, Response } from 'express';
 import { verifyGuideToken } from '../server'
 import { verifyTouristToken } from '../server'
 import { FindOptionsWhere } from 'typeorm'
+
 const router = Router();
 
 // Список всех экскурсий
@@ -341,5 +342,7 @@ router.post("/bookings", verifyTouristToken, async (req: Request, res: any) => {
         res.status(500).json({ error: "Internal server error" });
     }
 })
+
+
 
 export default router;
