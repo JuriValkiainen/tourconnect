@@ -233,5 +233,26 @@
     "adminlogin_btn_login": "Login",
     "admin-profile_title": "Admin Profile",
     "admin-profile_info_icon": "Out",
-    "admin-profile_email": "Admin Email"
+    "admin-profile_email": "Admin Email",
+
+    "contact_title": "Contact",
+    "contact_subtitle": "Let us book your next trip!",
+    "contact_country": "Finland",
+    "contact_phone": "Phone: +358 40 123 4567",
+    "contact_email": "Email: tourconnectweb@gmail.com",  
+    "contact_placeholder_firstName": "First Name",
+    "contact_placeholder_lastName": "Last Name",
+    "contact_placeholder_email": "Email",
+    "contact_placeholder_message": "Message",  
+    "contact_success": "Message sent successfully!",
+    "contact_error": "Failed to send message. Please try again.",  
+    "contact_button_send": "Send Message",
+
+    "newsletter_title": "Get the best offers first!",
+    "newsletter_subtitle": "Join our newsletter.",
+    "newsletter_label_email": "E-mail",
+    "newsletter_placeholder_email": "Your Email address",
+    "newsletter_button": "Subscribe",
+    "newsletter_success": "You have successfully subscribed!",
+    "newsletter_error": "Failed to subscribe. Please try again."
 }

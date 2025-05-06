@@ -1,15 +1,18 @@
 import { useState } from "react";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     message: "",
   });
 
   const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMesssage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const { t } = useTranslation();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -20,24 +23,24 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("/api/messages", formData);
-      setSuccessMessage("Message sent successfully!");
-      setFormData({ name: "", email: "", message: "" });
+      await axios.post("/api/admin/contact-us", formData);
+      setSuccessMessage(t("contact_success"));
+      setFormData({ firstName: "", lastName: "", email: "", message: "" });
     } catch (err) {
       console.error("Error sending message:", err);
-      setErrorMesssage("Failed to send message. Please try again.");
+      setErrorMessage(t("contact_error"));
     }
   };
 
   return (
     <div className="w3-container">
-      <h2>Contact</h2>
-      <p>Let us book your next trip!</p>
-      <i className="fa fa-map-marker" style={{ width: "30px" }}></i> Finland
+      <h2>{t("contact_title")}</h2>
+      <p>{t("contact_subtitle")}</p>
+      <i className="fa fa-map-marker" style={{ width: "30px" }}></i> {t("contact_country")}
       <br />
-      <i className="fa fa-phone" style={{ width: "30px" }}></i> Phone: +358 40 123 4567
+      <i className="fa fa-phone" style={{ width: "30px" }}></i> {t("contact_phone")}
       <br />
-      <i className="fa fa-envelope" style={{ width: "30px" }}></i> Email: tourconnectweb@gmail.com
+      <i className="fa fa-envelope" style={{ width: "30px" }}></i> {t("contact_email")}
       <br />
 
       <form onSubmit={handleSubmit}>
@@ -45,10 +48,21 @@ const Contact = () => {
           <input
             className="w3-input w3-padding-16 w3-border"
             type="text"
-            placeholder="Name"
+            placeholder={t("contact_placeholder_firstName")}
             required
-            name="name"
-            value={formData.name}
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleChange}
+          />
+        </p>
+        <p>
+          <input
+            className="w3-input w3-padding-16 w3-border"
+            type="text"
+            placeholder={t("contact_placeholder_lastName")}
+            required
+            name="lastName"
+            value={formData.lastName}
             onChange={handleChange}
           />
         </p>
@@ -56,7 +70,7 @@ const Contact = () => {
           <input
             className="w3-input w3-padding-16 w3-border"
             type="email"
-            placeholder="Email"
+            placeholder={t("contact_placeholder_email")}
             required
             name="email"
             value={formData.email}
@@ -67,7 +81,7 @@ const Contact = () => {
           <input
             className="w3-input w3-padding-16 w3-border"
             type="text"
-            placeholder="Message"
+            placeholder={t("contact_placeholder_message")}
             required
             name="message"
             value={formData.message}
@@ -84,7 +98,7 @@ const Contact = () => {
 
         <p>
           <button className="w3-button w3-black w3-padding-large" type="submit">
-            SEND MESSAGE
+          {t("contact_button_send")}
           </button>
         </p>
       </form>

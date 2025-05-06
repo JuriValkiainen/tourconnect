@@ -5,7 +5,7 @@ import CitySelection from "./CitySelection";
 
 const Header = () => {
     const { t } = useTranslation();
-    
+
     const [activeTab, setActiveTab] = useState("City");
     const [selectedCity, setSelectedCity] = useState("");
     const [selectedDate, setSelectedDate] = useState("");
@@ -13,7 +13,7 @@ const Header = () => {
 
     const showAlert = (message) => {
         alert(message);
-      };
+    };
 
     const handleSearch = () => {
         if (selectedCity && selectedDate) {
@@ -34,7 +34,7 @@ const Header = () => {
                     >
                         <i className="fa fa-city w3-margin-right"></i>{t('header_selectCity_panel')}
                     </button>
-                    <button
+                    {/*<button
                         className={`w3-bar-item w3-button tablink ${activeTab === "Hotel" ? "w3-red" : ""}`}
                         onClick={() => setActiveTab("Hotel")}
                     >
@@ -45,39 +45,39 @@ const Header = () => {
                         onClick={() => setActiveTab("Car")}
                     >
                         <i className="fa fa-car w3-margin-right"></i>Rental
-                    </button>
+                    </button>*/}
                 </div>
 
-                <div id="City" className="w3-container w3-white w3-padding-16 myLink" style={{ display: activeTab === "City" ? "block" : "none" }}>
-                    <h3>{t('select_date_city')}</h3>
-                    <div className="w3-row-padding" style={{ margin: "0 -16px" }}>
-                        <div className="w3-half">
-                            <label>{t('header_selectCity_date')}</label>
-                            <input
-                                className="w3-input w3-border"
-                                type="date"
-                                value={selectedDate}
-                                onChange={(e) => setSelectedDate(e.target.value)}
-                            />
+                    <div id="City" className="w3-container w3-white w3-padding-16 myLink" style={{ display: activeTab === "City" ? "block" : "none" }}>
+                        <h3>{t('select_date_city')}</h3>
+                        <div className="w3-row-padding" style={{ margin: "0 -16px" }}>
+                            <div className="w3-half">
+                                <label>{t('header_selectCity_date')}</label>
+                                <input
+                                    className="w3-input w3-border"
+                                    type="date"
+                                    value={selectedDate}
+                                    onChange={(e) => setSelectedDate(e.target.value)}
+                                />
+                            </div>
+
+                            <div className="w3-half">
+                                <label>{t('header_selectCity_city')}</label>
+                                <CitySelection
+                                    selectedCity={selectedCity}
+                                    onCitySelect={(city) => setSelectedCity(city)}
+                                />
+                            </div>
                         </div>
 
-                        <div className="w3-half">
-                            <label>{t('header_selectCity_city')}</label>
-                            <CitySelection
-                                selectedCity={selectedCity}
-                                onCitySelect={(city) => setSelectedCity(city)}
-                            />
-                        </div>
+                        <p>
+                            <button className="w3-button w3-dark-grey" onClick={handleSearch}>
+                                {t('header_selectCity_btn')}
+                            </button>
+                        </p>
                     </div>
 
-                    <p>
-                        <button className="w3-button w3-dark-grey" onClick={handleSearch}>
-                            {t('header_selectCity_btn')}
-                        </button>
-                    </p>
-                </div>
-
-                <div id="Hotel" className="w3-container w3-white w3-padding-16 myLink" style={{ display: activeTab === "Hotel" ? "block" : "none" }}>
+                    {/*<div id="Hotel" className="w3-container w3-white w3-padding-16 myLink" style={{ display: activeTab === "Hotel" ? "block" : "none" }}>
                     <h3>Find the best hotels</h3>
                     <p>Book a hotel with us and get the best fares and promotions.</p>
                     <p>We know hotels - we know comfort.</p>
@@ -95,8 +95,8 @@ const Header = () => {
                     <p>
                         <button className="w3-button w3-dark-grey">Search Availability</button>
                     </p>
+                </div>*/}
                 </div>
-            </div>
         </header>
     );
 };
