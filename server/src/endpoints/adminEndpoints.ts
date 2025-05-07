@@ -2,7 +2,8 @@ import { Router, Request, Response } from 'express';
 import { AppDataSource } from "../data-source";
 import { Admin } from "../entities/Admin";
 import { Subscribers } from "../entities/Subscribers";
-import { ContactUs } from "../entities/ContactUs";
+import { ContactMessages } from "../entities/ContactMessages";
+// import { Subscribers } from "../entities/Subscribers";
 // import { Subscribers } from "../entities/Subscribers";
 // import { ContactMessages } from "../entities/ContactMessages";
 import bcrypt from "bcryptjs";
@@ -64,7 +65,7 @@ console.log("admin endpoints loaded")
       try {
           const reqData = req.body as CreateSubscribersRequest
           
-          if (!reqData.firstName || !reqData.lastName || !reqData.email) {
+          if (!reqData.email) {
               return res.status(400).json({ error: "All fields are required" });
             }
   
@@ -76,10 +77,7 @@ console.log("admin endpoints loaded")
             }
   
       const newSubscriber = subscriberRepo.create({
-        firstName: reqData.firstName,
-        lastName: reqData.lastName,
         email: reqData.email,
-
       });
   
       const result = await subscriberRepo.save(newSubscriber);
@@ -109,15 +107,15 @@ console.log("admin endpoints loaded")
             return res.status(400).json({ error: "All fields are required" });
           }
 
-          const contactRepo = AppDataSource.getRepository(ContactUs);
+          const contactRepo = AppDataSource.getRepository(ContactMessages);
 
         const existingUser = await contactRepo.findOne({ where: {
             email: reqData.email, message: reqData.message}});
           if (existingUser) {
-            return res.status(400).json({ error: "Email already registered" });
+            return res.status(400).json({ error: "You have already sent this message" });
           }  
 
-    const newComtact = contactRepo.create({
+    const newContact = contactRepo.create({
       firstName: reqData.firstName,
       lastName: reqData.lastName,
       email: reqData.email,
@@ -125,7 +123,7 @@ console.log("admin endpoints loaded")
 
     });
 
-    const result = await contactRepo.save(newComtact);
+    const result = await contactRepo.save(newContact);
     return res.status(200).json({ success: true });
 
   } catch (error) {
@@ -134,7 +132,16 @@ console.log("admin endpoints loaded")
   }
 })
 
+router.get("/api/admin/subscribers", verifyAdminToken, async (req: Request, res: any) => {
+  const subscribersRepo = AppDataSource.getRepository(Subscribers);
+  const subscribers = await subscribersRepo.find();
+  res.json(subscribers); 
+});
 
-
+router.get("/api/admin/messages", verifyAdminToken, async (req: Request, res: any) => {
+  const messagesRepo = AppDataSource.getRepository(ContactMessages);
+  const messages = await messagesRepo.find();
+  res.json(messages); 
+});
 
 export default router;

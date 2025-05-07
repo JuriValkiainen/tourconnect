@@ -1,11 +1,11 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
 @Entity()
-export class ContactUs {
+export class ContactMessages {
   @PrimaryGeneratedColumn()
   contactID: number;
 
-  @Column("nvarchar", { length: 255, unique: true })
+  @Column("nvarchar", { length: 255})
   email: string;
 
   @Column("nvarchar", {length: 50})

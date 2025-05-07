@@ -31,7 +31,7 @@ app.use("/", touristsRouter);
 app.use("/", excursionsRouter);
 app.use("/", adminRouter);
 
-export function verifyGuideToken(req: Request, res: any, next: NextFunction) {
+export function verifyToken(req: Request, res: Response, next: NextFunction, roleToCheck: string) {
   const token = req.header("Authorization")?.replace("Bearer ", "").trim();
   if (!token) {
     return res.status(401).json({ error: " Access denied " });
@@ -41,73 +41,34 @@ export function verifyGuideToken(req: Request, res: any, next: NextFunction) {
       token,
       process.env.JWT_SECRET as string
     ) as JwtPayload;
-    const role = decoded["role"];
-    if (role != "guide") {
+
+    const existingRole = decoded["role"];
+    if (existingRole != roleToCheck) {
       return res.status(401).json({ error: " Access denied " });
     }
-
     req.user = {
       id: decoded["id"],
       email: decoded["email"],
       role: decoded["role"],
     };
-
+    
     next();
   } catch (error) {
     res.status(401).json({ error: " Invalid token" });
   }
 }
-export function verifyTouristToken(req: Request, res: any, next: NextFunction) {
-  const token = req.header("Authorization")?.replace("Bearer ", "").trim();
-  console.log("сработал мидлвейр и токен в нем: ", token);
-  if (!token) {
-    return res.status(401).json({ error: " Access denied " });
-  }
-  console.log("секрет доступен при проверке токена JWT_SECRET:", process.env.JWT_SECRET);
-  try {
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET as string
-    ) as JwtPayload;
-    const role = decoded["role"];
-    console.log("decoded в мидлвейре проверки токена: ", decoded);
-    if (role !== "tourist") {
-      return res.status(401).json({ error: " Access denied " });
-    }
 
-    req.user = {
-      id: decoded["id"],
-      email: decoded["email"],
-      role: decoded["role"],
-    };
-    console.log("req.user в мидлвейре проверки токена: ", req.user);
-    next();
-  } catch (error) {
-    console.error("Ошибка при верификации токена:", error);
-    res.status(401).json({ error: (error as Error).message || "Invalid token" });
-  }
+export function verifyGuideToken(req: Request, res: any, next: NextFunction) {
+  verifyToken(req, res, next, "guide")
+}
+
+
+export function verifyTouristToken(req: Request, res: any, next: NextFunction) {
+  verifyToken(req, res, next, "tourist")
 }
 
 export function verifyAdminToken(req: Request, res: any, next: NextFunction) {
-  const token = req.header("Authorization")?.replace("Bearer ", "").trim();
-  if (!token) return res.status(401).json({ error: "Access denied" });
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
-    if (decoded["role"] !== "admin") {
-      return res.status(401).json({ error: "Access denied" });
-    }
-
-    req.user = {
-      id: decoded["id"],
-      email: decoded["email"],
-      role: decoded["role"],
-    };
-
-    next();
-  } catch (error) {
-    res.status(401).json({ error: "Invalid token" });
-  }
+  verifyToken(req, res, next, "admin")
 }
 
 app.get("/cities", async (req, res) => {

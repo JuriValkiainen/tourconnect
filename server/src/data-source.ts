@@ -9,7 +9,7 @@ import { Reviews } from "./entities/Reviews"
 import { Tours } from "./entities/Tours"
 import { TourLanguages } from "./entities/TourLanguages";
 import { Admin } from "./entities/Admin";
-import { ContactUs} from "./entities/ContactUs";
+import { ContactMessages} from "./entities/ContactMessages";
 import { Subscribers } from "./entities/Subscribers";
 
 // Loading environment variables from .env file
@@ -27,7 +27,7 @@ export const AppDataSource = new DataSource({
     },
     logging: true,
     entities: [Tourists, Guides, Languages, Reservations,
-    Reviews, Tours, Admin, TourLanguages, ContactUs, Subscribers],
+    Reviews, Tours, Admin, TourLanguages, ContactMessages, Subscribers],
     subscribers: [],
     migrations: [],
 })
