@@ -1,7 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
-import Booking from "./pages/BookingForm";
 import ExcursionList from "./pages/ExcursionList";
 import Register from "./pages/Register";
 import GuideRegister from "./pages/GuideRegister";
@@ -22,7 +21,6 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/booking" element={<Booking />} />
       <Route path="/excursions" element={<ExcursionList />} />
       <Route path="/excursions/:id" element={<ExcursionDetail />} />
       <Route path="/guide-register" element={<GuideRegister />} />
