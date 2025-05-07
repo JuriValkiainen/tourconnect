@@ -38,17 +38,6 @@ router.post("/api/admin-login", async (req: Request, res: any) => {
 
   res.json({ token });
 });
-console.log("admin endpoints loaded")
-// router.get("/admin/subscribers", verifyAdminToken, async (req: Request, res: any) => {
-//   const subscribers = await AppDataSource.getRepository(Subscribers).find();
-//   res.json(subscribers);
-// });
-
-// router.get("/admin/messages", verifyAdminToken, async (req: Request, res: any) => {
-//   const messages = await AppDataSource.getRepository(ContactMessages).find();
-//   res.json(messages);
-// });
-
 
   interface CreateSubscribersRequest
   {

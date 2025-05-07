@@ -231,9 +231,20 @@
     "adminlogin_password": "Password",
     "adminlogin_btn_loading": "Logging in...",
     "adminlogin_btn_login": "Login",
-    "admin-profile_title": "Admin Profile",
-    "admin-profile_info_icon": "Out",
+    "admin-profile_title": "Admin Panel",
+    "admin-profile_info_icon": "Logout",
     "admin-profile_email": "Admin Email",
+    "admin-profile_admin-tab": "Admin Profile",
+    "admin-profile_subscribers-tab": "Subscribers",
+    "admin-profile_subscribers-tab_no-subscrb": "No subscribers",
+    "admin-profile_messages-tab": "Messages",
+    "admin-profile_messages-tab_no-msg": "No messages",
+    "admin-profile_subscr-table_fname": "Subscribers",
+    "admin-profile_messages-table_msg": "Messages",
+    "admin-profile_messages-table_email": "Email",
+    "admin-profile_messages-table_fullname": "Full Name",
+    
+    
 
     "contact_title": "Contact",
     "contact_subtitle": "Let us book your next trip!",
