@@ -7,11 +7,5 @@ export class Subscribers {
 
   @Column("nvarchar", { length: 255, unique: true })
   email: string;
-
-  @Column("nvarchar", {length: 50})
-  firstName: string;
-
-  @Column("nvarchar", {length: 50})
-  lastName: string;
   
 }
