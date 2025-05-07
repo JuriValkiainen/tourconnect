@@ -97,25 +97,33 @@ const AdminPanel = () => {
         <div className="w3-container w3-white w3-padding w3-round-large w3-margin-top">
           {activeTab === "admin" && (
             <div>
-              <h3>{t("admin-profile_admin-tab")}</h3>
+              <h3 className="w3-text-indigo">{t("admin-profile_admin-tab")}</h3>
               <p>
-                <strong>{t("admin-profile_email")}:</strong>{" "}
-                {adminEmail}
+                <strong>{t("admin-profile_email")}:</strong> {adminEmail}
               </p>
-              <br/>
+              <br />
               <button
                 onClick={handleLogout}
                 className="w3-btn w3-white w3-border w3-border-red w3-round-large"
               >
                 <FaSignOutAlt /> {t("admin-profile_info_icon")}
               </button>
-              <br/><br/>
+              <br />
+              <br />
             </div>
           )}
 
           {activeTab === "subscribers" && (
-            <div>
-              <h3>{t("admin-profile_subscribers-tab")}</h3>
+            <div
+              style={{
+                maxWidth: "600px",       // limits width on large screens
+                width: "90%",            // 90% of the screen width on all devices
+                margin: "0 auto",        // centers horizontally
+              }}
+            >
+              <h3 className="w3-text-indigo">
+                {t("admin-profile_subscribers-tab")}
+              </h3>
               {subscribers.length === 0 ? (
                 <p>{t("admin-profile_subscribers-tab_no-subscrb")}</p>
               ) : (
@@ -141,7 +149,9 @@ const AdminPanel = () => {
 
           {activeTab === "messages" && (
             <div>
-              <h3 className="w3-text-indigo">{t("admin-profile_messages-tab")}</h3>
+              <h3 className="w3-text-indigo">
+                {t("admin-profile_messages-tab")}
+              </h3>
 
               {messages.length === 0 ? (
                 <p>{t("admin-profile_messages-tab_no-msg")}</p>
@@ -158,9 +168,11 @@ const AdminPanel = () => {
                     <thead>
                       <tr className="w3-light-grey">
                         <th style={{ width: "5%" }}>ID</th>
-                        <th style={{ width: "20%" }}>Email</th>
-                        <th style={{ width: "20%" }}>Full Name</th>
-                        <th style={{ width: "55%" }}>{t("admin-profile_messages-table_msg")}</th>
+                        <th style={{ width: "20%" }}>{t("admin-profile_messages-table_email")}</th>
+                        <th style={{ width: "20%" }}>{t("admin-profile_messages-table_fullname")}</th>
+                        <th style={{ width: "55%" }}>
+                          {t("admin-profile_messages-table_msg")}
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -171,7 +183,9 @@ const AdminPanel = () => {
                           <td>
                             {msg.firstName} {msg.lastName}
                           </td>
-                          <td style={{ wordBreak: "break-word" }}>{msg.message}</td>
+                          <td style={{ wordBreak: "break-word" }}>
+                            {msg.message}
+                          </td>
                         </tr>
                       ))}
                     </tbody>

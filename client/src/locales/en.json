@@ -241,6 +241,8 @@
     "admin-profile_messages-tab_no-msg": "No messages",
     "admin-profile_subscr-table_fname": "Subscribers",
     "admin-profile_messages-table_msg": "Messages",
+    "admin-profile_messages-table_email": "Email",
+    "admin-profile_messages-table_fullname": "Full Name",
     
     
 

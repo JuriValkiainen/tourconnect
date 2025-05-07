@@ -10,12 +10,12 @@ export const initializeDatabase = async () => {
   try {
     await AppDataSource.initialize();
 
-    // Создание администратора, если он еще не создан
+    // Create an administrator if it does not exist yet
     const adminCount = await AppDataSource.getRepository(Admin).count();
     if (adminCount === 0) {
       const admin = new Admin();
       admin.email = "tourconnectweb@gmail.com".trim().toLowerCase();
-      admin.password = await bcrypt.hash("admin123", 10); // пароль можно сменить позже
+      admin.password = await bcrypt.hash("admin123", 10); // the password can be changed later
       admin.role = "admin";
 
       try {
