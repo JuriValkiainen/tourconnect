@@ -15,9 +15,11 @@ const Newsletter = () => {
       await axios.post("/api/admin/subscribers", { email });
       setSuccessMessage(t("newsletter_success"));
       setEmail("");
+      setTimeout(() => setSuccessMessage(""), 5000);
     } catch (err) {
       console.error("Subscription error:", err);
       setErrorMessage(t("newsletter_error"));
+      setTimeout(() => setErrorMessage(""), 5000);
     }
   };
 

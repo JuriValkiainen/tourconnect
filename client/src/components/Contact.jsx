@@ -17,7 +17,7 @@ const Contact = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setSuccessMessage("");
-    setErrorMesssage("");
+    setErrorMessage("");
   };
 
   const handleSubmit = async (e) => {
@@ -26,9 +26,11 @@ const Contact = () => {
       await axios.post("/api/admin/contact-us", formData);
       setSuccessMessage(t("contact_success"));
       setFormData({ firstName: "", lastName: "", email: "", message: "" });
+      setTimeout(() => setSuccessMessage(""), 5000);
     } catch (err) {
       console.error("Error sending message:", err);
       setErrorMessage(t("contact_error"));
+      setTimeout(() => setErrorMessage(""), 5000);
     }
   };
 
