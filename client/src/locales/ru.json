@@ -233,5 +233,26 @@
     "adminlogin_btn_login": "Войти",
     "admin-profile_title": "Админ профиль",
     "admin-profile_info_icon": "Выход",
-    "admin-profile_email": "Электронная почта администратора"
+    "admin-profile_email": "Электронная почта администратора",
+
+    "contact_title": "Контакты",
+    "contact_subtitle": "Позвольте нам организовать вашу следующую поездку!",
+    "contact_country": "Финляндия",
+    "contact_phone": "Телефон: +358 40 123 4567",
+    "contact_email": "Email: tourconnectweb@gmail.com",  
+    "contact_placeholder_firstName": "Имя",
+    "contact_placeholder_lastName": "Фамилия",
+    "contact_placeholder_email": "Электронная почта",
+    "contact_placeholder_message": "Сообщение",  
+    "contact_success": "Сообщение успешно отправлено!",
+    "contact_error": "Не удалось отправить сообщение. Пожалуйста, попробуйте снова.",  
+    "contact_button_send": "Отправить сообщение",
+
+    "newsletter_title": "Получите лучшие предложения первыми!",
+    "newsletter_subtitle": "Подпишитесь на нашу рассылку.",
+    "newsletter_label_email": "Электронная почта",
+    "newsletter_placeholder_email": "Ваш адрес электронной почты",
+    "newsletter_button": "Подписаться",
+    "newsletter_success": "Вы успешно подписались!",
+    "newsletter_error": "Не удалось подписаться. Пожалуйста, попробуйте снова."
 }

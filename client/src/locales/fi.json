@@ -233,6 +233,27 @@
     "adminlogin_btn_login": "Kirjaudu sisään",
     "admin-profile_title": "Admin Profile",
     "admin-profile_info_icon": "Ulos",
-    "admin-profile_email": "Sähköposti"
+    "admin-profile_email": "Sähköposti",
+
+    "contact_title": "Yhteystiedot",
+    "contact_subtitle": "Anna meidän järjestää seuraava matkasi!",
+    "contact_country": "Suomi",
+    "contact_phone": "Puhelin: +358 40 123 4567",
+    "contact_email": "Sähköposti: tourconnectweb@gmail.com",  
+    "contact_placeholder_firstName": "Etunimi",
+    "contact_placeholder_lastName": "Sukunimi",
+    "contact_placeholder_email": "Sähköposti",
+    "contact_placeholder_message": "Viesti",  
+    "contact_success": "Viesti lähetetty onnistuneesti!",
+    "contact_error": "Viestin lähetys epäonnistui. Yritä uudelleen.",  
+    "contact_button_send": "Lähetä viesti",
+
+    "newsletter_title": "Saat parhaat tarjoukset ensimmäisenä!",
+    "newsletter_subtitle": "Liity uutiskirjeeseemme.",
+    "newsletter_label_email": "Sähköposti",
+    "newsletter_placeholder_email": "Sähköpostiosoitteesi",
+    "newsletter_button": "Tilaa",
+    "newsletter_success": "Olet tilannut uutiskirjeen onnistuneesti!",
+    "newsletter_error": "Tilauksen lähettäminen epäonnistui. Yritä uudelleen."
 }
 
