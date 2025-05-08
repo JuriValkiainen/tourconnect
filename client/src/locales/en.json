@@ -202,6 +202,7 @@
     "guideDashboard_tours_card_language": "Language",
     "guideDashboard_tours_card_price": "Price",
     "guideDashboard_tours_card_people": "Max People",
+    "guideDashboard_tours_card_language_none": "No languages selected",
   
     "guideDashboard_tours_edit": "Edit",
     "guideDashboard_tours_delete": "Delete",
