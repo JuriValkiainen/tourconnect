@@ -141,7 +141,7 @@ const RegisterModal = ({ isOpen, closeModal, excursion, selectedDate }) => {
 
               <div className="w3-col s12 m6 w3-padding-small">
                 <button
-                  onClick={() => navigate("/login")}
+                  onClick={() => navigate("/login", { state: { excursion, selectedDate } })}
                   className="w3-button w3-border w3-light-grey w3-round-large w3-block"
                 >
                   <FaSignInAlt style={{ display: 'inline-block', verticalAlign: 'middle', marginRight: '8px' }} />
