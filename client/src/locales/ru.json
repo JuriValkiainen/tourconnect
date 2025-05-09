@@ -120,6 +120,8 @@
     "register_form_btn_1": "Регистрация...",
     "register_form_btn_2": "Регистрация",
     "register_form_btn_link": "У вас уже есть аккаунт? Войти",
+    "register_form_btn_link_mod": "У вас уже есть аккаунт?",
+
     "home_randomtours_title": "Хорошие предложения прямо сейчас",
     "home_randomtours_text": "Куда вы отправитесь дальше?",
     "home_nature_title": "Исследуйте природу",

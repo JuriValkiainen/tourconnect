@@ -126,6 +126,7 @@
     "register_form_btn_1": "Registering...",
     "register_form_btn_2": "Register",
     "register_form_btn_link": "Already have an account? Login",
+    "register_form_btn_link_mod": "Already have an account?",
 
     "guideRegister_title": "Register as a Guide",
     "guideRegister_subtitle": "Join our platform and start offering your own excursions",

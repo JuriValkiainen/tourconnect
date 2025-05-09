@@ -69,25 +69,24 @@ const Profile = () => {
   const handleDeleteAccount = async () => {
     setDeleteLoading(true);
     setDeleteError("");
-    
+
     try {
       const token = localStorage.getItem("token");
-      
+
       await axios.delete("http://localhost:5001/api/tourists/me", {
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
-// After successful deletion, remove the token from localStorage and navigate to the home page
+      // After successful deletion, remove the token from localStorage and navigate to the home page
       localStorage.removeItem("token");
       navigate("/");
-      
     } catch (error) {
       console.error("Delete account error:", error);
       setDeleteError(
-        error.response?.data?.error || 
-        "Failed to delete account. Please try again."
+        error.response?.data?.error ||
+          "Failed to delete account. Please try again."
       );
     } finally {
       setDeleteLoading(false);
@@ -97,24 +96,27 @@ const Profile = () => {
   const handleDeleteBooking = async () => {
     setDeleteLoading(true);
     setDeleteError("");
-  
+
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5001/api/bookings/me/${bookingToDelete}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      await axios.delete(
+        `http://localhost:5001/api/bookings/me/${bookingToDelete}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
-  
+      );
+
       // After successful deletion, remove the booking from the state
-      setBookings(prev => prev.filter(booking => booking.reservID !== bookingToDelete));
+      setBookings((prev) =>
+        prev.filter((booking) => booking.reservID !== bookingToDelete)
+      );
       setBookingToDelete(null);
-      
     } catch (error) {
       console.error("Delete booking error:", error);
       setDeleteError(
-        error.response?.data?.error || 
-        t("profile_delete_tour_error")
+        error.response?.data?.error || t("profile_delete_tour_error")
       );
     } finally {
       setDeleteLoading(false);
@@ -163,40 +165,38 @@ const Profile = () => {
 
   return (
     <>
-    {/* Delete Account Modal */}
-    {showDeleteModal && (
+      {/* Delete Account Modal */}
+      {showDeleteModal && (
         <div className="w3-modal" style={{ display: "block" }}>
-          <div 
-            className="w3-modal-content w3-card-4 w3-animate-zoom" 
+          <div
+            className="w3-modal-content w3-card-4 w3-animate-zoom"
             style={{ maxWidth: "500px" }}
           >
             <div className="w3-container w3-padding-16">
-              <span 
-                onClick={() => setShowDeleteModal(false)} 
+              <span
+                onClick={() => setShowDeleteModal(false)}
                 className="w3-button w3-display-topright"
               >
                 &times;
               </span>
-              
+
               <div className="w3-center">
-                <FaExclamationTriangle 
-                  className="w3-text-red" 
-                  style={{ fontSize: "48px", margin: "16px 0" }} 
+                <FaExclamationTriangle
+                  className="w3-text-red"
+                  style={{ fontSize: "48px", margin: "16px 0" }}
                 />
               </div>
-              
-              <h3 className="w3-center">{t('profile_delete_account_title')}</h3>
-              <p className="w3-center">
-                {t('profile_delete_account_confirm')}
-              </p>
-              
+
+              <h3 className="w3-center">{t("profile_delete_account_title")}</h3>
+              <p className="w3-center">{t("profile_delete_account_confirm")}</p>
+
               <div className="w3-row w3-margin-top">
                 <div className="w3-half w3-padding">
                   <button
                     onClick={() => setShowDeleteModal(false)}
                     className="w3-button w3-light-grey w3-block w3-round-large"
                   >
-                    {t('profile_delete_account_cancel')}
+                    {t("profile_delete_account_cancel")}
                   </button>
                 </div>
                 <div className="w3-half w3-padding">
@@ -205,11 +205,13 @@ const Profile = () => {
                     disabled={deleteLoading}
                     className="w3-button w3-red w3-block w3-round-large"
                   >
-                    {deleteLoading ? t('profile_delete_account_modalBtn_1') : t('profile_delete_account_modalBtn_2')}
+                    {deleteLoading
+                      ? t("profile_delete_account_modalBtn_1")
+                      : t("profile_delete_account_modalBtn_2")}
                   </button>
                 </div>
               </div>
-              
+
               {deleteError && (
                 <p className="w3-text-red w3-center">{deleteError}</p>
               )}
@@ -250,7 +252,8 @@ const Profile = () => {
               <div className="w3-row">
                 <div className="w3-col" style={{ maxWidth: "300px" }}>
                   <h3>
-                    <i className="fa fa-user-circle"></i> {t("profile_personalInfo_title")}
+                    <i className="fa fa-user-circle"></i>{" "}
+                    {t("profile_personalInfo_title")}
                   </h3>
                 </div>
                 <div className="w3-rest w3-right-align">
@@ -262,7 +265,8 @@ const Profile = () => {
                       border: "1px solid rgba(255,255,255,0.4)",
                     }}
                   >
-                    <FaSignOutAlt style={{marginTop: "8px"}}/> {t("profile_personalInfo_icon")}
+                    <FaSignOutAlt style={{ marginTop: "8px" }} />{" "}
+                    {t("profile_personalInfo_icon")}
                   </button>
                 </div>
               </div>
@@ -303,9 +307,13 @@ const Profile = () => {
                 <p>
                   <b>{t("profile_personalInfo_verified")} </b>
                   {user.isVerified ? (
-                    <span className="w3-text-green">{t("profile_personalInfo_verified_yes")}</span>
+                    <span className="w3-text-green">
+                      {t("profile_personalInfo_verified_yes")}
+                    </span>
                   ) : (
-                    <span className="w3-text-orange">{t("profile_personalInfo_verified_no")}</span>
+                    <span className="w3-text-orange">
+                      {t("profile_personalInfo_verified_no")}
+                    </span>
                   )}
                 </p>
               </div>
@@ -357,7 +365,8 @@ const Profile = () => {
                 }}
               >
                 <h3>
-                  <i className="fa fa-calendar-check"></i> {t("profile_bookings_title")}
+                  <i className="fa fa-calendar-check"></i>{" "}
+                  {t("profile_bookings_title")}
                 </h3>
               </div>
 
@@ -366,10 +375,10 @@ const Profile = () => {
                   {bookings.map((booking, index) => (
                     <div
                       key={booking.reservID}
-                      className="w3-third w3-margin-bottom"
+                      className="w3-third w3-margin-bottom w3-hover-shadow "
                     >
                       <div
-                        className="w3-card w3-padding"
+                        className="w3-card w3-padding-small"
                         style={{
                           borderRadius: "8px",
                           background: "white",
@@ -386,15 +395,15 @@ const Profile = () => {
                           {new Date(booking.date).toLocaleDateString()}
                         </p>
                         <p>
-                          <strong>{t("profile_bookings_guide")}</strong> {booking.guideFirstName}{" "}
-                          {booking.guideLastName}
+                          <strong>{t("profile_bookings_guide")}</strong>{" "}
+                          {booking.guideFirstName} {booking.guideLastName}
                         </p>
                         <div
-                          className="w3-margin-top"
+                          className="w3-margin-top w3-margin-bottom"
                           style={{ display: "flex", gap: "8px" }}
                         >
                           <button
-                            className="w3-button w3-round"
+                            className="w3-button w3-round w3-padding-small"
                             style={{
                               flex: 1,
                               background: "rgba(58, 123, 213, 0.1)",
@@ -409,7 +418,7 @@ const Profile = () => {
                             {t("profile_bookings_btn_details")}
                           </button>
                           <button
-                            className="w3-button w3-round"
+                            className="w3-button w3-round w3-padding-small"
                             style={{
                               flex: 1,
                               background: "rgba(244, 67, 54, 0.1)",
@@ -456,28 +465,45 @@ const Profile = () => {
                           <div className="w3-padding">
                             {/* modal content */}
                             <p>
-                              <strong>{t("profile_bookings_modal_tourType")}</strong> {booking.tourType}
+                              <strong>
+                                {t("profile_bookings_modal_tourType")}
+                              </strong>{" "}
+                              {booking.tourType}
                             </p>
                             <p>
-                              <strong>{t("profile_bookings_modal_city")}</strong> {booking.city}
+                              <strong>
+                                {t("profile_bookings_modal_city")}
+                              </strong>{" "}
+                              {booking.city}
                             </p>
                             <p>
-                              <strong>{t("profile_bookings_modal_date")}</strong>{" "}
+                              <strong>
+                                {t("profile_bookings_modal_date")}
+                              </strong>{" "}
                               {new Date(booking.date).toLocaleString()}
                             </p>
                             <p>
-                              <strong>{t("profile_bookings_modal_guide")}</strong> {booking.guideFirstName}{" "}
-                              {booking.guideLastName}
+                              <strong>
+                                {t("profile_bookings_modal_guide")}
+                              </strong>{" "}
+                              {booking.guideFirstName} {booking.guideLastName}
                             </p>
                             <p>
-                              <strong>{t("profile_bookings_modal_people")}</strong>{" "}
+                              <strong>
+                                {t("profile_bookings_modal_people")}
+                              </strong>{" "}
                               {booking.numberOfPeople}
                             </p>
                             <p>
-                              <strong>{t("profile_bookings_modal_price")}</strong> €{booking.summa}
+                              <strong>
+                                {t("profile_bookings_modal_price")}
+                              </strong>{" "}
+                              €{booking.summa}
                             </p>
                             <p>
-                              <strong>{t("profile_bookings_modal_resID")}</strong>{" "}
+                              <strong>
+                                {t("profile_bookings_modal_resID")}
+                              </strong>{" "}
                               {booking.reservID}
                             </p>
                           </div>
@@ -510,30 +536,32 @@ const Profile = () => {
           {/* Delete Booking Modal */}
           {bookingToDelete && (
             <div className="w3-modal" style={{ display: "block" }}>
-              <div 
-                className="w3-modal-content w3-card-4 w3-animate-zoom" 
+              <div
+                className="w3-modal-content w3-card-4 w3-animate-zoom"
                 style={{ maxWidth: "500px" }}
               >
                 <div className="w3-container w3-padding-16">
-                  <span 
-                    onClick={() => setBookingToDelete(null)} 
+                  <span
+                    onClick={() => setBookingToDelete(null)}
                     className="w3-button w3-display-topright"
                   >
                     &times;
                   </span>
-                  
+
                   <div className="w3-center">
-                    <FaExclamationTriangle 
-                      className="w3-text-red" 
-                      style={{ fontSize: "48px", margin: "16px 0" }} 
+                    <FaExclamationTriangle
+                      className="w3-text-red"
+                      style={{ fontSize: "48px", margin: "16px 0" }}
                     />
                   </div>
-                  
-                  <h3 className="w3-center">{t("profile_delete_tour_confirmation_title")}</h3>
+
+                  <h3 className="w3-center">
+                    {t("profile_delete_tour_confirmation_title")}
+                  </h3>
                   <p className="w3-center">
                     {t("profile_delete_tour_confirmation_message")}
                   </p>
-                  
+
                   <div className="w3-row w3-margin-top">
                     <div className="w3-half w3-padding">
                       <button
@@ -549,11 +577,13 @@ const Profile = () => {
                         disabled={deleteLoading}
                         className="w3-button w3-red w3-block w3-round-large"
                       >
-                        {deleteLoading ? t("profile_btn_delete_deleting") : t("profile_btn_delete_delete")}
+                        {deleteLoading
+                          ? t("profile_btn_delete_deleting")
+                          : t("profile_btn_delete_delete")}
                       </button>
                     </div>
                   </div>
-                  
+
                   {deleteError && (
                     <p className="w3-text-red w3-center">{deleteError}</p>
                   )}
@@ -564,18 +594,18 @@ const Profile = () => {
 
           {/* Delete Account Button */}
           <div className="w3-padding w3-center w3-margin-bottom">
-              <button
-                onClick={() => setShowDeleteModal(true)}
-                className="w3-button w3-round-large"
-                style={{
-                  background: "linear-gradient(to right, #ff5f6d, #ffc371)",
-                  color: "white",
-                }}
-              >
-                <FaExclamationTriangle style={{ marginRight: "8px" }} />
-                {t("profile_delete_account_button")}
-              </button>
-            </div>
+            <button
+              onClick={() => setShowDeleteModal(true)}
+              className="w3-button w3-round-large"
+              style={{
+                background: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                color: "white",
+              }}
+            >
+              <FaExclamationTriangle style={{ marginRight: "8px" }} />
+              {t("profile_delete_account_button")}
+            </button>
+          </div>
         </div>
       </div>
       <ExploreNature />

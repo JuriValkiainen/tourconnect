@@ -12,7 +12,7 @@ import { Reviews } from "../entities/Reviews";
 
 const router = Router();
 
-// Настройка nodemailer для отправки электронной почты
+// Setting up nodemailer to send email
 // console.log("EMAIL CONFIG:", {
 //   host: process.env.EMAIL_HOST,
 //   port: process.env.EMAIL_PORT,
@@ -38,13 +38,13 @@ const transporter = nodemailer.createTransport({
   }
 }); 
 
-// Функция для генерации случайного токена
+// Function to generate a random token
 const generateVerificationToken = () => {
   return crypto.randomBytes(32).toString('hex');
 };
 
-//----------Регистрация туриста-----------
-// Интерфейс для запроса регистрации
+//----------Tourist registration-----------
+// Interface for registration request
 interface CreateRegisterRequest
 {
     firstName: string
@@ -55,7 +55,7 @@ interface CreateRegisterRequest
     }
 /**
  * @route POST /api/auth/register
- * @description Регистрация нового туриста.
+ * @description Register a new tourist.
  * @access Public
  */
 router.post("/register", async (req: Request, res: any) => {
@@ -102,7 +102,7 @@ router.post("/register", async (req: Request, res: any) => {
     );
 
     res.status(201).json({
-      message: 'Регистрация успешна. Вы вошли в аккаунт.',
+      message: 'Registration successful',
       token,
     });
 
@@ -112,7 +112,7 @@ router.post("/register", async (req: Request, res: any) => {
   }
 })
 
-//--Запрос на повторную верификацию (по кнопке на клиенте)
+//--Request for re-verification (via button on the client)
 router.post("/verify-request", verifyTouristToken, async (req: Request, res: any) => {
   try {
     console.log("verify-request endpoint called", req.user);
@@ -172,7 +172,7 @@ router.post("/verify-request", verifyTouristToken, async (req: Request, res: any
 
 /**
  * @route GET /api/auth/verify-email
- * @description Верификация электронной почты пользователя по токену.
+ * @description Verify email address.
  * @access Public
  */
 router.get("/verify-email", async (req: Request, res: any) => {
@@ -205,7 +205,7 @@ router.get("/verify-email", async (req: Request, res: any) => {
 });
 
 
-//Аутентификация туриста
+//Authentication for tourists
 interface CreateTouristLoginRequest
 {
     email: string
@@ -248,7 +248,7 @@ interface CreateTouristLoginRequest
 }
 })
 
-//Возвращает профиль туриста
+//Return tourist profile
 router.get('/api/tourists/me', verifyTouristToken, async (req: Request, res: any) => {
   try {
 
@@ -264,8 +264,8 @@ router.get('/api/tourists/me', verifyTouristToken, async (req: Request, res: any
     const touristRepo = AppDataSource.getRepository(Tourists);
 
     const tourist = await touristRepo.findOne({where: { touristID }
-
     })
+
     if (!tourist) {
       return res.status(404).json({ error: 'Profil not found' });
     }
@@ -278,7 +278,7 @@ router.get('/api/tourists/me', verifyTouristToken, async (req: Request, res: any
       email: tourist.email,
       isVerified: tourist.isVerified,
       }
-      console.log('profile is created in endpoint /api/tourists/me: ', profile);
+
     res.json(profile);
 
 } catch (error) {
@@ -287,24 +287,22 @@ router.get('/api/tourists/me', verifyTouristToken, async (req: Request, res: any
 }
 });
 
-//Возвращает список бронирований данного туриста
+//Return tourist booking
 router.get('/api/tourists/booking', verifyTouristToken, async (req: Request, res: any) => {
   try {
     const { id: touristID } = req.user as { id: number; email: string; role: string }
-    console.log('req.user in /api/tourists/booking:', req.user); // Убедитесь, что req.user есть
-    console.log('touristID in /api/tourists/booking:', touristID); // Убедитесь, что ID правильный
+    
     if (!touristID) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
    
     const reservRepo = AppDataSource.getRepository(Reservations);
-    console.log('Попытка найти бронирования для touristID:', touristID); // Проверьте ID перед запросом
 
     const reservations = await reservRepo.find({
       where: { touristID },
       relations: ['tours','tours.guide'], 
     })
-    console.log('reservations in endpoint /api/tourists/booking: ', reservations);
+
     const bookings = reservations.map(reservation => ({
       reservID: reservation.reservID,
       guideFirstName: reservation.tours?.guide?.firstName,
@@ -315,7 +313,6 @@ router.get('/api/tourists/booking', verifyTouristToken, async (req: Request, res
       numberOfPeople: reservation.numberOfPeople,
       summa: reservation.summa,
     }));
-    console.log('Преобразованные бронирования:', bookings); // Посмотрите на результат map
 
     res.json(bookings);
   } catch (error) {
@@ -324,8 +321,8 @@ router.get('/api/tourists/booking', verifyTouristToken, async (req: Request, res
   }
 });
 
-// Удаление туриста
-     router.delete("/api/tourists/me", verifyTouristToken, async (req: Request, res: any) => {
+// Delete tourist profile
+router.delete("/api/tourists/me", verifyTouristToken, async (req: Request, res: any) => {
        try {
          const { id: touristID } = req.user as { id: number; email: string; role: string };
                
@@ -364,10 +361,10 @@ router.get('/api/tourists/booking', verifyTouristToken, async (req: Request, res
          console.error("Error while deleting the tour:", error);
          res.status(500).json({ error: "Internal server error" });
        }
-     });
+});
 
-     // Удаление бронирования
-     router.delete("/api/bookings/me/:reservID", verifyTouristToken, async (req: Request, res: any) => {
+// Delete booking
+router.delete("/api/bookings/me/:reservID", verifyTouristToken, async (req: Request, res: any) => {
        try {
          const { id: touristID } = req.user as { id: number; email: string; role: string };
                
@@ -398,8 +395,7 @@ router.get('/api/tourists/booking', verifyTouristToken, async (req: Request, res
          console.error("Error while deleting the reservation:", error);
          res.status(500).json({ error: "Internal server error" });
        }
-     });
+});
      
-
 
 export default router;

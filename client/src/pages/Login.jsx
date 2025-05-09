@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import axios from "axios";
 import Newsletter from "../components/Newsletter";
 import HeroImage from "../components/HeroImage";
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -53,7 +53,9 @@ const Login = () => {
           },
         });
 
-        console.log("Бронирование выполнено после логина зарегистрированного пользователя.");
+        console.log(
+          "Бронирование выполнено после логина зарегистрированного пользователя."
+        );
       }
 
       // Redirect to the profile page after a short delay
