@@ -62,7 +62,7 @@ const Register = () => {
           style={{ maxWidth: "600px", margin: "0 auto" }}
         >
           <div className="w3-container w3-padding-16 w3-light-grey">
-            <h2 className="w3-center">{t('register_title')}</h2>
+            <h2 className="w3-center">{t("register_title")}</h2>
 
             {message && (
               <div
@@ -77,7 +77,7 @@ const Register = () => {
             <form onSubmit={handleSubmit} className="w3-container">
               <div className="w3-row-padding">
                 <div className="w3-half w3-margin-bottom">
-                  <label>{t('register_form_firstName')}</label>
+                  <label>{t("register_form_firstName")}</label>
                   <input
                     name="firstName"
                     value={formData.firstName}
@@ -87,7 +87,7 @@ const Register = () => {
                   />
                 </div>
                 <div className="w3-half w3-margin-bottom">
-                  <label>{t('register_form_lastName')}</label>
+                  <label>{t("register_form_lastName")}</label>
                   <input
                     name="lastName"
                     value={formData.lastName}
@@ -98,30 +98,36 @@ const Register = () => {
                 </div>
               </div>
 
-              <label>{t('register_form_email')}</label>
+              <label>{t("register_form_email")}</label>
               <input
                 type="email"
                 name="email"
+                pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$"
+                title="Enter a valid email"
                 value={formData.email}
                 onChange={handleChange}
                 required
                 className="w3-input w3-border w3-margin-bottom"
               />
 
-              <label>{t('register_form_phone')}</label>
+              <label>{t("register_form_phone")}</label>
               <input
                 type="tel"
                 name="phone"
+                pattern="^[0-9]{10}$"
+                title="Enter a valid phone number (10 digits)"
                 value={formData.phone}
                 onChange={handleChange}
                 required
                 className="w3-input w3-border w3-margin-bottom"
               />
 
-              <label>{t('register_form_password')}</label>
+              <label>{t("register_form_password")}</label>
               <input
                 type="password"
                 name="password"
+                // pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                // title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters"
                 value={formData.password}
                 onChange={handleChange}
                 required
@@ -136,7 +142,9 @@ const Register = () => {
                   className="w3-button w3-blue w3-round-large w3-block"
                   style={{ marginBottom: "16px" }}
                 >
-                  {loading ? t('register_form_btn_1') : t('register_form_btn_2')}
+                  {loading
+                    ? t("register_form_btn_1")
+                    : t("register_form_btn_2")}
                 </button>
 
                 <Link
@@ -153,7 +161,7 @@ const Register = () => {
                   <span
                     style={{ display: "inline-block", verticalAlign: "middle" }}
                   >
-                    {t('register_form_btn_link')}
+                    {t("register_form_btn_link")}
                   </span>
                 </Link>
               </div>

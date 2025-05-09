@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import Newsletter from "../components/Newsletter";
 import HeroImage from "../components/HeroImage";
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -12,6 +13,8 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const location = useLocation();
+  const { excursion, selectedDate } = location.state || {};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,6 +34,29 @@ const Login = () => {
       localStorage.setItem("token", token);
 
       setMessage("Login successful!");
+
+      const decodedToken = jwtDecode(token);
+      const touristID = decodedToken.id;
+      // Check if excursion and selectedDate are defined
+      if (excursion && selectedDate) {
+        const bookingData = {
+          tourID: excursion.tourID,
+          touristID: touristID,
+          date: selectedDate,
+          numberOfPeople: 1,
+          summa: excursion.pricePerPerson * 1,
+        };
+
+        await axios.post("http://localhost:5001/bookings", bookingData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        console.log(
+          "Бронирование выполнено после логина зарегистрированного пользователя."
+        );
+      }
 
       // Redirect to the profile page after a short delay
       setTimeout(() => {

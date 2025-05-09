@@ -120,6 +120,8 @@
     "register_form_btn_1": "Rekisteröinti...",
     "register_form_btn_2": "Rekisteröidy",
     "register_form_btn_link": "Onko sinulla jo tili? Kirjaudu sisään",
+    "register_form_btn_link_mod": "Onko sinulla jo tili?",
+
     "home_randomtours_title": "Hyviä tarjouksia juuri nyt",
     "home_randomtours_text": "Mihin lähdet seuraavaksi?",
     "home_nature_title": "Tutustu luontoon",
