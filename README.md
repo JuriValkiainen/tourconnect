@@ -50,7 +50,7 @@ This project is licensed under the MIT License.
 
 ## About This Fork
 
-This fork was created by [Juri Valkiainen](https://www.linkedin.com/in/juri-valkainen/) as part of fullstack software development studies at Careeria.
+This fork was created by Juri Valkiainen as part of fullstack software development studies at Careeria.
 
 I was responsible for designing and developing part of the user interface. I implemented the following pages:  
 `ExcursionDetail.jsx`, `ExcursionList.jsx`, `GuideDashboard.jsx`, `GuideLogin.jsx`, `GuideRegister.jsx`, `GuideSupport.jsx`,  
