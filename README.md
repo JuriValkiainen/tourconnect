@@ -1,4 +1,4 @@
-![TourConnect screenshot](logoTourConnect.png)
+<img src="logoTourConnect.png" alt="TourConnect Logo" width="300"/>
 # TourConnect
 
 TourConnect is a travel application that connects users with local guides. It allows guides to register and provide their details, while users can create personal profiles, view guides, and book experiences.
