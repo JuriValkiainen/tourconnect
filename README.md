@@ -1,4 +1,4 @@
-<img src="logoTourConnect.png" alt="TourConnect Logo" width="150"/>
+<img src="logoTourConnect.png" alt="TourConnect Logo" width="180"/>
 # TourConnect
 
 TourConnect is a travel application that connects users with local guides. It allows guides to register and provide their details, while users can create personal profiles, view guides, and book experiences.
@@ -58,4 +58,6 @@ I was responsible for designing and developing part of the user interface. I imp
 as well as UI components:  
 `CitySelection.jsx`, `Contact.jsx`, `ExcursionTypes.jsx`, `GuideDropdown.jsx`, `HeroImage.jsx`, `Newsletter.jsx`.
 
-This project demonstrated my skills in teamwork, frontend development, and working with a modern tech stack (React, Node.js, TypeScript, Azure SQL).
+For collaboration, we used GitHub, Trello, and WhatsApp.
+
+This project demonstrated my skills in teamwork, frontend development, and working with a modern tech stack: React, Node.js, TypeScript, Azure SQL, JWT authentication, and REST APIs.
